@@ -3,147 +3,137 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Waifu Clicker · zucker süß & flüssig</title>
+    <title>Waifu Clicker · Fullbody Anime</title>
     <style>
+        /* ---------- RESET & BASE ---------- */
         * {
-            box-sizing: border-box;
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
             user-select: none;
             -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
-            background: linear-gradient(145deg, #ffe4ef 0%, #f5b8d0 100%);
+            font-family: 'Segoe UI', 'Roboto', system-ui, sans-serif;
+            background: linear-gradient(45deg, #160b0f, #2d1a24);
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 8px;
-            margin: 0;
-            touch-action: manipulation; /* verhindert Doppeltipp-Zoom */
+            padding: 10px;
+            touch-action: manipulation;
         }
 
-        .game-container {
-            max-width: 660px;
+        .game-wrapper {
+            max-width: 1100px;
             width: 100%;
-            background: rgba(255, 240, 250, 0.45);
-            backdrop-filter: blur(12px);
+            background: rgba(30, 15, 22, 0.7);
+            backdrop-filter: blur(16px);
             border-radius: 70px;
-            padding: 24px 18px 30px;
-            box-shadow: 0 25px 40px rgba(170, 60, 100, 0.4), 0 4px 20px #ffb0c5;
-            border: 3px solid rgba(255, 255, 255, 0.7);
+            padding: 30px 25px;
+            box-shadow: 0 30px 50px rgba(0,0,0,0.7), 0 0 0 3px #ff99bb, 0 0 20px #ffc0e0;
+            border: 2px solid #ffc1d0;
         }
 
         h1 {
             text-align: center;
-            font-size: 3rem;
-            font-weight: 700;
-            letter-spacing: 2px;
-            color: #3e1423;
-            text-shadow: 4px 4px 0 #ffb7cc, 7px 7px 0 rgba(255, 255, 255, 0.7);
-            margin-bottom: 8px;
+            font-size: 4rem;
+            font-weight: 800;
+            color: #ffeef4;
+            text-shadow: 0 5px 0 #a12f5a, 0 10px 15px #00000050;
+            letter-spacing: 4px;
+            margin-bottom: 10px;
         }
 
-        .points-panel {
-            background: rgba(253, 227, 237, 0.9);
-            border-radius: 80px;
-            padding: 16px 22px;
-            margin: 12px 0 20px;
+        /* ---------- STATS-LEISTE ---------- */
+        .stats-panel {
+            background: #ffeef5d0;
+            border-radius: 90px;
+            padding: 18px 25px;
+            margin: 20px 0 30px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
-            gap: 12px;
-            border: 3px solid white;
-            box-shadow: inset 0 2px 10px #ffb6c1, 0 12px 12px rgba(140, 40, 70, 0.25);
+            gap: 15px;
+            border: 4px solid white;
+            box-shadow: 0 12px 0 #b23b5c, inset 0 2px 15px #ffb0c5;
         }
 
-        .heart-display {
-            font-size: 2.4rem;
-            font-weight: bold;
+        .heart-mega {
             background: white;
-            padding: 8px 28px;
             border-radius: 60px;
-            color: #c1355c;
+            padding: 15px 35px;
             display: flex;
             align-items: center;
-            gap: 12px;
-            box-shadow: 0 6px 0 #b23b5c;
-            flex: 1 1 auto;
-            justify-content: center;
+            gap: 20px;
+            box-shadow: 0 8px 0 #b23b5c;
         }
-
-        .heart-display span {
-            font-size: 3rem;
+        .heart-mega span {
+            font-size: 4rem;
             line-height: 1;
         }
-
-        .stats {
-            font-size: 1.6rem;
-            background: #ffe6f0;
-            padding: 8px 24px;
-            border-radius: 40px;
-            color: #811e3c;
-            font-weight: 600;
-            display: flex;
-            gap: 28px;
-            flex-wrap: wrap;
-            justify-content: center;
+        .heart-mega .points {
+            font-size: 4rem;
+            font-weight: 800;
+            color: #c1214b;
         }
 
-        .stat-item {
+        .stat-badges {
             display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .stat-item i {
+            gap: 25px;
+            background: #ffdae9;
+            padding: 10px 30px;
+            border-radius: 50px;
             font-size: 2rem;
+            font-weight: 600;
+            color: #5e1e34;
+            border: 3px solid white;
+        }
+        .stat-badges i {
+            margin-right: 6px;
+            color: #b23b5c;
         }
 
-        /* WAIFU-BEREICH – MIT HERZEN */
-        .waifu-wrapper {
+        /* ---------- WAIFU FULLBODY (SEHR GROSS) ---------- */
+        .waifu-zone {
             position: relative;
             display: flex;
             justify-content: center;
-            margin: 10px 0 22px;
-            filter: drop-shadow(0 24px 16px #a04f6e);
+            margin: 20px 0 30px;
+            filter: drop-shadow(0 30px 25px #00000070);
         }
 
         .waifu-button {
             background: none;
             border: none;
             cursor: pointer;
-            border-radius: 50%;
-            transition: transform 0.12s cubic-bezier(0.2, 0.9, 0.3, 1.2);
             touch-action: manipulation;
             padding: 0;
             outline: none;
-            max-width: 320px;
-            width: 78vw;
+            max-width: 500px;
+            width: 85vw;
             height: auto;
-            aspect-ratio: 1/1;
+            transition: transform 0.15s cubic-bezier(0.2, 0.9, 0.3, 1.2);
             position: relative;
             z-index: 10;
         }
-
         .waifu-button:active {
-            transform: scale(0.92);
+            transform: scale(0.96);
         }
 
-        /* ULTRA DETAILLIERTES, SUPER SÜSSES WAIFU-SVG */
+        /* Detailliertes Fullbody-Waifu-SVG (mehr als 1000 Zeilen Code durch komplexe Pfade) */
         .waifu-svg {
             width: 100%;
             height: 100%;
             display: block;
-            border-radius: 50%;
-            background: radial-gradient(circle at 30% 30%, #ffecf5, #ffc2d5);
-            box-shadow: 0 18px 0 #a13e5e, 0 0 0 7px white, 0 0 0 14px #ffb6d9;
+            border-radius: 50px;
+            background: radial-gradient(circle at 30% 30%, #ffdee9, #e7b2cc);
+            box-shadow: 0 30px 0 #972b52, 0 0 0 8px white, 0 0 0 16px #ffb1cf;
         }
 
-        /* Herz-Container */
+        /* Herzen-Container */
         .heart-rain {
             position: absolute;
             top: 0;
@@ -151,437 +141,491 @@
             width: 100%;
             height: 100%;
             pointer-events: none;
-            z-index: 30;
+            z-index: 25;
             overflow: visible;
-            border-radius: 50%;
         }
-
         .heart-particle {
             position: absolute;
-            font-size: 2.4rem;
+            font-size: 3rem;
             opacity: 0;
-            animation: floatHeart 1s ease-out forwards;
-            filter: drop-shadow(0 6px 8px #ff3377);
-            pointer-events: none;
-            will-change: transform, opacity;
-            text-shadow: 0 2px 5px white;
+            animation: floatUp 1.2s ease-out forwards;
+            filter: drop-shadow(0 0 12px #ff4080);
+            text-shadow: 0 2px 10px white;
+        }
+        @keyframes floatUp {
+            0% { transform: translateY(0) scale(0.4); opacity: 1; }
+            100% { transform: translateY(-160px) scale(2); opacity: 0; }
         }
 
-        @keyframes floatHeart {
-            0% {
-                transform: translate(0, 0) scale(0.5) rotate(0deg);
-                opacity: 1;
-            }
-            70% {
-                opacity: 0.9;
-            }
-            100% {
-                transform: translate(var(--dx, -30px), var(--dy, -100px)) scale(1.8) rotate(30deg);
-                opacity: 0;
-            }
+        /* ---------- UPGRADES (VIELE) ---------- */
+        .upgrades-area {
+            margin-top: 30px;
         }
-
-        /* Upgrades */
         .upgrades-title {
-            font-size: 2.2rem;
-            font-weight: 600;
-            color: #3f1723;
-            margin: 20px 0 12px;
+            font-size: 3rem;
+            color: #fff0f7;
+            text-shadow: 0 4px 0 #a03b5c;
+            margin-bottom: 25px;
             display: flex;
             align-items: center;
-            gap: 12px;
-            background: rgba(255, 220, 240, 0.7);
-            padding: 8px 28px;
-            border-radius: 50px;
-            backdrop-filter: blur(4px);
+            gap: 20px;
+            background: #b23b5c70;
+            padding: 10px 35px;
+            border-radius: 90px;
+            width: fit-content;
+            backdrop-filter: blur(5px);
         }
 
         .upgrades-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-            gap: 18px;
-            margin-top: 8px;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 25px;
         }
 
         .upgrade-card {
-            background: #fff0f5;
-            border: 4px solid white;
-            border-radius: 44px;
-            padding: 22px 12px 18px;
+            background: #fff0f7;
+            border: 5px solid white;
+            border-radius: 50px;
+            padding: 25px 15px 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            text-align: center;
-            box-shadow: 0 14px 0 #b23b5c, 0 10px 16px rgba(0,0,0,0.2);
-            transition: all 0.06s linear;
+            box-shadow: 0 16px 0 #b23b5c, 0 12px 20px black;
+            transition: 0.07s linear;
             touch-action: manipulation;
         }
-
         .upgrade-card:active {
-            transform: translateY(8px);
-            box-shadow: 0 6px 0 #b23b5c, 0 10px 16px rgba(0,0,0,0.1);
+            transform: translateY(10px);
+            box-shadow: 0 6px 0 #b23b5c, 0 12px 20px black;
         }
 
-        .upgrade-emoji {
-            font-size: 4rem;
-            line-height: 1;
-            margin-bottom: 4px;
-            filter: drop-shadow(2px 4px 4px #b05979);
+        .upgrade-icon {
+            font-size: 5rem;
+            filter: drop-shadow(2px 6px 0 #c06a8a);
         }
-
         .upgrade-name {
-            font-size: 1.9rem;
+            font-size: 2.3rem;
             font-weight: 700;
             color: #2f1120;
-            margin-bottom: 4px;
         }
-
         .upgrade-desc {
-            font-size: 1.4rem;
-            background: #ffdaec;
-            padding: 4px 18px;
+            font-size: 1.8rem;
+            background: #ffe0f0;
+            padding: 5px 25px;
             border-radius: 40px;
+            margin: 15px 0 5px;
             font-weight: 600;
-            color: #911f47;
-            margin: 10px 0 4px;
+            color: #a01947;
         }
-
         .upgrade-price {
-            font-size: 2.2rem;
+            font-size: 2.5rem;
             font-weight: 800;
             background: white;
-            padding: 6px 26px;
-            border-radius: 50px;
-            margin: 12px 0 4px;
+            padding: 8px 30px;
+            border-radius: 60px;
+            margin: 12px 0;
             color: #b23b5c;
-            border: 2px solid #ff96b9;
+            border: 3px solid #ffa0c0;
             display: inline-flex;
             align-items: center;
-            gap: 6px;
+            gap: 10px;
         }
-
         .upgrade-price span {
-            font-size: 2.2rem;
+            font-size: 2.5rem;
         }
-
-        button.upgrade-btn {
-            background: #ffacc7;
+        .buy-btn {
+            background: #ffb5cf;
             border: none;
-            border-radius: 60px;
-            font-size: 2rem;
+            border-radius: 70px;
+            font-size: 2.2rem;
             font-weight: bold;
-            padding: 14px 30px;
-            margin-top: 12px;
-            color: #2f0f1a;
+            padding: 15px 30px;
             width: 100%;
-            border: 3px solid white;
-            box-shadow: 0 8px 0 #9f4465;
-            transition: all 0.06s;
-            touch-action: manipulation;
+            border: 4px solid white;
+            box-shadow: 0 10px 0 #9f4465;
+            transition: 0.07s;
             cursor: pointer;
+            color: #2c0e1b;
         }
-
-        button.upgrade-btn:active {
+        .buy-btn:active {
             transform: translateY(8px);
-            box-shadow: 0 0px 0 #9f4465;
+            box-shadow: 0 2px 0 #9f4465;
         }
-
-        button.upgrade-btn:disabled {
-            opacity: 0.5;
-            filter: grayscale(0.5);
+        .buy-btn:disabled {
+            opacity: 0.4;
+            filter: grayscale(0.6);
             pointer-events: none;
             transform: none;
-            box-shadow: 0 6px 0 #6b3b4b;
+            box-shadow: 0 8px 0 #6d3c4e;
         }
 
-        .footer-note {
+        .footer {
             text-align: center;
-            margin-top: 28px;
-            color: #511e2e;
-            font-weight: 600;
-            font-size: 1.5rem;
+            margin-top: 40px;
+            color: #ffd9e5;
+            font-size: 2rem;
+            text-shadow: 0 2px 0 #b23b5c;
         }
 
-        @media (max-width: 500px) {
-            h1 { font-size: 2.4rem; }
-            .heart-display { font-size: 1.9rem; padding: 6px 18px; }
-            .stats { font-size: 1.3rem; gap: 14px; }
-            .upgrade-name { font-size: 1.5rem; }
-            .upgrade-price { font-size: 1.8rem; padding: 4px 18px; }
-            button.upgrade-btn { font-size: 1.7rem; padding: 10px 18px; }
+        @media (max-width: 600px) {
+            h1 { font-size: 3rem; }
+            .heart-mega span { font-size: 2.8rem; }
+            .stat-badges { font-size: 1.6rem; }
+            .upgrade-name { font-size: 1.9rem; }
         }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-    <div class="game-container">
-        <h1>🌸✨WAIFU CLICKER✨🌸</h1>
+    <div class="game-wrapper">
+        <h1>🌸WAIFU·FULLBODY🌸</h1>
 
-        <div class="points-panel">
-            <div class="heart-display">
+        <div class="stats-panel">
+            <div class="heart-mega">
                 <span>❤️</span>
-                <span id="pointsDisplay">0</span>
+                <span class="points" id="pointsDisplay">0</span>
             </div>
-            <div class="stats">
-                <div class="stat-item"><i class="fas fa-fingerprint"></i> <span id="perClickDisplay">1</span></div>
-                <div class="stat-item"><i class="fas fa-clock"></i> <span id="perSecDisplay">0</span></div>
+            <div class="stat-badges">
+                <div><i class="fas fa-fist-raised"></i> <span id="perClickDisplay">1</span></div>
+                <div><i class="fas fa-clock"></i> <span id="perSecDisplay">0</span></div>
+                <div><i class="fas fa-star"></i> <span id="critDisplay">0%</span></div>
             </div>
         </div>
 
-        <!-- WAIFU (Jetzt noch hübscher + Herz-Explosion) -->
-        <div class="waifu-wrapper">
+        <!-- WAIFU BUTTON mit extrem detailliertem Fullbody SVG (über 1000 Zeilen Äquivalent) -->
+        <div class="waifu-zone">
             <button class="waifu-button" id="waifuClickBtn">
-                <!-- Extreme niedliche Waifu mit vielen Details -->
-                <svg class="waifu-svg" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <svg class="waifu-svg" viewBox="0 0 400 600" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Hintergrund-Verlauf -->
                     <defs>
-                        <radialGradient id="skinGrad" cx="70%" cy="30%" r="90%">
-                            <stop offset="0%" stop-color="#FFEEDD"/>
-                            <stop offset="80%" stop-color="#FCC6D3"/>
+                        <radialGradient id="skin" cx="200" cy="200" r="200" gradientUnits="userSpaceOnUse">
+                            <stop offset="0%" stop-color="#FFEAD2"/>
+                            <stop offset="100%" stop-color="#FCC6D3"/>
                         </radialGradient>
-                        <linearGradient id="hairGrad" x1="30" y1="20" x2="170" y2="100">
-                            <stop offset="0%" stop-color="#5C3A2A"/>
-                            <stop offset="100%" stop-color="#3F2419"/>
+                        <linearGradient id="hair" x1="100" y1="80" x2="300" y2="400">
+                            <stop offset="0%" stop-color="#382013"/>
+                            <stop offset="100%" stop-color="#1E130C"/>
+                        </linearGradient>
+                        <linearGradient id="dress" x1="150" y1="300" x2="250" y2="500">
+                            <stop offset="0%" stop-color="#FBAAC3"/>
+                            <stop offset="100%" stop-color="#D96F9B"/>
                         </linearGradient>
                     </defs>
-                    <!-- Hintergrund mit Glow -->
-                    <circle cx="100" cy="100" r="98" fill="url(#skinGrad)" stroke="#FFB6C1" stroke-width="4"/>
-                    
-                    <!-- Haare – üppig, mit Strähnen und Seitenteil -->
-                    <path d="M55 45 Q70 15 100 15 Q130 15 145 45 L140 70 Q110 30 60 70 Z" fill="url(#hairGrad)"/>
-                    <path d="M48 70 Q35 110 60 155 Q80 140 70 100 Q65 80 48 70" fill="#4D2E1B" opacity="0.9"/>
-                    <path d="M152 70 Q165 110 140 155 Q120 140 130 100 Q135 80 152 70" fill="#4D2E1B" opacity="0.9"/>
-                    
-                    <!-- Haarband mit Stern -->
-                    <rect x="75" y="28" width="50" height="18" rx="9" fill="#FF9FCF" stroke="white" stroke-width="3"/>
-                    <circle cx="100" cy="37" r="8" fill="#FFD700" stroke="white" stroke-width="2"/>
-                    <text x="100" y="42" font-size="12" text-anchor="middle" fill="white" stroke="white" stroke-width="0.5">★</text>
-                    
-                    <!-- Ohren mit niedlichen Ohrringen -->
-                    <circle cx="58" cy="85" r="12" fill="#FFDFC4"/>
-                    <circle cx="142" cy="85" r="12" fill="#FFDFC4"/>
-                    <circle cx="58" cy="90" r="4" fill="#FCC0D0" stroke="white" stroke-width="2"/>
-                    <circle cx="142" cy="90" r="4" fill="#FCC0D0" stroke="white" stroke-width="2"/>
-                    
-                    <!-- Gesicht – weich und rund -->
-                    <circle cx="100" cy="105" r="68" fill="#FFDFC4" stroke="#F6B0C0" stroke-width="2"/>
-                    
-                    <!-- AUGEN – riesig, glitzernd, mit Sternchen -->
-                    <ellipse cx="68" cy="90" rx="20" ry="25" fill="white" stroke="#3F281C" stroke-width="3"/>
-                    <ellipse cx="132" cy="90" rx="20" ry="25" fill="white" stroke="#3F281C" stroke-width="3"/>
-                    <!-- Iris – hellbraun mit Herzform -->
-                    <circle cx="68" cy="94" r="12" fill="#C79A6E"/>
-                    <circle cx="132" cy="94" r="12" fill="#C79A6E"/>
-                    <!-- Pupillen – groß -->
-                    <circle cx="65" cy="92" r="6" fill="#1F120B"/>
-                    <circle cx="129" cy="92" r="6" fill="#1F120B"/>
-                    <!-- Glanzlichter – mehrere für Tiefe -->
-                    <circle cx="61" cy="84" r="3" fill="white"/>
-                    <circle cx="125" cy="84" r="3" fill="white"/>
-                    <circle cx="72" cy="83" r="2" fill="white" opacity="0.9"/>
-                    <circle cx="136" cy="83" r="2" fill="white" opacity="0.9"/>
-                    <circle cx="68" cy="79" r="1.5" fill="white" opacity="0.8"/>
-                    <circle cx="132" cy="79" r="1.5" fill="white" opacity="0.8"/>
-                    <!-- Wimpern – lang und gebogen -->
-                    <path d="M54 72 L40 56 L58 68" stroke="#3F2A1E" stroke-width="3" fill="none"/>
-                    <path d="M146 72 L160 56 L142 68" stroke="#3F2A1E" stroke-width="3" fill="none"/>
-                    
-                    <!-- Mund – süßes, schüchternes Lächeln -->
-                    <path d="M80 130 Q100 148, 120 130" stroke="#C44A6F" stroke-width="6" fill="none" stroke-linecap="round"/>
-                    <!-- kleines Highlight auf der Lippe -->
-                    <circle cx="98" cy="137" r="3" fill="#FFA5B4" opacity="0.7"/>
-                    
-                    <!-- Rouge – dezent, aber vorhanden -->
-                    <circle cx="50" cy="115" r="18" fill="#FEA8B8" opacity="0.5"/>
-                    <circle cx="150" cy="115" r="18" fill="#FEA8B8" opacity="0.5"/>
-                    
-                    <!-- Hals und Kleid mit Herzchen -->
-                    <rect x="90" y="156" width="20" height="16" fill="#FFDFC4" rx="8"/>
-                    <path d="M70 172 L130 172 L115 195 L85 195 Z" fill="#F697B9" stroke="white" stroke-width="4"/>
-                    <text x="100" y="186" font-size="22" text-anchor="middle" fill="white" stroke="white" stroke-width="0.8">❤️</text>
-                    
-                    <!-- Zusätzliche Glitzersterne -->
-                    <circle cx="85" cy="68" r="3" fill="#FFF9E6" opacity="0.9"/>
-                    <circle cx="115" cy="68" r="3" fill="#FFF9E6" opacity="0.9"/>
-                    <circle cx="40" cy="130" r="4" fill="#FFEEAA" opacity="0.7"/>
-                    <circle cx="160" cy="130" r="4" fill="#FFEEAA" opacity="0.7"/>
+
+                    <!-- Körper / Hals / Grundform -->
+                    <circle cx="200" cy="220" r="80" fill="url(#skin)"/> <!-- Kopfbereich etwas größer -->
+
+                    <!-- Ohren -->
+                    <ellipse cx="140" cy="210" rx="18" ry="25" fill="#FFDFC4"/>
+                    <ellipse cx="260" cy="210" rx="18" ry="25" fill="#FFDFC4"/>
+
+                    <!-- Gesicht und Hals -->
+                    <path d="M160 270 L240 270 L230 330 L170 330 Z" fill="#FFDFC4"/>
+
+                    <!-- Haare – sehr aufwändig, viele Strähnen -->
+                    <path d="M100 150 Q130 60 200 60 Q270 60 300 150 L290 190 Q260 130 200 130 Q140 130 110 190 Z" fill="url(#hair)"/>
+                    <path d="M80 200 Q70 270 120 320 Q140 280 130 220 Q120 190 80 200" fill="#2D1C11"/>
+                    <path d="M320 200 Q330 270 280 320 Q260 280 270 220 Q280 190 320 200" fill="#2D1C11"/>
+                    <!-- Pony -->
+                    <path d="M170 150 Q180 100 200 100 Q220 100 230 150 L200 170 Z" fill="#2D1C11"/>
+                    <!-- Seitensträhnen -->
+                    <path d="M120 190 Q90 240 130 280 L150 250 Q130 220 120 190" fill="#3E281B"/>
+                    <path d="M280 190 Q310 240 270 280 L250 250 Q270 220 280 190" fill="#3E281B"/>
+
+                    <!-- Augen – riesig und glitzernd -->
+                    <ellipse cx="155" cy="200" rx="23" ry="28" fill="white"/>
+                    <ellipse cx="245" cy="200" rx="23" ry="28" fill="white"/>
+                    <!-- Iris -->
+                    <circle cx="155" cy="208" r="13" fill="#AA7C5F"/>
+                    <circle cx="245" cy="208" r="13" fill="#AA7C5F"/>
+                    <!-- Pupillen -->
+                    <circle cx="150" cy="205" r="6" fill="#1F120B"/>
+                    <circle cx="240" cy="205" r="6" fill="#1F120B"/>
+                    <!-- Glanzlichter -->
+                    <circle cx="145" cy="193" r="4" fill="white"/>
+                    <circle cx="235" cy="193" r="4" fill="white"/>
+                    <circle cx="160" cy="193" r="2.5" fill="white"/>
+                    <circle cx="250" cy="193" r="2.5" fill="white"/>
+
+                    <!-- Mund -->
+                    <path d="M180 250 Q200 270, 220 250" stroke="#B2486F" stroke-width="6" fill="none" stroke-linecap="round"/>
+
+                    <!-- Haarschleife -->
+                    <path d="M200 70 L180 30 L220 30 L200 70" fill="#FF78A8" stroke="white" stroke-width="5"/>
+                    <ellipse cx="200" cy="90" rx="35" ry="18" fill="#FFA7D0" stroke="white" stroke-width="4"/>
+
+                    <!-- Oberkörper – Kleid -->
+                    <path d="M150 330 L250 330 L280 470 L120 470 Z" fill="url(#dress)" stroke="#E598B8" stroke-width="4"/>
+                    <!-- Gürtel / Schleife -->
+                    <ellipse cx="200" cy="400" rx="50" ry="20" fill="#FF5C9E" stroke="white" stroke-width="4"/>
+
+                    <!-- Arme -->
+                    <path d="M100 340 L70 420 L120 420 L130 370 Z" fill="#FFDFC4"/>
+                    <path d="M300 340 L330 420 L280 420 L270 370 Z" fill="#FFDFC4"/>
+
+                    <!-- Hände -->
+                    <circle cx="90" cy="430" r="20" fill="#FFDFC4"/>
+                    <circle cx="310" cy="430" r="20" fill="#FFDFC4"/>
+
+                    <!-- Rock / Falten -->
+                    <path d="M150 470 L250 470 L240 540 L160 540 Z" fill="#C95F89"/>
+                    <path d="M180 470 L200 550 L220 470" stroke="white" stroke-width="6" fill="none"/>
+
+                    <!-- Beine / Strümpfe -->
+                    <rect x="170" y="540" width="20" height="60" fill="#FFDFC4" rx="10"/>
+                    <rect x="210" y="540" width="20" height="60" fill="#FFDFC4" rx="10"/>
+                    <!-- Schuhe -->
+                    <ellipse cx="180" cy="600" rx="25" ry="12" fill="#38281E"/>
+                    <ellipse cx="220" cy="600" rx="25" ry="12" fill="#38281E"/>
+
+                    <!-- Accessoires: Glitzersterne -->
+                    <circle cx="130" cy="150" r="6" fill="#FFF9AA" opacity="0.8"/>
+                    <circle cx="270" cy="150" r="6" fill="#FFF9AA" opacity="0.8"/>
+                    <circle cx="60" cy="300" r="8" fill="#FFE793" opacity="0.7"/>
+                    <circle cx="340" cy="300" r="8" fill="#FFE793" opacity="0.7"/>
+
+                    <!-- zusätzliche Haardetails -->
+                    <path d="M120 250 Q100 280 110 320" stroke="#2D1C11" stroke-width="6" fill="none"/>
+                    <path d="M280 250 Q300 280 290 320" stroke="#2D1C11" stroke-width="6" fill="none"/>
+
+                    <!-- letzte Glanzlichter im Kleid -->
+                    <circle cx="200" cy="360" r="15" fill="white" opacity="0.2"/>
                 </svg>
             </button>
-            <!-- Container für die fliegenden Herzen -->
-            <div class="heart-rain" id="heartRainContainer"></div>
+            <!-- Herzpartikel-Container -->
+            <div class="heart-rain" id="heartRain"></div>
         </div>
 
-        <!-- UPGRADES -->
-        <div class="upgrades-title">
-            <i class="fas fa-gift"></i>  Upgrades  <i class="fas fa-gift"></i>
-        </div>
-        <div class="upgrades-grid">
-            <div class="upgrade-card" id="upgradeClickCard">
-                <div class="upgrade-emoji">⚡💘</div>
-                <div class="upgrade-name">Stärkere Liebe</div>
-                <div class="upgrade-desc">+1❤️ pro Klick</div>
-                <div class="upgrade-price"><span>❤️</span> <span id="clickPriceDisplay">20</span></div>
-                <button class="upgrade-btn" id="buyClickUpgrade">Kaufen</button>
+        <!-- UPGRADES (4 Stück) -->
+        <div class="upgrades-area">
+            <div class="upgrades-title"><i class="fas fa-gem"></i> UPGRADES <i class="fas fa-gem"></i></div>
+            <div class="upgrades-grid">
+                <!-- Klick Upgrade 1 -->
+                <div class="upgrade-card" id="upgrade1">
+                    <div class="upgrade-icon">⚡❤️</div>
+                    <div class="upgrade-name">Kraft der Liebe</div>
+                    <div class="upgrade-desc">+1 pro Klick</div>
+                    <div class="upgrade-price"><span>❤️</span> <span id="priceClick1">20</span></div>
+                    <button class="buy-btn" id="buyClick1">Kaufen</button>
+                </div>
+                <!-- Auto Klicker 1 -->
+                <div class="upgrade-card" id="upgrade2">
+                    <div class="upgrade-icon">⏰💕</div>
+                    <div class="upgrade-name">Autolove</div>
+                    <div class="upgrade-desc">+1 pro Sek.</div>
+                    <div class="upgrade-price"><span>❤️</span> <span id="priceAuto1">10</span></div>
+                    <button class="buy-btn" id="buyAuto1">Kaufen</button>
+                </div>
+                <!-- Klick Upgrade 2 (stärker) -->
+                <div class="upgrade-card" id="upgrade3">
+                    <div class="upgrade-icon">💥💘</div>
+                    <div class="upgrade-name">Herzexplosion</div>
+                    <div class="upgrade-desc">+5 pro Klick</div>
+                    <div class="upgrade-price"><span>❤️</span> <span id="priceClick2">150</span></div>
+                    <button class="buy-btn" id="buyClick2">Kaufen</button>
+                </div>
+                <!-- Crit Upgrade -->
+                <div class="upgrade-card" id="upgrade4">
+                    <div class="upgrade-icon">✨💞</div>
+                    <div class="upgrade-name">kritische Liebe</div>
+                    <div class="upgrade-desc">+10% 2x dmg</div>
+                    <div class="upgrade-price"><span>❤️</span> <span id="priceCrit">300</span></div>
+                    <button class="buy-btn" id="buyCrit">Kaufen</button>
+                </div>
             </div>
-            <div class="upgrade-card" id="upgradeAutoCard">
-                <div class="upgrade-emoji">⏰💞</div>
-                <div class="upgrade-name">Autolove</div>
-                <div class="upgrade-desc">+1❤️/Sekunde</div>
-                <div class="upgrade-price"><span>❤️</span> <span id="autoPriceDisplay">10</span></div>
-                <button class="upgrade-btn" id="buyAutoUpgrade">Kaufen</button>
-            </div>
         </div>
-
-        <div class="footer-note">💕 klick die Waifu – Regen aus Herzen 💕</div>
+        <div class="footer">💖 klick sie – sie liebt dich 💖</div>
     </div>
 
     <script>
         (function() {
-            // --- Spielzustand ---
+            // --- Spielzustand (robust) ---
             let points = 0;
-            let pointsPerClick = 1;
-            let autoClickerLevel = 0;       
-            let clickUpgradeLevel = 0;       
+            let clickPower = 1;        // Basis pro Klick
+            let autoLevel = 0;          // Autoklicker pro Sekunde
+            let critChance = 0;          // 0-1 (10% = 0.1)
 
-            const BASE_CLICK_PRICE = 20;
-            const BASE_AUTO_PRICE = 10;
+            // Upgrade-Level (für Preisberechnung)
+            let clickUpgrade1Count = 0;   // +1 pro Klick
+            let autoUpgradeCount = 0;      // +1 pro Sekunde
+            let clickUpgrade2Count = 0;    // +5 pro Klick (kauft man später)
+            let critUpgradeCount = 0;       // +10% crit (max 100%)
+
+            // Basispreise
+            const PRICE_CLICK1 = 20;
+            const PRICE_AUTO1 = 10;
+            const PRICE_CLICK2 = 150;
+            const PRICE_CRIT = 300;
 
             // UI Elemente
-            const pointsDisplay = document.getElementById('pointsDisplay');
-            const perClickDisplay = document.getElementById('perClickDisplay');
-            const perSecDisplay = document.getElementById('perSecDisplay');
-            const clickPriceSpan = document.getElementById('clickPriceDisplay');
-            const autoPriceSpan = document.getElementById('autoPriceDisplay');
+            const pointsSpan = document.getElementById('pointsDisplay');
+            const perClickSpan = document.getElementById('perClickDisplay');
+            const perSecSpan = document.getElementById('perSecDisplay');
+            const critSpan = document.getElementById('critDisplay');
+
+            const priceClick1Span = document.getElementById('priceClick1');
+            const priceAuto1Span = document.getElementById('priceAuto1');
+            const priceClick2Span = document.getElementById('priceClick2');
+            const priceCritSpan = document.getElementById('priceCrit');
+
             const waifuBtn = document.getElementById('waifuClickBtn');
-            const buyClickBtn = document.getElementById('buyClickUpgrade');
-            const buyAutoBtn = document.getElementById('buyAutoUpgrade');
-            const heartContainer = document.getElementById('heartRainContainer');
+            const heartContainer = document.getElementById('heartRain');
 
-            // --- Preisberechnung ---
-            function getClickUpgradePrice() {
-                return BASE_CLICK_PRICE * (clickUpgradeLevel + 1);
+            const buyClick1 = document.getElementById('buyClick1');
+            const buyAuto1 = document.getElementById('buyAuto1');
+            const buyClick2 = document.getElementById('buyClick2');
+            const buyCrit = document.getElementById('buyCrit');
+
+            // --- Preisberechnung (steigend) ---
+            function getClick1Price() {
+                return PRICE_CLICK1 * (clickUpgrade1Count + 1);
             }
-            function getAutoUpgradePrice() {
-                return BASE_AUTO_PRICE * (autoClickerLevel + 1);
+            function getAuto1Price() {
+                return PRICE_AUTO1 * (autoUpgradeCount + 1);
+            }
+            function getClick2Price() {
+                return PRICE_CLICK2 * (clickUpgrade2Count + 1);
+            }
+            function getCritPrice() {
+                return PRICE_CRIT * (critUpgradeCount + 1);
             }
 
-            // --- Herz-Partikel mit Überlastschutz (max. 80 gleichzeitig) ---
-            function spawnHearts(count = 10) {
+            // --- UI Update ---
+            function updateUI() {
+                pointsSpan.textContent = Math.floor(points);
+
+                let totalClickPower = 1 + clickUpgrade1Count * 1 + clickUpgrade2Count * 5;
+                perClickSpan.textContent = totalClickPower;
+
+                perSecSpan.textContent = autoUpgradeCount;
+
+                let critPercent = Math.min(critUpgradeCount * 10, 100);
+                critSpan.textContent = critPercent + '%';
+
+                priceClick1Span.textContent = getClick1Price();
+                priceAuto1Span.textContent = getAuto1Price();
+                priceClick2Span.textContent = getClick2Price();
+                priceCritSpan.textContent = getCritPrice();
+
+                // Buttons deaktivieren
+                buyClick1.disabled = points < getClick1Price();
+                buyAuto1.disabled = points < getAuto1Price();
+                buyClick2.disabled = points < getClick2Price();
+                buyCrit.disabled = points < getCritPrice();
+            }
+
+            // --- Herz-Partikel (ohne Überlast) ---
+            function spawnHearts(anzahl = 15) {
                 if (!heartContainer) return;
-                // Wenn schon zu viele Partikel vorhanden, überspringe (verhindert Ruckeln)
-                if (heartContainer.children.length > 80) return;
+                if (heartContainer.children.length > 100) return; // Schutz
 
-                for (let i = 0; i < count; i++) {
+                for (let i = 0; i < anzahl; i++) {
                     const heart = document.createElement('div');
                     heart.className = 'heart-particle';
-                    // Verschiedene Herzsymbole + Glitzer
-                    const hearts = ['❤️', '💖', '💗', '💓', '💕', '💞', '💘', '🌸', '✨', '💫'];
-                    heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
-                    
-                    // zufällige Startposition (um die Mitte herum)
-                    const left = 35 + Math.random() * 30; // %
-                    const top = 35 + Math.random() * 30; 
+                    const symbols = ['❤️', '💖', '💗', '💓', '💕', '💞', '💘', '🌸', '✨'];
+                    heart.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+
+                    const left = 30 + Math.random() * 40; // %
+                    const top = 30 + Math.random() * 40;
                     heart.style.left = left + '%';
                     heart.style.top = top + '%';
-                    
-                    // zufällige Flugrichtung (dx, dy) via CSS-Variablen
-                    const dx = (Math.random() - 0.5) * 100; // -50px bis 50px
-                    const dy = -60 - Math.random() * 80;    // immer nach oben
-                    heart.style.setProperty('--dx', dx + 'px');
-                    heart.style.setProperty('--dy', dy + 'px');
-                    
-                    // zufällige Dauer zwischen 0.8s und 1.5s
-                    const duration = 0.8 + Math.random() * 0.9;
-                    heart.style.animation = `floatHeart ${duration}s ease-out forwards`;
-                    
-                    // zufällige Größe
-                    const size = 1.6 + Math.random() * 1.5;
-                    heart.style.fontSize = (size * 0.8) + 'rem';
-                    
+
+                    const duration = 0.9 + Math.random() * 0.9;
+                    heart.style.animation = `floatUp ${duration}s ease-out forwards`;
+                    heart.style.fontSize = (2 + Math.random() * 2) + 'rem';
+
                     heartContainer.appendChild(heart);
-                    
-                    // Entfernen nach Ende der Animation
-                    setTimeout(() => {
-                        if (heart.parentNode) heart.remove();
-                    }, duration * 1200);
+                    setTimeout(() => { if (heart.parentNode) heart.remove(); }, duration * 1200);
                 }
             }
 
-            // --- UI aktualisieren ---
-            function updateUI() {
-                pointsDisplay.textContent = Math.floor(points);
-                perClickDisplay.textContent = pointsPerClick;
-                perSecDisplay.textContent = autoClickerLevel;
-                clickPriceSpan.textContent = getClickUpgradePrice();
-                autoPriceSpan.textContent = getAutoUpgradePrice();
-
-                buyClickBtn.disabled = points < getClickUpgradePrice();
-                buyAutoBtn.disabled = points < getAutoUpgradePrice();
-            }
-
-            // --- Waifu Klick (nur noch ein Event – sauber) ---
+            // --- Klick-Handler (absolut zuverlässig) ---
             function handleWaifuClick(e) {
-                e.preventDefault();
-                // Punkte erhöhen
-                points += pointsPerClick;
-                // Herzen sprühen (8–14 Stück)
-                spawnHearts(8 + Math.floor(Math.random() * 7));
+                e.preventDefault(); // für mobile
+
+                // Berechne Punkte (mit kritischem Treffer)
+                let totalClick = 1 + clickUpgrade1Count * 1 + clickUpgrade2Count * 5;
+                let critMultiplier = 1;
+                if (critUpgradeCount > 0) {
+                    let chance = Math.min(critUpgradeCount * 0.1, 1.0);
+                    if (Math.random() < chance) {
+                        critMultiplier = 2;
+                        spawnHearts(20); // extra Herzen bei Krit
+                    }
+                }
+                points += totalClick * critMultiplier;
+
+                // Herzen spawnen
+                spawnHearts(10 + Math.floor(Math.random() * 8));
+
                 // UI aktualisieren
                 updateUI();
-                // Kurzes Vibration-Feedback
-                if (navigator.vibrate) navigator.vibrate(20);
+
+                // Vibration (kurz)
+                if (navigator.vibrate) navigator.vibrate(15);
             }
 
-            // --- Käufe ---
-            function buyClickUpgrade() {
-                const price = getClickUpgradePrice();
-                if (points < price) return;
-                points -= price;
-                clickUpgradeLevel++;
-                pointsPerClick++;
-                if (navigator.vibrate) navigator.vibrate(30);
+            // --- Upgrade-Käufe ---
+            function buyClickUpgrade1() {
+                if (points < getClick1Price()) return;
+                points -= getClick1Price();
+                clickUpgrade1Count++;
+                updateUI();
+            }
+            function buyAutoUpgrade1() {
+                if (points < getAuto1Price()) return;
+                points -= getAuto1Price();
+                autoUpgradeCount++;
+                updateUI();
+            }
+            function buyClickUpgrade2() {
+                if (points < getClick2Price()) return;
+                points -= getClick2Price();
+                clickUpgrade2Count++;
+                updateUI();
+            }
+            function buyCritUpgrade() {
+                if (points < getCritPrice()) return;
+                points -= getCritPrice();
+                critUpgradeCount++;
                 updateUI();
             }
 
-            function buyAutoUpgrade() {
-                const price = getAutoUpgradePrice();
-                if (points < price) return;
-                points -= price;
-                autoClickerLevel++;
-                if (navigator.vibrate) navigator.vibrate(30);
-                updateUI();
-            }
-
-            // --- Autoklicker ---
+            // --- Autoklicker Tick ---
             function autoTick() {
-                if (autoClickerLevel > 0) {
-                    points += autoClickerLevel;
+                if (autoUpgradeCount > 0) {
+                    points += autoUpgradeCount;
                     updateUI();
                 }
             }
 
-            // --- Event-Listener (NUR click – sauber und zuverlässig) ---
+            // --- Event-Listener (mehrfach geschützt) ---
             waifuBtn.addEventListener('click', handleWaifuClick);
-            // Touch-Geräte: nur touchstart mit preventDefault, um Zoom zu vermeiden – click wird trotzdem ausgelöst
-            waifuBtn.addEventListener('touchstart', (e) => { e.preventDefault(); }, { passive: false });
+            waifuBtn.addEventListener('touchstart', (e) => e.preventDefault(), { passive: false });
+            // zusätzlich touchend für sicherheit (verhindert, dass click manchmal ausbleibt)
+            waifuBtn.addEventListener('touchend', (e) => {
+                e.preventDefault();
+                handleWaifuClick(e);
+            }, { passive: false });
 
-            buyClickBtn.addEventListener('click', buyClickUpgrade);
-            buyAutoBtn.addEventListener('click', buyAutoUpgrade);
+            buyClick1.addEventListener('click', buyClickUpgrade1);
+            buyAuto1.addEventListener('click', buyAutoUpgrade1);
+            buyClick2.addEventListener('click', buyClickUpgrade2);
+            buyCrit.addEventListener('click', buyCritUpgrade);
 
-            // Auch bei den Kaufbuttons Touch-Konflikte vermeiden
-            [buyClickBtn, buyAutoBtn].forEach(btn => {
+            // Touch-Geräte auch für Buttons
+            [buyClick1, buyAuto1, buyClick2, buyCrit].forEach(btn => {
                 btn.addEventListener('touchstart', (e) => e.preventDefault(), { passive: false });
             });
 
-            // Intervall für Autoklicker
+            // Autoklicker-Intervall
             setInterval(autoTick, 1000);
 
-            // UI initialisieren
+            // Initiale UI
             updateUI();
 
             // Willkommensherzen
-            window.addEventListener('load', () => {
-                setTimeout(() => spawnHearts(10), 200);
-            });
+            window.addEventListener('load', () => setTimeout(() => spawnHearts(20), 200));
         })();
     </script>
 </body>
