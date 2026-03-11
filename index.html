@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Waifu Clicker · Fullbody Anime</title>
+    <title>Waifu Clicker · Fullbody + fixer Shop</title>
     <style>
         /* ---------- RESET & BASE ---------- */
         * {
@@ -96,7 +96,7 @@
             color: #b23b5c;
         }
 
-        /* ---------- WAIFU FULLBODY (SEHR GROSS) ---------- */
+        /* ---------- WAIFU FULLBODY ---------- */
         .waifu-zone {
             position: relative;
             display: flex;
@@ -123,7 +123,6 @@
             transform: scale(0.96);
         }
 
-        /* Detailliertes Fullbody-Waifu-SVG (mehr als 1000 Zeilen Code durch komplexe Pfade) */
         .waifu-svg {
             width: 100%;
             height: 100%;
@@ -267,6 +266,17 @@
             text-shadow: 0 2px 0 #b23b5c;
         }
 
+        /* Kleine Feedback-Anzeige (optional) */
+        #debugConsole {
+            color: white;
+            background: rgba(0,0,0,0.5);
+            padding: 5px;
+            border-radius: 10px;
+            font-size: 1.2rem;
+            margin-top: 10px;
+            text-align: center;
+        }
+
         @media (max-width: 600px) {
             h1 { font-size: 3rem; }
             .heart-mega span { font-size: 2.8rem; }
@@ -292,7 +302,7 @@
             </div>
         </div>
 
-        <!-- WAIFU BUTTON mit extrem detailliertem Fullbody SVG (über 1000 Zeilen Äquivalent) -->
+        <!-- WAIFU BUTTON mit extrem detailliertem Fullbody SVG -->
         <div class="waifu-zone">
             <button class="waifu-button" id="waifuClickBtn">
                 <svg class="waifu-svg" viewBox="0 0 400 600" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -313,7 +323,7 @@
                     </defs>
 
                     <!-- Körper / Hals / Grundform -->
-                    <circle cx="200" cy="220" r="80" fill="url(#skin)"/> <!-- Kopfbereich etwas größer -->
+                    <circle cx="200" cy="220" r="80" fill="url(#skin)"/>
 
                     <!-- Ohren -->
                     <ellipse cx="140" cy="210" rx="18" ry="25" fill="#FFDFC4"/>
@@ -322,26 +332,21 @@
                     <!-- Gesicht und Hals -->
                     <path d="M160 270 L240 270 L230 330 L170 330 Z" fill="#FFDFC4"/>
 
-                    <!-- Haare – sehr aufwändig, viele Strähnen -->
+                    <!-- Haare – sehr aufwändig -->
                     <path d="M100 150 Q130 60 200 60 Q270 60 300 150 L290 190 Q260 130 200 130 Q140 130 110 190 Z" fill="url(#hair)"/>
                     <path d="M80 200 Q70 270 120 320 Q140 280 130 220 Q120 190 80 200" fill="#2D1C11"/>
                     <path d="M320 200 Q330 270 280 320 Q260 280 270 220 Q280 190 320 200" fill="#2D1C11"/>
-                    <!-- Pony -->
                     <path d="M170 150 Q180 100 200 100 Q220 100 230 150 L200 170 Z" fill="#2D1C11"/>
-                    <!-- Seitensträhnen -->
                     <path d="M120 190 Q90 240 130 280 L150 250 Q130 220 120 190" fill="#3E281B"/>
                     <path d="M280 190 Q310 240 270 280 L250 250 Q270 220 280 190" fill="#3E281B"/>
 
                     <!-- Augen – riesig und glitzernd -->
                     <ellipse cx="155" cy="200" rx="23" ry="28" fill="white"/>
                     <ellipse cx="245" cy="200" rx="23" ry="28" fill="white"/>
-                    <!-- Iris -->
                     <circle cx="155" cy="208" r="13" fill="#AA7C5F"/>
                     <circle cx="245" cy="208" r="13" fill="#AA7C5F"/>
-                    <!-- Pupillen -->
                     <circle cx="150" cy="205" r="6" fill="#1F120B"/>
                     <circle cx="240" cy="205" r="6" fill="#1F120B"/>
-                    <!-- Glanzlichter -->
                     <circle cx="145" cy="193" r="4" fill="white"/>
                     <circle cx="235" cy="193" r="4" fill="white"/>
                     <circle cx="160" cy="193" r="2.5" fill="white"/>
@@ -356,7 +361,6 @@
 
                     <!-- Oberkörper – Kleid -->
                     <path d="M150 330 L250 330 L280 470 L120 470 Z" fill="url(#dress)" stroke="#E598B8" stroke-width="4"/>
-                    <!-- Gürtel / Schleife -->
                     <ellipse cx="200" cy="400" rx="50" ry="20" fill="#FF5C9E" stroke="white" stroke-width="4"/>
 
                     <!-- Arme -->
@@ -388,20 +392,19 @@
                     <path d="M120 250 Q100 280 110 320" stroke="#2D1C11" stroke-width="6" fill="none"/>
                     <path d="M280 250 Q300 280 290 320" stroke="#2D1C11" stroke-width="6" fill="none"/>
 
-                    <!-- letzte Glanzlichter im Kleid -->
+                    <!-- Glanzlicht im Kleid -->
                     <circle cx="200" cy="360" r="15" fill="white" opacity="0.2"/>
                 </svg>
             </button>
-            <!-- Herzpartikel-Container -->
             <div class="heart-rain" id="heartRain"></div>
         </div>
 
-        <!-- UPGRADES (4 Stück) -->
+        <!-- UPGRADES -->
         <div class="upgrades-area">
             <div class="upgrades-title"><i class="fas fa-gem"></i> UPGRADES <i class="fas fa-gem"></i></div>
             <div class="upgrades-grid">
                 <!-- Klick Upgrade 1 -->
-                <div class="upgrade-card" id="upgrade1">
+                <div class="upgrade-card">
                     <div class="upgrade-icon">⚡❤️</div>
                     <div class="upgrade-name">Kraft der Liebe</div>
                     <div class="upgrade-desc">+1 pro Klick</div>
@@ -409,7 +412,7 @@
                     <button class="buy-btn" id="buyClick1">Kaufen</button>
                 </div>
                 <!-- Auto Klicker 1 -->
-                <div class="upgrade-card" id="upgrade2">
+                <div class="upgrade-card">
                     <div class="upgrade-icon">⏰💕</div>
                     <div class="upgrade-name">Autolove</div>
                     <div class="upgrade-desc">+1 pro Sek.</div>
@@ -417,7 +420,7 @@
                     <button class="buy-btn" id="buyAuto1">Kaufen</button>
                 </div>
                 <!-- Klick Upgrade 2 (stärker) -->
-                <div class="upgrade-card" id="upgrade3">
+                <div class="upgrade-card">
                     <div class="upgrade-icon">💥💘</div>
                     <div class="upgrade-name">Herzexplosion</div>
                     <div class="upgrade-desc">+5 pro Klick</div>
@@ -425,7 +428,7 @@
                     <button class="buy-btn" id="buyClick2">Kaufen</button>
                 </div>
                 <!-- Crit Upgrade -->
-                <div class="upgrade-card" id="upgrade4">
+                <div class="upgrade-card">
                     <div class="upgrade-icon">✨💞</div>
                     <div class="upgrade-name">kritische Liebe</div>
                     <div class="upgrade-desc">+10% 2x dmg</div>
@@ -435,6 +438,8 @@
             </div>
         </div>
         <div class="footer">💖 klick sie – sie liebt dich 💖</div>
+        <!-- kleines unsichtbares Debug-Element (für uns) -->
+        <div id="debugConsole" style="display: none;"></div>
     </div>
 
     <script>
@@ -448,8 +453,8 @@
             // Upgrade-Level (für Preisberechnung)
             let clickUpgrade1Count = 0;   // +1 pro Klick
             let autoUpgradeCount = 0;      // +1 pro Sekunde
-            let clickUpgrade2Count = 0;    // +5 pro Klick (kauft man später)
-            let critUpgradeCount = 0;       // +10% crit (max 100%)
+            let clickUpgrade2Count = 0;    // +5 pro Klick
+            let critUpgradeCount = 0;       // +10% crit
 
             // Basispreise
             const PRICE_CLICK1 = 20;
@@ -476,6 +481,12 @@
             const buyClick2 = document.getElementById('buyClick2');
             const buyCrit = document.getElementById('buyCrit');
 
+            // --- Hilfsfunktion für Debug (unsichtbar) ---
+            function debugLog(msg) {
+                const dbg = document.getElementById('debugConsole');
+                if (dbg) dbg.innerHTML = msg;
+            }
+
             // --- Preisberechnung (steigend) ---
             function getClick1Price() {
                 return PRICE_CLICK1 * (clickUpgrade1Count + 1);
@@ -490,12 +501,16 @@
                 return PRICE_CRIT * (critUpgradeCount + 1);
             }
 
-            // --- UI Update ---
+            // --- Gesamt-Klickkraft berechnen ---
+            function totalClickPower() {
+                return 1 + clickUpgrade1Count * 1 + clickUpgrade2Count * 5;
+            }
+
+            // --- UI Update (stellt Preise und Punkte dar, deaktiviert Buttons) ---
             function updateUI() {
                 pointsSpan.textContent = Math.floor(points);
 
-                let totalClickPower = 1 + clickUpgrade1Count * 1 + clickUpgrade2Count * 5;
-                perClickSpan.textContent = totalClickPower;
+                perClickSpan.textContent = totalClickPower();
 
                 perSecSpan.textContent = autoUpgradeCount;
 
@@ -507,17 +522,19 @@
                 priceClick2Span.textContent = getClick2Price();
                 priceCritSpan.textContent = getCritPrice();
 
-                // Buttons deaktivieren
+                // Buttons deaktivieren / aktivieren
                 buyClick1.disabled = points < getClick1Price();
                 buyAuto1.disabled = points < getAuto1Price();
                 buyClick2.disabled = points < getClick2Price();
                 buyCrit.disabled = points < getCritPrice();
+
+                debugLog(`Punkte: ${points} | Click: ${totalClickPower()}`);
             }
 
-            // --- Herz-Partikel (ohne Überlast) ---
+            // --- Herz-Partikel (mit Schutz vor Überlast) ---
             function spawnHearts(anzahl = 15) {
                 if (!heartContainer) return;
-                if (heartContainer.children.length > 100) return; // Schutz
+                if (heartContainer.children.length > 100) return;
 
                 for (let i = 0; i < anzahl; i++) {
                     const heart = document.createElement('div');
@@ -539,59 +556,78 @@
                 }
             }
 
-            // --- Klick-Handler (absolut zuverlässig) ---
+            // --- Klick-Handler für Waifu ---
             function handleWaifuClick(e) {
-                e.preventDefault(); // für mobile
+                e.preventDefault(); // Für mobile
 
-                // Berechne Punkte (mit kritischem Treffer)
-                let totalClick = 1 + clickUpgrade1Count * 1 + clickUpgrade2Count * 5;
-                let critMultiplier = 1;
+                let power = totalClickPower();
+                let multiplier = 1;
                 if (critUpgradeCount > 0) {
                     let chance = Math.min(critUpgradeCount * 0.1, 1.0);
                     if (Math.random() < chance) {
-                        critMultiplier = 2;
-                        spawnHearts(20); // extra Herzen bei Krit
+                        multiplier = 2;
+                        spawnHearts(20); // Extraherzen bei Krit
                     }
                 }
-                points += totalClick * critMultiplier;
+                points += power * multiplier;
 
-                // Herzen spawnen
                 spawnHearts(10 + Math.floor(Math.random() * 8));
 
-                // UI aktualisieren
                 updateUI();
 
-                // Vibration (kurz)
                 if (navigator.vibrate) navigator.vibrate(15);
             }
 
-            // --- Upgrade-Käufe ---
+            // --- Kauf-Funktionen (mit sofortiger Prüfung) ---
             function buyClickUpgrade1() {
-                if (points < getClick1Price()) return;
-                points -= getClick1Price();
-                clickUpgrade1Count++;
-                updateUI();
-            }
-            function buyAutoUpgrade1() {
-                if (points < getAuto1Price()) return;
-                points -= getAuto1Price();
-                autoUpgradeCount++;
-                updateUI();
-            }
-            function buyClickUpgrade2() {
-                if (points < getClick2Price()) return;
-                points -= getClick2Price();
-                clickUpgrade2Count++;
-                updateUI();
-            }
-            function buyCritUpgrade() {
-                if (points < getCritPrice()) return;
-                points -= getCritPrice();
-                critUpgradeCount++;
-                updateUI();
+                let price = getClick1Price();
+                if (points >= price) {
+                    points -= price;
+                    clickUpgrade1Count++;
+                    updateUI();
+                    if (navigator.vibrate) navigator.vibrate(30);
+                } else {
+                    debugLog('Nicht genug Punkte für Kraft der Liebe');
+                }
             }
 
-            // --- Autoklicker Tick ---
+            function buyAutoUpgrade1() {
+                let price = getAuto1Price();
+                if (points >= price) {
+                    points -= price;
+                    autoUpgradeCount++;
+                    updateUI();
+                    if (navigator.vibrate) navigator.vibrate(30);
+                } else {
+                    debugLog('Nicht genug Punkte für Autolove');
+                }
+            }
+
+            function buyClickUpgrade2() {
+                let price = getClick2Price();
+                if (points >= price) {
+                    points -= price;
+                    clickUpgrade2Count++;
+                    updateUI();
+                    if (navigator.vibrate) navigator.vibrate(30);
+                } else {
+                    debugLog('Nicht genug Punkte für Herzexplosion');
+                }
+            }
+
+            function buyCritUpgrade() {
+                let price = getCritPrice();
+                if (points >= price) {
+                    points -= price;
+                    critUpgradeCount++;
+                    updateUI();
+                    if (navigator.vibrate) navigator.vibrate(30);
+                } else {
+                    debugLog('Nicht genug Punkte für kritische Liebe');
+                }
+            }
+
+            // --- Autoklicker ---
             function autoTick() {
                 if (autoUpgradeCount > 0) {
                     points += autoUpgradeCount;
@@ -599,24 +635,38 @@
                 }
             }
 
-            // --- Event-Listener (mehrfach geschützt) ---
+            // --- Event-Listener (robust) ---
             waifuBtn.addEventListener('click', handleWaifuClick);
             waifuBtn.addEventListener('touchstart', (e) => e.preventDefault(), { passive: false });
-            // zusätzlich touchend für sicherheit (verhindert, dass click manchmal ausbleibt)
             waifuBtn.addEventListener('touchend', (e) => {
                 e.preventDefault();
                 handleWaifuClick(e);
             }, { passive: false });
 
+            // Shop-Buttons: Click-Listener
             buyClick1.addEventListener('click', buyClickUpgrade1);
             buyAuto1.addEventListener('click', buyAutoUpgrade1);
             buyClick2.addEventListener('click', buyClickUpgrade2);
             buyCrit.addEventListener('click', buyCritUpgrade);
 
-            // Touch-Geräte auch für Buttons
+            // Touch-Geräte: Nur preventDefault auf touchstart, um Zoom zu vermeiden, click bleibt erhalten
             [buyClick1, buyAuto1, buyClick2, buyCrit].forEach(btn => {
                 btn.addEventListener('touchstart', (e) => e.preventDefault(), { passive: false });
             });
+
+            // Zusätzlich: Falls die Buttons auf mobilen Geräten manchmal den Click nicht auslösen,
+            // können wir auch touchend nutzen (optional)
+            // Aber wir setzen der Sicherheit halber auch touchend, das den click模仿t
+            function makeTouchendHandler(fn) {
+                return (e) => {
+                    e.preventDefault();
+                    fn(e);
+                };
+            }
+            buyClick1.addEventListener('touchend', makeTouchendHandler(buyClickUpgrade1), { passive: false });
+            buyAuto1.addEventListener('touchend', makeTouchendHandler(buyAutoUpgrade1), { passive: false });
+            buyClick2.addEventListener('touchend', makeTouchendHandler(buyClickUpgrade2), { passive: false });
+            buyCrit.addEventListener('touchend', makeTouchendHandler(buyCritUpgrade), { passive: false });
 
             // Autoklicker-Intervall
             setInterval(autoTick, 1000);
