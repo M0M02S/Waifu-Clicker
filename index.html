@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Waifu Clicker · ultra detailliert + Herzexplosion</title>
+    <title>Waifu Clicker · zucker süß & flüssig</title>
     <style>
         * {
             box-sizing: border-box;
@@ -15,22 +15,22 @@
 
         body {
             font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
-            background: linear-gradient(145deg, #ffe0ed 0%, #f5b0c5 100%);
+            background: linear-gradient(145deg, #ffe4ef 0%, #f5b8d0 100%);
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 8px;
             margin: 0;
-            touch-action: manipulation;
+            touch-action: manipulation; /* verhindert Doppeltipp-Zoom */
         }
 
         .game-container {
-            max-width: 640px;
+            max-width: 660px;
             width: 100%;
-            background: rgba(255, 235, 245, 0.4);
+            background: rgba(255, 240, 250, 0.45);
             backdrop-filter: blur(12px);
-            border-radius: 64px;
+            border-radius: 70px;
             padding: 24px 18px 30px;
             box-shadow: 0 25px 40px rgba(170, 60, 100, 0.4), 0 4px 20px #ffb0c5;
             border: 3px solid rgba(255, 255, 255, 0.7);
@@ -38,13 +38,12 @@
 
         h1 {
             text-align: center;
-            font-size: 2.9rem;
+            font-size: 3rem;
             font-weight: 700;
             letter-spacing: 2px;
             color: #3e1423;
             text-shadow: 4px 4px 0 #ffb7cc, 7px 7px 0 rgba(255, 255, 255, 0.7);
             margin-bottom: 8px;
-            word-break: break-word;
         }
 
         .points-panel {
@@ -104,7 +103,7 @@
             font-size: 2rem;
         }
 
-        /* WAIFU-BEREICH MIT VIELEN HERZEN */
+        /* WAIFU-BEREICH – MIT HERZEN */
         .waifu-wrapper {
             position: relative;
             display: flex;
@@ -134,7 +133,7 @@
             transform: scale(0.92);
         }
 
-        /* SUPER DETAILLIERTES WAIFU-SVG (niedlich, nicht gruselig) */
+        /* ULTRA DETAILLIERTES, SUPER SÜSSES WAIFU-SVG */
         .waifu-svg {
             width: 100%;
             height: 100%;
@@ -144,7 +143,7 @@
             box-shadow: 0 18px 0 #a13e5e, 0 0 0 7px white, 0 0 0 14px #ffb6d9;
         }
 
-        /* Herzen-regen container */
+        /* Herz-Container */
         .heart-rain {
             position: absolute;
             top: 0;
@@ -329,81 +328,85 @@
             </div>
         </div>
 
-        <!-- WAIFU MIT HERZ-REGEN (VIELE PARTIKEL) -->
+        <!-- WAIFU (Jetzt noch hübscher + Herz-Explosion) -->
         <div class="waifu-wrapper">
             <button class="waifu-button" id="waifuClickBtn">
-                <!-- Ultra detailliertes, süßes Waifu-SVG (kein Grusel) -->
+                <!-- Extreme niedliche Waifu mit vielen Details -->
                 <svg class="waifu-svg" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <!-- weicher Hintergrund mit Glow -->
-                    <circle cx="100" cy="100" r="98" fill="url(#gradSkin)" stroke="#FFB6C1" stroke-width="4"/>
                     <defs>
-                        <radialGradient id="gradSkin" cx="70%" cy="30%" r="90%">
-                            <stop offset="0%" stop-color="#FFE9D0"/>
+                        <radialGradient id="skinGrad" cx="70%" cy="30%" r="90%">
+                            <stop offset="0%" stop-color="#FFEEDD"/>
                             <stop offset="80%" stop-color="#FCC6D3"/>
                         </radialGradient>
+                        <linearGradient id="hairGrad" x1="30" y1="20" x2="170" y2="100">
+                            <stop offset="0%" stop-color="#5C3A2A"/>
+                            <stop offset="100%" stop-color="#3F2419"/>
+                        </linearGradient>
                     </defs>
-
-                    <!-- üppiges, glänzendes Haar mit Strähnen und Zopf -->
-                    <path d="M55 45 Q70 15 100 15 Q130 15 145 45 L140 70 Q110 30 60 70 Z" fill="#4D2E1B"/>
+                    <!-- Hintergrund mit Glow -->
+                    <circle cx="100" cy="100" r="98" fill="url(#skinGrad)" stroke="#FFB6C1" stroke-width="4"/>
+                    
+                    <!-- Haare – üppig, mit Strähnen und Seitenteil -->
+                    <path d="M55 45 Q70 15 100 15 Q130 15 145 45 L140 70 Q110 30 60 70 Z" fill="url(#hairGrad)"/>
                     <path d="M48 70 Q35 110 60 155 Q80 140 70 100 Q65 80 48 70" fill="#4D2E1B" opacity="0.9"/>
                     <path d="M152 70 Q165 110 140 155 Q120 140 130 100 Q135 80 152 70" fill="#4D2E1B" opacity="0.9"/>
-                    <!-- Haarspange / Blume -->
-                    <circle cx="100" cy="35" r="14" fill="#FFB3D9" stroke="white" stroke-width="3"/>
-                    <circle cx="100" cy="35" r="7" fill="#FF5F9E"/>
-                    <circle cx="106" cy="31" r="2" fill="white" opacity="0.9"/>
-
-                    <!-- Ohren mit Ohrringen -->
+                    
+                    <!-- Haarband mit Stern -->
+                    <rect x="75" y="28" width="50" height="18" rx="9" fill="#FF9FCF" stroke="white" stroke-width="3"/>
+                    <circle cx="100" cy="37" r="8" fill="#FFD700" stroke="white" stroke-width="2"/>
+                    <text x="100" y="42" font-size="12" text-anchor="middle" fill="white" stroke="white" stroke-width="0.5">★</text>
+                    
+                    <!-- Ohren mit niedlichen Ohrringen -->
                     <circle cx="58" cy="85" r="12" fill="#FFDFC4"/>
                     <circle cx="142" cy="85" r="12" fill="#FFDFC4"/>
                     <circle cx="58" cy="90" r="4" fill="#FCC0D0" stroke="white" stroke-width="2"/>
                     <circle cx="142" cy="90" r="4" fill="#FCC0D0" stroke="white" stroke-width="2"/>
-
-                    <!-- Gesichtsform sanft modelliert -->
+                    
+                    <!-- Gesicht – weich und rund -->
                     <circle cx="100" cy="105" r="68" fill="#FFDFC4" stroke="#F6B0C0" stroke-width="2"/>
-
-                    <!-- große, runde Augen mit Sternenglanz (sehr niedlich) -->
-                    <ellipse cx="68" cy="90" rx="19" ry="24" fill="white" stroke="#4A2E22" stroke-width="2.5"/>
-                    <ellipse cx="132" cy="90" rx="19" ry="24" fill="white" stroke="#4A2E22" stroke-width="2.5"/>
-                    <!-- Iris (hellbraun mit Herzspitze) -->
-                    <circle cx="68" cy="93" r="11" fill="#B8865B"/>
-                    <circle cx="132" cy="93" r="11" fill="#B8865B"/>
-                    <!-- Pupillen groß und glänzend -->
-                    <circle cx="65" cy="91" r="5" fill="#22100A"/>
-                    <circle cx="129" cy="91" r="5" fill="#22100A"/>
-                    <!-- Glanzlichter (mehrere) -->
-                    <circle cx="61" cy="85" r="2.5" fill="white"/>
-                    <circle cx="125" cy="85" r="2.5" fill="white"/>
-                    <circle cx="72" cy="84" r="1.8" fill="white" opacity="0.9"/>
-                    <circle cx="136" cy="84" r="1.8" fill="white" opacity="0.9"/>
-                    <!-- Wimpern oben (lang) -->
-                    <path d="M54 72 L42 58 L58 68" stroke="#3F2A1E" stroke-width="2.8" fill="none"/>
-                    <path d="M146 72 L158 58 L142 68" stroke="#3F2A1E" stroke-width="2.8" fill="none"/>
-
-                    <!-- Mund – süßes lächeln mit Zähnchen? nein, eher schüchtern -->
-                    <path d="M80 130 Q100 148, 120 130" stroke="#C44A6F" stroke-width="5" fill="none" stroke-linecap="round"/>
-                    <!-- kleine Zunge? optional -->
-                    <circle cx="100" cy="140" r="5" fill="#FF8598" opacity="0.6"/>
-
-                    <!-- Rouge (Wangen) -->
-                    <circle cx="50" cy="115" r="16" fill="#FEA8B8" opacity="0.5"/>
-                    <circle cx="150" cy="115" r="16" fill="#FEA8B8" opacity="0.5"/>
-
-                    <!-- Haarschleife riesig und pink -->
-                    <path d="M100 5 L80 -10 L120 -10 L100 5" fill="#FF80C0" stroke="white" stroke-width="4"/>
-                    <ellipse cx="100" cy="18" rx="28" ry="14" fill="#FFA7D0" stroke="white" stroke-width="3"/>
-                    <circle cx="100" cy="18" r="9" fill="#FF5FA0" stroke="white" stroke-width="2"/>
-
-                    <!-- Hals und Kleid mit Herzausschnitt -->
+                    
+                    <!-- AUGEN – riesig, glitzernd, mit Sternchen -->
+                    <ellipse cx="68" cy="90" rx="20" ry="25" fill="white" stroke="#3F281C" stroke-width="3"/>
+                    <ellipse cx="132" cy="90" rx="20" ry="25" fill="white" stroke="#3F281C" stroke-width="3"/>
+                    <!-- Iris – hellbraun mit Herzform -->
+                    <circle cx="68" cy="94" r="12" fill="#C79A6E"/>
+                    <circle cx="132" cy="94" r="12" fill="#C79A6E"/>
+                    <!-- Pupillen – groß -->
+                    <circle cx="65" cy="92" r="6" fill="#1F120B"/>
+                    <circle cx="129" cy="92" r="6" fill="#1F120B"/>
+                    <!-- Glanzlichter – mehrere für Tiefe -->
+                    <circle cx="61" cy="84" r="3" fill="white"/>
+                    <circle cx="125" cy="84" r="3" fill="white"/>
+                    <circle cx="72" cy="83" r="2" fill="white" opacity="0.9"/>
+                    <circle cx="136" cy="83" r="2" fill="white" opacity="0.9"/>
+                    <circle cx="68" cy="79" r="1.5" fill="white" opacity="0.8"/>
+                    <circle cx="132" cy="79" r="1.5" fill="white" opacity="0.8"/>
+                    <!-- Wimpern – lang und gebogen -->
+                    <path d="M54 72 L40 56 L58 68" stroke="#3F2A1E" stroke-width="3" fill="none"/>
+                    <path d="M146 72 L160 56 L142 68" stroke="#3F2A1E" stroke-width="3" fill="none"/>
+                    
+                    <!-- Mund – süßes, schüchternes Lächeln -->
+                    <path d="M80 130 Q100 148, 120 130" stroke="#C44A6F" stroke-width="6" fill="none" stroke-linecap="round"/>
+                    <!-- kleines Highlight auf der Lippe -->
+                    <circle cx="98" cy="137" r="3" fill="#FFA5B4" opacity="0.7"/>
+                    
+                    <!-- Rouge – dezent, aber vorhanden -->
+                    <circle cx="50" cy="115" r="18" fill="#FEA8B8" opacity="0.5"/>
+                    <circle cx="150" cy="115" r="18" fill="#FEA8B8" opacity="0.5"/>
+                    
+                    <!-- Hals und Kleid mit Herzchen -->
                     <rect x="90" y="156" width="20" height="16" fill="#FFDFC4" rx="8"/>
-                    <path d="M70 172 L130 172 L115 195 L85 195 Z" fill="#F697B9" stroke="white" stroke-width="3"/>
-                    <text x="100" y="186" font-size="22" text-anchor="middle" fill="white" font-weight="bold" stroke="white" stroke-width="0.5">❤️</text>
-
-                    <!-- zarte Glitzer um die Augen -->
-                    <circle cx="88" cy="75" r="3" fill="#FFF2F5" opacity="0.9"/>
-                    <circle cx="112" cy="75" r="3" fill="#FFF2F5" opacity="0.9"/>
+                    <path d="M70 172 L130 172 L115 195 L85 195 Z" fill="#F697B9" stroke="white" stroke-width="4"/>
+                    <text x="100" y="186" font-size="22" text-anchor="middle" fill="white" stroke="white" stroke-width="0.8">❤️</text>
+                    
+                    <!-- Zusätzliche Glitzersterne -->
+                    <circle cx="85" cy="68" r="3" fill="#FFF9E6" opacity="0.9"/>
+                    <circle cx="115" cy="68" r="3" fill="#FFF9E6" opacity="0.9"/>
+                    <circle cx="40" cy="130" r="4" fill="#FFEEAA" opacity="0.7"/>
+                    <circle cx="160" cy="130" r="4" fill="#FFEEAA" opacity="0.7"/>
                 </svg>
             </button>
-            <!-- Container für fliegende Herzen -->
+            <!-- Container für die fliegenden Herzen -->
             <div class="heart-rain" id="heartRainContainer"></div>
         </div>
 
@@ -461,17 +464,20 @@
                 return BASE_AUTO_PRICE * (autoClickerLevel + 1);
             }
 
-            // --- Herz-Partikel mit zufälliger Richtung (explodieren schön) ---
-            function spawnHearts(count = 16) {
+            // --- Herz-Partikel mit Überlastschutz (max. 80 gleichzeitig) ---
+            function spawnHearts(count = 10) {
                 if (!heartContainer) return;
+                // Wenn schon zu viele Partikel vorhanden, überspringe (verhindert Ruckeln)
+                if (heartContainer.children.length > 80) return;
+
                 for (let i = 0; i < count; i++) {
                     const heart = document.createElement('div');
                     heart.className = 'heart-particle';
-                    // verschiedene Herzsymbole
+                    // Verschiedene Herzsymbole + Glitzer
                     const hearts = ['❤️', '💖', '💗', '💓', '💕', '💞', '💘', '🌸', '✨', '💫'];
                     heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
                     
-                    // zufällige Startposition (um die Mitte herum, Bereich 30% - 70%)
+                    // zufällige Startposition (um die Mitte herum)
                     const left = 35 + Math.random() * 30; // %
                     const top = 35 + Math.random() * 30; 
                     heart.style.left = left + '%';
@@ -479,16 +485,16 @@
                     
                     // zufällige Flugrichtung (dx, dy) via CSS-Variablen
                     const dx = (Math.random() - 0.5) * 100; // -50px bis 50px
-                    const dy = -60 - Math.random() * 80;    // immer nach oben (-60 bis -140)
+                    const dy = -60 - Math.random() * 80;    // immer nach oben
                     heart.style.setProperty('--dx', dx + 'px');
                     heart.style.setProperty('--dy', dy + 'px');
                     
-                    // zufällige Dauer zwischen 0.9s und 1.6s
-                    const duration = 0.9 + Math.random() * 0.9;
+                    // zufällige Dauer zwischen 0.8s und 1.5s
+                    const duration = 0.8 + Math.random() * 0.9;
                     heart.style.animation = `floatHeart ${duration}s ease-out forwards`;
                     
                     // zufällige Größe
-                    const size = 1.8 + Math.random() * 1.7;
+                    const size = 1.6 + Math.random() * 1.5;
                     heart.style.fontSize = (size * 0.8) + 'rem';
                     
                     heartContainer.appendChild(heart);
@@ -500,7 +506,7 @@
                 }
             }
 
-            // --- UI aktualisieren (Punkte, Preise, disabled) ---
+            // --- UI aktualisieren ---
             function updateUI() {
                 pointsDisplay.textContent = Math.floor(points);
                 perClickDisplay.textContent = pointsPerClick;
@@ -512,17 +518,17 @@
                 buyAutoBtn.disabled = points < getAutoUpgradePrice();
             }
 
-            // --- Waifu Klick (Herzen + Punkte) ---
+            // --- Waifu Klick (nur noch ein Event – sauber) ---
             function handleWaifuClick(e) {
                 e.preventDefault();
                 // Punkte erhöhen
                 points += pointsPerClick;
-                // Herzen sprühen lassen (zwischen 12 und 22)
-                spawnHearts(14 + Math.floor(Math.random() * 12));
+                // Herzen sprühen (8–14 Stück)
+                spawnHearts(8 + Math.floor(Math.random() * 7));
                 // UI aktualisieren
                 updateUI();
                 // Kurzes Vibration-Feedback
-                if (navigator.vibrate) navigator.vibrate(25);
+                if (navigator.vibrate) navigator.vibrate(20);
             }
 
             // --- Käufe ---
@@ -545,7 +551,7 @@
                 updateUI();
             }
 
-            // --- Autoklicker-Tick (pro Sekunde) ---
+            // --- Autoklicker ---
             function autoTick() {
                 if (autoClickerLevel > 0) {
                     points += autoClickerLevel;
@@ -553,35 +559,29 @@
                 }
             }
 
-            // --- Event-Listener (Touch & Maus) ---
+            // --- Event-Listener (NUR click – sauber und zuverlässig) ---
             waifuBtn.addEventListener('click', handleWaifuClick);
-            // Für Touch-Geräte: zusätzlich touchend, um sicherzugehen (und doppelten Zoom unterbinden)
+            // Touch-Geräte: nur touchstart mit preventDefault, um Zoom zu vermeiden – click wird trotzdem ausgelöst
             waifuBtn.addEventListener('touchstart', (e) => { e.preventDefault(); }, { passive: false });
-            waifuBtn.addEventListener('touchend', (e) => {
-                e.preventDefault();
-                handleWaifuClick(e);
-            }, { passive: false });
 
             buyClickBtn.addEventListener('click', buyClickUpgrade);
             buyAutoBtn.addEventListener('click', buyAutoUpgrade);
 
-            // Touch-Geräte: keine unerwünschten Aktionen
+            // Auch bei den Kaufbuttons Touch-Konflikte vermeiden
             [buyClickBtn, buyAutoBtn].forEach(btn => {
                 btn.addEventListener('touchstart', (e) => e.preventDefault(), { passive: false });
             });
 
-            // Autoklicker starten
+            // Intervall für Autoklicker
             setInterval(autoTick, 1000);
 
             // UI initialisieren
             updateUI();
 
-            // Willkommensherzen nach Seitenaufbau
+            // Willkommensherzen
             window.addEventListener('load', () => {
-                setTimeout(() => spawnHearts(12), 200);
+                setTimeout(() => spawnHearts(10), 200);
             });
-
-            // zusätzliche Sicherheit: Punkte immer als Zahl
         })();
     </script>
 </body>
