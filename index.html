@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ege's Panda Spiel 🐼</title>
+    <title>ege's Panda – 100 Bambus</title>
     <style>
         * {
             box-sizing: border-box;
@@ -19,7 +19,6 @@
             align-items: center;
             font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
             padding: 16px;
-            margin: 0;
         }
 
         .game-card {
@@ -28,31 +27,26 @@
             background: #fef9e8;
             border-radius: 60px 60px 40px 40px;
             box-shadow: 0 20px 30px rgba(0, 40, 0, 0.4), inset 0 2px 4px rgba(255, 255, 200, 0.6);
-            padding: 30px 20px 30px 20px;
+            padding: 30px 20px;
             border: 4px solid #6b4f3c;
-            transition: 0.3s;
         }
 
         h1 {
             text-align: center;
             font-size: 2.8rem;
-            letter-spacing: 2px;
             color: #2d4b2d;
             text-shadow: 3px 3px 0 #c0d080;
-            margin-top: -10px;
-            margin-bottom: 10px;
+            margin: -10px 0 10px;
             font-weight: 800;
-            word-break: break-word;
         }
 
         .panda-zone {
             background: #dcd0b0;
             border-radius: 100px 100px 60px 60px;
             border: 5px solid #8b6b4d;
-            padding: 25px 15px 15px 15px;
-            margin: 15px 0 30px 0;
+            padding: 25px 15px 15px;
+            margin: 15px 0 30px;
             display: flex;
-            flex-direction: row;
             align-items: center;
             justify-content: center;
             gap: 20px;
@@ -65,7 +59,7 @@
             line-height: 1;
             filter: drop-shadow(4px 8px 0 #3a2a1e);
             transform: scaleX(-1);
-            transition: transform 0.2s, filter 0.2s;
+            transition: 0.2s;
         }
 
         .speech-bubble {
@@ -77,14 +71,9 @@
             color: #2d4b2d;
             border: 4px solid #6b4f3c;
             box-shadow: 6px 6px 0 #3a5e3a;
-            max-width: 350px;
-            min-width: 250px;
+            max-width: 380px;
+            min-width: 260px;
             text-align: center;
-            word-break: break-word;
-        }
-
-        .speech-bubble span {
-            display: inline-block;
         }
 
         .bamboo-forest {
@@ -108,10 +97,10 @@
             font-size: 6rem;
             line-height: 1;
             cursor: pointer;
-            transition: transform 0.1s ease, opacity 0.2s ease, filter 0.2s;
-            user-select: none;
+            transition: transform 0.1s ease, opacity 0.2s ease;
             filter: drop-shadow(2px 8px 0 #3a5e3a);
             transform: rotate(2deg);
+            user-select: none;
         }
 
         .bamboo:hover {
@@ -121,14 +110,12 @@
 
         .bamboo:active {
             transform: scale(0.95) rotate(-2deg);
-            filter: drop-shadow(0 4px 0 #1e3a1e);
         }
 
         .bamboo.hidden {
             opacity: 0;
             pointer-events: none;
             transform: scale(0.8);
-            filter: none;
             transition: opacity 0.3s, transform 0.3s;
         }
 
@@ -141,8 +128,8 @@
             padding: 15px 25px;
             border: 4px solid #6b4f3c;
             margin: 20px 0 15px;
-            font-weight: bold;
             font-size: 1.8rem;
+            font-weight: bold;
             color: #1e3a1e;
             box-shadow: 0 6px 0 #4d3a2b;
             flex-wrap: wrap;
@@ -157,7 +144,6 @@
             font-size: 2rem;
             border: 3px solid #fedb7a;
             text-shadow: 2px 2px 0 #1e3a1e;
-            box-shadow: inset 0 -2px 0 #0f1e0f;
         }
 
         .reset-btn {
@@ -169,7 +155,7 @@
             font-weight: bold;
             color: #3a2a1e;
             border: 4px solid #b37b48;
-            box-shadow: 0 7px 0 #8b5a2e, 0 8px 8px rgba(0,0,0,0.2);
+            box-shadow: 0 7px 0 #8b5a2e;
             cursor: pointer;
             transition: 0.07s linear;
             display: inline-flex;
@@ -179,7 +165,7 @@
 
         .reset-btn:active {
             transform: translateY(7px);
-            box-shadow: 0 0px 0 #8b5a2e, 0 5px 10px rgba(0,0,0,0.2);
+            box-shadow: none;
         }
 
         .win-message {
@@ -196,193 +182,195 @@
             text-align: center;
             color: #3d5e3d;
             font-size: 1.4rem;
-            margin-top: 10px;
             font-style: italic;
             font-weight: 600;
-            text-shadow: 1px 1px 0 #b0b07a;
         }
     </style>
 </head>
 <body>
     <div class="game-card">
-        <h1>🐼 ege's Panda Spiel</h1>
+        <h1>🐼 ege's Panda</h1>
 
-        <!-- Panda ege mit Sprechblase -->
+        <!-- Panda ege -->
         <div class="panda-zone">
-            <div class="panda-emoji" id="pandaEmoji" aria-label="Panda ege">🐼</div>
+            <div class="panda-emoji" id="pandaEmoji">🐼</div>
             <div class="speech-bubble" id="pandaMessage">
-                <span id="messageText">ege: 😋 Ich habe Hunger!</span>
+                <span id="messageText">ege: 😃 Hey, ich bin ege! Fütter mich!</span>
             </div>
         </div>
 
-        <!-- Bambuswald – drei Halme -->
+        <!-- Drei Bambus-Stücke -->
         <div class="bamboo-forest">
             <div class="bamboo-row" id="bambooContainer">
-                <div class="bamboo" data-index="0" aria-label="Bambus" role="button" tabindex="0">🎋</div>
-                <div class="bamboo" data-index="1" aria-label="Bambus" role="button" tabindex="0">🎋</div>
-                <div class="bamboo" data-index="2" aria-label="Bambus" role="button" tabindex="0">🎋</div>
+                <div class="bamboo" data-index="0" tabindex="0" role="button">🎋</div>
+                <div class="bamboo" data-index="1" tabindex="0" role="button">🎋</div>
+                <div class="bamboo" data-index="2" tabindex="0" role="button">🎋</div>
             </div>
         </div>
 
-        <!-- Punktestand + Reset -->
+        <!-- Punktestand und Reset -->
         <div class="score-panel">
             <div class="score-text" id="scoreDisplay">0 / 100</div>
-            <button class="reset-btn" id="resetGameBtn" aria-label="Neustart">🔄 Neustart</button>
+            <button class="reset-btn" id="resetGameBtn">🔄 Neustart</button>
         </div>
 
-        <!-- Kleine Statuszeile (wird bei Explosion sichtbar) -->
+        <!-- Platz für Explosionsmeldung -->
         <div id="winMessageContainer" style="min-height: 50px; text-align: center;"></div>
 
-        <footer>🥬 Klick auf Bambus – fütter ege, aber Vorsicht, er platzt bei 100!</footer>
+        <footer>🥬 Klick auf Bambus – ege spricht nur alle 10 Stück</footer>
     </div>
 
     <script>
         (function() {
-            // ---------- Spieleinstellungen ----------
-            const MAX_SCORE = 100;          // Bei 100 platzt ege
-            const SATT_SCORE = 50;           // Ab 50 ist ege satt (andere Sprüche)
+            // ---------- Konstanten ----------
+            const MAX_SCORE = 100;
+            const SATT_SCORE = 50;   // ab hier ist er satt (andere Sprüche)
             let currentScore = 0;
-            let gameActive = true;           
+            let gameActive = true;
+            let lastMilestone = -1;   // letzter Zehner-Meilenstein, bei dem wir eine Nachricht gezeigt haben
 
-            // DOM elemente
+            // DOM-Elemente
             const bambooElements = Array.from(document.querySelectorAll('.bamboo'));
-            const scoreDisplay = document.getElementById('scoreDisplay');
-            const messageSpan = document.getElementById('messageText');
             const pandaEmoji = document.getElementById('pandaEmoji');
+            const messageSpan = document.getElementById('messageText');
+            const scoreDisplay = document.getElementById('scoreDisplay');
             const winContainer = document.getElementById('winMessageContainer');
 
-            // Timeout-Verwaltung für jeden Bambus (3 Stück)
+            // Timeouts für Bambus-Wiedererscheinen
             let bambooTimeouts = [null, null, null];
 
-            // ---------- lustige Panda-Sprüche (getrennt nach Zustand) ----------
-            const hungryPhrases = [
-                "😋 Ich habe Hunger!",
-                "🎋 Bambus, bitte!",
-                "🙏 Fütter mich!",
-                "😩 Mampf, mampf!",
-                "🍽️ Ich will Bambus!"
-            ];
-
-            const fullPhrases = [
-                "😤 Es reicht!",
-                "🤰 Ich bin satt!",
-                "🛑 Hör auf!",
-                "🙅 Kein Bambus mehr!",
-                "💥 Ich platze gleich!"
-            ];
-
-            const explodedPhrase = "💥 BUMM! ege ist geplatzt!";
-
-            // Hilfsfunktion: zufälligen Index aus Array
-            function randomPhrase(arr) {
-                return arr[Math.floor(Math.random() * arr.length)];
+            // ---------- Nachricht je nach Meilenstein ----------
+            function getMessageForMilestone(score) {
+                if (score >= 100) {
+                    return "ege: 💥 BUMM! ege ist geplatzt!";
+                }
+                if (score >= 90) {
+                    return "ege: 😤 Nur noch 10 bis ich platze! Hör endlich auf!";
+                }
+                if (score >= 80) {
+                    return "ege: 💢 Noch 20, dann passiert was Schlimmes! Du nervst!";
+                }
+                if (score >= 70) {
+                    return "ege: 😠 Noch 30 … Ich hab doch schon ‚Stopp‘ gesagt!";
+                }
+                if (score >= 60) {
+                    return "ege: 😒 Langsam wird’s unangenehm. Noch 40 bis zum Platzen.";
+                }
+                if (score >= 50) {
+                    return "ege: 😑 So, ich bin satt. Du kannst jetzt aufhören. Wirklich.";
+                }
+                if (score >= 40) {
+                    return "ege: 🙂 Noch 10 bis ich satt bin! Weiter so!";
+                }
+                if (score >= 30) {
+                    return "ege: 😋 Schon 30! Noch 20 bis satt.";
+                }
+                if (score >= 20) {
+                    return "ege: 👍 20 geschafft! Noch 30 bis zur Sättigung.";
+                }
+                if (score >= 10) {
+                    return "ege: 😊 Schon 10! Fütter weiter!";
+                }
+                // 0 – 9
+                return "ege: 😃 Hey, ich bin ege! Fütter mich!";
             }
 
-            // Aktualisiert Sprechblase, Emoji und ggf. Explosion
-            function updatePandaMessage() {
-                // Platzen?
+            // Setzt die Sprechblase und das Emoji entsprechend dem aktuellen Score
+            function updateMessageAndEmoji() {
                 if (currentScore >= MAX_SCORE) {
-                    // Explosion
                     pandaEmoji.textContent = "💥";
-                    messageSpan.textContent = "ege: " + explodedPhrase;
+                    messageSpan.textContent = getMessageForMilestone(currentScore);
                     winContainer.innerHTML = '<div class="win-message">😵 ege ist geplatzt! Neustart?</div>';
                 } else {
-                    // Normales Panda-Emoji
                     pandaEmoji.textContent = "🐼";
-                    winContainer.innerHTML = ''; // leeren
-
-                    let phrase = "";
-                    if (currentScore >= SATT_SCORE) {
-                        // satt-phase (50-99)
-                        phrase = randomPhrase(fullPhrases);
-                    } else {
-                        // hungrig-phase (0-49)
-                        phrase = randomPhrase(hungryPhrases);
-                    }
-                    messageSpan.textContent = "ege: " + phrase;
+                    winContainer.innerHTML = '';
+                    messageSpan.textContent = getMessageForMilestone(currentScore);
                 }
             }
 
-            // Anzeige von Punktestand
+            // UI: Punktestand aktualisieren
             function updateScoreUI() {
                 scoreDisplay.textContent = `${currentScore} / ${MAX_SCORE}`;
+            }
+
+            // Prüft, ob ein neuer Meilenstein (10er-Schritt) erreicht wurde, und aktualisiert ggf. die Nachricht
+            function checkMilestoneAndUpdate() {
+                let milestone = Math.floor(currentScore / 10) * 10; // 0, 10, 20, ..., 100
+                // Bei 100 soll die Explosion auch als neuer Meilenstein gelten
+                if (milestone > lastMilestone || (currentScore >= MAX_SCORE && lastMilestone < MAX_SCORE)) {
+                    lastMilestone = milestone;
+                    updateMessageAndEmoji();
+                }
+                // Spezialfall: Bei 100 wird lastMilestone = 100, danach keine weiteren Updates.
             }
 
             // ---------- Explosion / Game Over ----------
             function explodePanda() {
                 gameActive = false;
-
-                // Alle laufenden Timeouts abbrechen (damit kein Bambus mehr auftaucht)
+                // Alle Bambus-Timeouts löschen
                 for (let i = 0; i < bambooTimeouts.length; i++) {
                     if (bambooTimeouts[i]) {
                         clearTimeout(bambooTimeouts[i]);
                         bambooTimeouts[i] = null;
                     }
                 }
-
-                // Alle Bambusse sichtbar machen (für den finalen Anblick)
+                // Alle Bambusse sichtbar machen (für den letzten Look)
                 bambooElements.forEach(b => b.classList.remove('hidden'));
-
-                // Panda-Nachricht und Emoji updaten
-                updatePandaMessage();  // setzt Emoji auf 💥 und Text
+                // Nachricht und Emoji final setzen (wird auch durch checkMilestone... gemacht)
+                checkMilestoneAndUpdate();
                 updateScoreUI();
             }
 
-            // Punktestand erhöhen (durch Bambusklick)
+            // Punktestand erhöhen (bei Klick)
             function increaseScore() {
-                if (!gameActive) return;           // Explosion – keine Erhöhung mehr
+                if (!gameActive) return;
                 if (currentScore >= MAX_SCORE) return;
 
                 currentScore++;
-                
-                // Prüfen ob maximale Punktzahl erreicht (Platzen)
+
+                // Prüfen, ob ein neuer Meilenstein erreicht wurde (10er-Schritte)
+                checkMilestoneAndUpdate();
+
+                // Bei Erreichen von 100: Explosion auslösen
                 if (currentScore >= MAX_SCORE) {
-                    explodePanda();
-                } else {
-                    // Normales Update
-                    updatePandaMessage();
-                    updateScoreUI();
+                    explodePanda();  // setzt gameActive false und aktualisiert UI
                 }
+
+                updateScoreUI();  // Punktestand immer aktualisieren
             }
 
-            // Handler für Bambus-Klick
+            // ---------- Bambus-Klick ----------
             function onBambooClick(event) {
                 const bamboo = event.currentTarget;
-
                 if (!gameActive) return;
                 if (currentScore >= MAX_SCORE) return;
                 if (bamboo.classList.contains('hidden')) return;
 
                 const index = parseInt(bamboo.dataset.index, 10);
 
-                // Punktestand erhöhen (kann explode auslösen)
-                increaseScore();  
+                // Score erhöhen (löst ggf. Meilenstein-Update aus)
+                increaseScore();
 
-                // Bambus verschwinden lassen (sofort)
+                // Bambus verschwinden lassen
                 bamboo.classList.add('hidden');
 
-                // Vorherigen Timeout für diesen Bambus löschen
+                // Vorherigen Timeout löschen
                 if (bambooTimeouts[index]) {
                     clearTimeout(bambooTimeouts[index]);
-                    bambooTimeouts[index] = null;
                 }
 
-                // Neuen Timeout starten: nach 1 Sekunde wieder sichtbar (nur wenn Spiel aktiv und nicht explodiert)
+                // Neuen Timeout zum Wiedereinblenden (1 Sekunde)
                 bambooTimeouts[index] = setTimeout(() => {
                     if (gameActive && currentScore < MAX_SCORE) {
                         bamboo.classList.remove('hidden');
-                    } else {
-                        // Wenn explodiert, bleibt er versteckt? Wir machen alle sichtbar in explode, also hier nichts.
-                        // Aber falls ein Timeout nach dem Platzen noch ausgelöst wird (durch Race-Condition), 
-                        // dann nicht einblenden, weil gameActive false ist.
                     }
                     bambooTimeouts[index] = null;
                 }, 1000);
             }
 
-            // ---------- Reset-Funktion ----------
+            // ---------- Reset ----------
             function resetGame() {
-                // Alle laufenden Timeouts vernichten
+                // Alle Timeouts abbrechen
                 for (let i = 0; i < bambooTimeouts.length; i++) {
                     if (bambooTimeouts[i]) {
                         clearTimeout(bambooTimeouts[i]);
@@ -390,29 +378,27 @@
                     }
                 }
 
-                // Alle Bambusse wieder sichtbar machen
+                // Bambusse wieder sichtbar
                 bambooElements.forEach(b => b.classList.remove('hidden'));
 
-                // Punktestand zurücksetzen
+                // Zustand zurücksetzen
                 currentScore = 0;
                 gameActive = true;
+                lastMilestone = -1;   // damit die Startnachricht beim nächsten check erscheint
 
-                // Panda-Emoji wieder normal
+                // UI aktualisieren (setzt auch die Startnachricht)
                 pandaEmoji.textContent = "🐼";
-
-                // Panda-Sprüche & UI updaten
-                updatePandaMessage();
-                updateScoreUI();
-
-                // Eventuelle Explosionsmeldung entfernen
                 winContainer.innerHTML = '';
+                updateScoreUI();
+                // Erzwinge die Anfangsnachricht (Meilenstein 0)
+                lastMilestone = -1; // sicherstellen
+                checkMilestoneAndUpdate(); // setzt Nachricht auf "Hey, ich bin ege..."
             }
 
-            // ---------- Event-Listener für Bambus ----------
+            // ---------- Event-Listener ----------
             bambooElements.forEach((bamboo, idx) => {
                 bamboo.dataset.index = idx;
                 bamboo.addEventListener('click', onBambooClick);
-                // kleine Tastaturbedienung
                 bamboo.addEventListener('keypress', (e) => {
                     if (e.key === 'Enter' || e.key === ' ') {
                         e.preventDefault();
@@ -421,13 +407,10 @@
                 });
             });
 
-            // Reset-Knopf
-            const resetBtn = document.getElementById('resetGameBtn');
-            resetBtn.addEventListener('click', resetGame);
+            document.getElementById('resetGameBtn').addEventListener('click', resetGame);
 
-            // Initiale UI
-            updatePandaMessage();
-            updateScoreUI();
+            // Initialisierung: Startnachricht anzeigen
+            resetGame(); // setzt alles auf Anfang
         })();
     </script>
 </body>
