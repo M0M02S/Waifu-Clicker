@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ege's Panda – 100 Bambus</title>
+    <title>ege's Panda – 1000 Bambus + Shop</title>
     <style>
         * {
             box-sizing: border-box;
@@ -13,22 +13,30 @@
 
         body {
             background: linear-gradient(145deg, #c0e0c0 0%, #a0c0a0 100%);
+            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
             padding: 16px;
         }
 
-        .game-card {
-            max-width: 750px;
+        .game-container {
+            max-width: 1200px;
             width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 320px;
+            gap: 20px;
+            align-items: start;
+        }
+
+        /* Hauptbereich */
+        .main-area {
             background: #fef9e8;
             border-radius: 60px 60px 40px 40px;
-            box-shadow: 0 20px 30px rgba(0, 40, 0, 0.4), inset 0 2px 4px rgba(255, 255, 200, 0.6);
-            padding: 30px 20px;
             border: 4px solid #6b4f3c;
+            box-shadow: 0 20px 30px rgba(0, 40, 0, 0.4);
+            padding: 30px 20px;
         }
 
         h1 {
@@ -37,7 +45,6 @@
             color: #2d4b2d;
             text-shadow: 3px 3px 0 #c0d080;
             margin: -10px 0 10px;
-            font-weight: 800;
         }
 
         .panda-zone {
@@ -59,20 +66,19 @@
             line-height: 1;
             filter: drop-shadow(4px 8px 0 #3a2a1e);
             transform: scaleX(-1);
-            transition: 0.2s;
         }
 
         .speech-bubble {
             background: white;
             border-radius: 40px 40px 40px 10px;
             padding: 18px 25px;
-            font-size: 1.8rem;
+            font-size: 1.6rem;
             font-weight: bold;
             color: #2d4b2d;
             border: 4px solid #6b4f3c;
             box-shadow: 6px 6px 0 #3a5e3a;
-            max-width: 380px;
-            min-width: 260px;
+            max-width: 450px;
+            min-width: 280px;
             text-align: center;
         }
 
@@ -88,7 +94,6 @@
         .bamboo-row {
             display: flex;
             justify-content: center;
-            align-items: flex-end;
             gap: 20px;
             flex-wrap: wrap;
         }
@@ -97,7 +102,7 @@
             font-size: 6rem;
             line-height: 1;
             cursor: pointer;
-            transition: transform 0.1s ease, opacity 0.2s ease;
+            transition: 0.1s ease;
             filter: drop-shadow(2px 8px 0 #3a5e3a);
             transform: rotate(2deg);
             user-select: none;
@@ -116,10 +121,10 @@
             opacity: 0;
             pointer-events: none;
             transform: scale(0.8);
-            transition: opacity 0.3s, transform 0.3s;
+            transition: 0.3s;
         }
 
-        .score-panel {
+        .stats-panel {
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -146,6 +151,84 @@
             text-shadow: 2px 2px 0 #1e3a1e;
         }
 
+        .currency {
+            background: #b38b60;
+            color: #ffecb3;
+            padding: 12px 28px;
+            border-radius: 40px;
+            font-size: 2rem;
+            border: 3px solid #fedb7a;
+            text-shadow: 2px 2px 0 #5e3e2b;
+        }
+
+        /* Shopbereich */
+        .shop-area {
+            background: #fef9e8;
+            border-radius: 40px;
+            border: 4px solid #6b4f3c;
+            padding: 25px 15px;
+            box-shadow: 0 20px 30px rgba(0, 40, 0, 0.4);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .shop-title {
+            font-size: 2.2rem;
+            color: #2d4b2d;
+            text-align: center;
+            border-bottom: 4px solid #8b6b4d;
+            padding-bottom: 10px;
+        }
+
+        .shop-item {
+            background: #dcd0b0;
+            border: 3px solid #8b6b4d;
+            border-radius: 30px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            box-shadow: 0 5px 0 #6b4f3c;
+        }
+
+        .shop-item button {
+            background: #ffcf8a;
+            border: none;
+            font-size: 1.5rem;
+            padding: 10px;
+            border-radius: 30px;
+            font-weight: bold;
+            color: #3a2a1e;
+            border: 3px solid #b37b48;
+            box-shadow: 0 5px 0 #8b5a2e;
+            cursor: pointer;
+            transition: 0.05s linear;
+        }
+
+        .shop-item button:active {
+            transform: translateY(5px);
+            box-shadow: none;
+        }
+
+        .shop-item button:disabled {
+            opacity: 0.5;
+            transform: none;
+            box-shadow: 0 5px 0 #8b5a2e;
+            pointer-events: none;
+        }
+
+        .item-desc {
+            font-size: 1.3rem;
+            color: #1e3a1e;
+        }
+
+        .item-price {
+            font-size: 1.6rem;
+            font-weight: bold;
+            color: #a52a2a;
+        }
+
         .reset-btn {
             background: #ffcf8a;
             border: none;
@@ -157,10 +240,8 @@
             border: 4px solid #b37b48;
             box-shadow: 0 7px 0 #8b5a2e;
             cursor: pointer;
-            transition: 0.07s linear;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
+            width: 100%;
+            margin-top: 15px;
         }
 
         .reset-btn:active {
@@ -168,175 +249,375 @@
             box-shadow: none;
         }
 
-        .win-message {
-            color: #c44b1e;
-            font-size: 1.8rem;
+        .boost-info {
+            background: #ead5b5;
+            border-radius: 30px;
+            padding: 10px 15px;
+            font-size: 1.3rem;
             text-align: center;
-            background: #ffecb3;
-            border-radius: 40px;
-            padding: 8px 20px;
-            border: 3px dashed #c44b1e;
+            border: 2px solid #6b4f3c;
         }
 
         footer {
             text-align: center;
             color: #3d5e3d;
             font-size: 1.4rem;
-            font-style: italic;
-            font-weight: 600;
+            margin-top: 15px;
         }
     </style>
 </head>
 <body>
-    <div class="game-card">
-        <h1>🐼 ege's Panda</h1>
+    <div class="game-container">
+        <!-- Hauptspiel -->
+        <div class="main-area">
+            <h1>🐼 ege's Panda</h1>
 
-        <!-- Panda ege -->
-        <div class="panda-zone">
-            <div class="panda-emoji" id="pandaEmoji">🐼</div>
-            <div class="speech-bubble" id="pandaMessage">
-                <span id="messageText">ege: 😃 Hey, ich bin ege! Fütter mich!</span>
+            <div class="panda-zone">
+                <div class="panda-emoji" id="pandaEmoji">🐼</div>
+                <div class="speech-bubble" id="pandaMessage">
+                    <span id="messageText">ege: 😃 Hey, ich bin ege! Fütter mich!</span>
+                </div>
             </div>
-        </div>
 
-        <!-- Drei Bambus-Stücke -->
-        <div class="bamboo-forest">
-            <div class="bamboo-row" id="bambooContainer">
-                <div class="bamboo" data-index="0" tabindex="0" role="button">🎋</div>
-                <div class="bamboo" data-index="1" tabindex="0" role="button">🎋</div>
-                <div class="bamboo" data-index="2" tabindex="0" role="button">🎋</div>
+            <div class="bamboo-forest">
+                <div class="bamboo-row" id="bambooContainer">
+                    <div class="bamboo" data-index="0" tabindex="0" role="button">🎋</div>
+                    <div class="bamboo" data-index="1" tabindex="0" role="button">🎋</div>
+                    <div class="bamboo" data-index="2" tabindex="0" role="button">🎋</div>
+                </div>
             </div>
-        </div>
 
-        <!-- Punktestand und Reset -->
-        <div class="score-panel">
-            <div class="score-text" id="scoreDisplay">0 / 100</div>
+            <div class="stats-panel">
+                <div class="score-text" id="scoreDisplay">0 / 1000</div>
+                <div class="currency" id="currencyDisplay">💰 0</div>
+            </div>
+
+            <div id="boostInfo" class="boost-info">Keine aktiven Boosts</div>
+
             <button class="reset-btn" id="resetGameBtn">🔄 Neustart</button>
+            <footer>🥬 Klick auf Bambus – ege freut sich (manchmal)</footer>
         </div>
 
-        <!-- Platz für Explosionsmeldung -->
-        <div id="winMessageContainer" style="min-height: 50px; text-align: center;"></div>
+        <!-- Shop -->
+        <div class="shop-area">
+            <div class="shop-title">🛒 Bambus-Shop</div>
 
-        <footer>🥬 Klick auf Bambus – ege spricht nur alle 10 Stück</footer>
+            <div class="shop-item">
+                <span class="item-desc">🤖 Autoclicker (permanent)</span>
+                <span class="item-price">Preis: 50 💰</span>
+                <button id="buyAutoclicker">Kaufen (1 Klick/Sek)</button>
+            </div>
+
+            <div class="shop-item">
+                <span class="item-desc">⚡ Doppelklick (30 Sek.)</span>
+                <span class="item-price">Preis: 100 💰</span>
+                <button id="buyDouble">Kaufen (2x pro Klick)</button>
+            </div>
+
+            <div class="shop-item">
+                <span class="item-desc">🌧️ Bambus-Regen (10 Sek., 5x)</span>
+                <span class="item-price">Preis: 200 💰</span>
+                <button id="buyRain">Kaufen (5x Multiplier)</button>
+            </div>
+
+            <div class="shop-item">
+                <span class="item-desc">🍀 Glücksbambus (sofort)</span>
+                <span class="item-price">Preis: 150 💰</span>
+                <button id="buyLucky">Kaufen (+50 Futter)</button>
+            </div>
+
+            <div class="shop-item">
+                <span class="item-desc">📈 Autoclicker +1 (Upgrade)</span>
+                <span class="item-price">Preis: 100 💰</span>
+                <button id="buyMoreAutoclicker">Mehr Autoclicker</button>
+            </div>
+        </div>
     </div>
 
     <script>
         (function() {
             // ---------- Konstanten ----------
-            const MAX_SCORE = 100;
-            const SATT_SCORE = 50;   // ab hier ist er satt (andere Sprüche)
+            const MAX_SCORE = 1000;
+            const SATIATED = 500;   // ab 500 ist ege satt
             let currentScore = 0;
+            let bambooPoints = 0;       // Währung
             let gameActive = true;
-            let lastMilestone = -1;   // letzter Zehner-Meilenstein, bei dem wir eine Nachricht gezeigt haben
+
+            // Shop-Items Zustand
+            let autoclickerCount = 0;           // jeder gibt +1 Klick pro Sekunde
+            let doubleBoostActive = false;       // 2x Multiplier für 30s
+            let rainBoostActive = false;         // 5x Multiplier für 10s
+            let doubleBoostTimeout = null;
+            let rainBoostTimeout = null;
+
+            // Multiplier berechnen
+            function getCurrentMultiplier() {
+                let mult = 1;
+                if (doubleBoostActive) mult *= 2;
+                if (rainBoostActive) mult *= 5;
+                return mult;
+            }
+
+            // Autoclicker-Intervall
+            let autoclickerInterval = null;
+
+            // Meilensteinverfolgung (für 100er Schritte)
+            let lastMilestone = 0;   // letzter ausgelöster Hunderter
 
             // DOM-Elemente
-            const bambooElements = Array.from(document.querySelectorAll('.bamboo'));
             const pandaEmoji = document.getElementById('pandaEmoji');
             const messageSpan = document.getElementById('messageText');
             const scoreDisplay = document.getElementById('scoreDisplay');
-            const winContainer = document.getElementById('winMessageContainer');
+            const currencyDisplay = document.getElementById('currencyDisplay');
+            const boostInfo = document.getElementById('boostInfo');
+            const bambooElements = Array.from(document.querySelectorAll('.bamboo'));
+            const resetBtn = document.getElementById('resetGameBtn');
 
-            // Timeouts für Bambus-Wiedererscheinen
-            let bambooTimeouts = [null, null, null];
+            // Shop-Buttons
+            const btnAutoclicker = document.getElementById('buyAutoclicker');
+            const btnDouble = document.getElementById('buyDouble');
+            const btnRain = document.getElementById('buyRain');
+            const btnLucky = document.getElementById('buyLucky');
+            const btnMoreAutoclicker = document.getElementById('buyMoreAutoclicker');
 
-            // ---------- Nachricht je nach Meilenstein ----------
-            function getMessageForMilestone(score) {
-                if (score >= 100) {
-                    return "ege: 💥 BUMM! ege ist geplatzt!";
-                }
-                if (score >= 90) {
-                    return "ege: 😤 Nur noch 10 bis ich platze! Hör endlich auf!";
-                }
-                if (score >= 80) {
-                    return "ege: 💢 Noch 20, dann passiert was Schlimmes! Du nervst!";
-                }
-                if (score >= 70) {
-                    return "ege: 😠 Noch 30 … Ich hab doch schon ‚Stopp‘ gesagt!";
-                }
-                if (score >= 60) {
-                    return "ege: 😒 Langsam wird’s unangenehm. Noch 40 bis zum Platzen.";
-                }
-                if (score >= 50) {
-                    return "ege: 😑 So, ich bin satt. Du kannst jetzt aufhören. Wirklich.";
-                }
-                if (score >= 40) {
-                    return "ege: 🙂 Noch 10 bis ich satt bin! Weiter so!";
-                }
-                if (score >= 30) {
-                    return "ege: 😋 Schon 30! Noch 20 bis satt.";
-                }
-                if (score >= 20) {
-                    return "ege: 👍 20 geschafft! Noch 30 bis zur Sättigung.";
-                }
-                if (score >= 10) {
-                    return "ege: 😊 Schon 10! Fütter weiter!";
-                }
-                // 0 – 9
-                return "ege: 😃 Hey, ich bin ege! Fütter mich!";
+            // ---------- Sprüche-Sammlungen ----------
+            const hungryPhrases = [
+                "😋 Bambus ist mein Leben!",
+                "🙏 Fütter mich, ich hab Hunger!",
+                "🎋 Noch mehr Bambus!",
+                "😃 Lecker, lecker!",
+                "🍽️ Ich könnte ewig fressen.",
+                "😊 Mmmh, das ist gut!",
+                "🌟 Weiter so!",
+                "😄 Immer her mit dem Bambus!",
+                "💚 Ich liebe Bambus!",
+                "😌 So sättigend …",
+                "🤤 Noch einen, bitte!",
+                "😁 Ich werde langsam satt …",
+                "🙂 Noch ein bisschen …"
+            ];
+
+            const satedPhrases = [
+                "😑 Ich bin satt. Hör auf!",
+                "😒 Im Ernst, es reicht.",
+                "😤 Du ignorierst mich!",
+                "😠 Ich platze gleich!",
+                "💢 Kein Bambus mehr!",
+                "😣 Bitte hör auf zu füttern!",
+                "😫 Ich kann nicht mehr!",
+                "😩 Warum tust du mir das an?",
+                "😡 Letzte Warnung!",
+                "🤬 Gleich explodiere ich!",
+                "😭 Du bist gemein!",
+                "😨  noch  … (Angst)",
+                "😱  … bitte stopp!"
+            ];
+
+            const explosionPhrase = "💥 BUMM! ege ist geplatzt!";
+
+            // Spezielle Sprüche für Meilensteine (Hunderter)
+            const milestonePhrases = {
+                100: "ege: 😮 Schon 100! Aber ich hab noch Platz.",
+                200: "ege: 😌 200 Bambus – lecker!",
+                300: "ege: 😋 300! Noch 200 bis satt.",
+                400: "ege: 😐 Gleich 400… bald bin ich satt.",
+                500: "ege: 😑 So, jetzt bin ich satt. Aber du machst wohl weiter?",
+                600: "ege: 😒 600? Ich sagte doch, ich bin satt!",
+                700: "ege: 😠 700! Du hörst wohl nicht zu?",
+                800: "ege: 😤 800! Gleich platze ich!",
+                900: "ege: 😨 900 … Hilfe!",
+                1000: "ege: 💥 1000 – tschüss!"
+            };
+
+            // Shop-Reaktionen
+            const shopPhrases = {
+                autoclicker: "ege: 🤖 Ein Autoclicker? Praktisch!",
+                double: "ege: ⚡ Doppelklick! Jetzt geht's schnell!",
+                rain: "ege: 🌧️ Bambus-Regen! So viel auf einmal!",
+                lucky: "ege: 🍀 Glücksbambus! Lecker!",
+                moreAutoclicker: "ege: 🤖 Noch ein Helfer! Jetzt geht's richtig ab!"
+            };
+
+            // ---------- Hilfsfunktionen ----------
+            function updateUI() {
+                scoreDisplay.textContent = `${currentScore} / ${MAX_SCORE}`;
+                currencyDisplay.textContent = `💰 ${bambooPoints}`;
+
+                // Boost-Info
+                let boosts = [];
+                if (doubleBoostActive) boosts.push("⚡ Doppelklick");
+                if (rainBoostActive) boosts.push("🌧️ 5x Bambus");
+                if (autoclickerCount > 0) boosts.push(`🤖 ${autoclickerCount} Autoclicker`);
+                boostInfo.textContent = boosts.length ? "Aktiv: " + boosts.join(" · ") : "Keine aktiven Boosts";
+
+                // Shop-Buttons deaktivieren bei Spielende oder zu wenig Punkten
+                const buttons = [btnAutoclicker, btnDouble, btnRain, btnLucky, btnMoreAutoclicker];
+                buttons.forEach(btn => btn.disabled = !gameActive || bambooPoints < getPrice(btn.id));
             }
 
-            // Setzt die Sprechblase und das Emoji entsprechend dem aktuellen Score
-            function updateMessageAndEmoji() {
-                if (currentScore >= MAX_SCORE) {
+            function getPrice(buttonId) {
+                switch(buttonId) {
+                    case 'buyAutoclicker': return 50;
+                    case 'buyDouble': return 100;
+                    case 'buyRain': return 200;
+                    case 'buyLucky': return 150;
+                    case 'buyMoreAutoclicker': return 100;
+                    default: return 0;
+                }
+            }
+
+            // Panda-Nachricht setzen (optional erzwungener Text)
+            function setPandaMessage(text, isSpecial = true) {
+                if (!gameActive && currentScore >= MAX_SCORE) {
                     pandaEmoji.textContent = "💥";
-                    messageSpan.textContent = getMessageForMilestone(currentScore);
-                    winContainer.innerHTML = '<div class="win-message">😵 ege ist geplatzt! Neustart?</div>';
+                    messageSpan.textContent = "ege: " + explosionPhrase;
                 } else {
                     pandaEmoji.textContent = "🐼";
-                    winContainer.innerHTML = '';
-                    messageSpan.textContent = getMessageForMilestone(currentScore);
+                    messageSpan.textContent = text.startsWith('ege:') ? text : 'ege: ' + text;
                 }
             }
 
-            // UI: Punktestand aktualisieren
-            function updateScoreUI() {
-                scoreDisplay.textContent = `${currentScore} / ${MAX_SCORE}`;
-            }
-
-            // Prüft, ob ein neuer Meilenstein (10er-Schritt) erreicht wurde, und aktualisiert ggf. die Nachricht
-            function checkMilestoneAndUpdate() {
-                let milestone = Math.floor(currentScore / 10) * 10; // 0, 10, 20, ..., 100
-                // Bei 100 soll die Explosion auch als neuer Meilenstein gelten
-                if (milestone > lastMilestone || (currentScore >= MAX_SCORE && lastMilestone < MAX_SCORE)) {
-                    lastMilestone = milestone;
-                    updateMessageAndEmoji();
+            // Zufälligen Spruch aus aktueller Phase holen
+            function getRandomPhasePhrase() {
+                if (currentScore >= MAX_SCORE) return explosionPhrase;
+                if (currentScore >= SATIATED) {
+                    return satedPhrases[Math.floor(Math.random() * satedPhrases.length)];
+                } else {
+                    return hungryPhrases[Math.floor(Math.random() * hungryPhrases.length)];
                 }
-                // Spezialfall: Bei 100 wird lastMilestone = 100, danach keine weiteren Updates.
             }
 
-            // ---------- Explosion / Game Over ----------
-            function explodePanda() {
-                gameActive = false;
-                // Alle Bambus-Timeouts löschen
-                for (let i = 0; i < bambooTimeouts.length; i++) {
-                    if (bambooTimeouts[i]) {
-                        clearTimeout(bambooTimeouts[i]);
-                        bambooTimeouts[i] = null;
+            // Meilenstein prüfen (bei Erhöhung)
+            function checkMilestone(oldScore, newScore) {
+                for (let m = 100; m <= 1000; m += 100) {
+                    if (oldScore < m && newScore >= m) {
+                        // Meilenstein erreicht
+                        setPandaMessage(milestonePhrases[m] || getRandomPhasePhrase());
+                        return true;
                     }
                 }
-                // Alle Bambusse sichtbar machen (für den letzten Look)
-                bambooElements.forEach(b => b.classList.remove('hidden'));
-                // Nachricht und Emoji final setzen (wird auch durch checkMilestone... gemacht)
-                checkMilestoneAndUpdate();
-                updateScoreUI();
+                return false;
             }
 
-            // Punktestand erhöhen (bei Klick)
-            function increaseScore() {
+            // Zufällige Spruch-Chance (5%)
+            function maybeRandomPhrase() {
+                if (!gameActive) return;
+                if (Math.random() < 0.05) {
+                    setPandaMessage(getRandomPhasePhrase());
+                }
+            }
+
+            // Fütterung (wird bei Klick oder Autoclicker aufgerufen)
+            function feed(amount = 1) {
                 if (!gameActive) return;
                 if (currentScore >= MAX_SCORE) return;
 
-                currentScore++;
+                const multiplier = getCurrentMultiplier();
+                const totalFeed = amount * multiplier;
+                const oldScore = currentScore;
+                const newScore = Math.min(oldScore + totalFeed, MAX_SCORE); // nicht über MAX
+                const feedActual = newScore - oldScore;
 
-                // Prüfen, ob ein neuer Meilenstein erreicht wurde (10er-Schritte)
-                checkMilestoneAndUpdate();
+                currentScore = newScore;
+                bambooPoints += feedActual;  // bekommt auch Punkte (1 pro Bambus)
 
-                // Bei Erreichen von 100: Explosion auslösen
+                // Prüfen, ob Explosion
                 if (currentScore >= MAX_SCORE) {
-                    explodePanda();  // setzt gameActive false und aktualisiert UI
+                    gameActive = false;
+                    setPandaMessage(explosionPhrase);
+                    // Alle Intervalle stoppen
+                    if (autoclickerInterval) clearInterval(autoclickerInterval);
+                    autoclickerInterval = null;
+                } else {
+                    // Meilenstein prüfen
+                    const milestoneReached = checkMilestone(oldScore, currentScore);
+                    if (!milestoneReached) {
+                        maybeRandomPhrase();  // nur wenn kein Meilenstein
+                    }
                 }
 
-                updateScoreUI();  // Punktestand immer aktualisieren
+                updateUI();
+            }
+
+            // ---------- Shop-Käufe ----------
+            function buyItem(price, callback, successMessage) {
+                if (!gameActive) return false;
+                if (bambooPoints < price) return false;
+                bambooPoints -= price;
+                callback();
+                setPandaMessage(successMessage);
+                updateUI();
+                return true;
+            }
+
+            // Autoclicker kaufen (permanent)
+            function buyAutoclicker() {
+                if (!gameActive) return;
+                buyItem(50, () => {
+                    autoclickerCount++;
+                    if (autoclickerInterval) clearInterval(autoclickerInterval);
+                    // Neuen Intervall starten (jede Sekunde feed mit Anzahl)
+                    autoclickerInterval = setInterval(() => {
+                        if (gameActive && currentScore < MAX_SCORE) {
+                            feed(autoclickerCount);  // jeder Autoclicker gibt 1 pro Sekunde
+                        }
+                    }, 1000);
+                }, shopPhrases.autoclicker);
+            }
+
+            // Doppelklick (temporär)
+            function buyDouble() {
+                if (!gameActive) return;
+                buyItem(100, () => {
+                    if (doubleBoostActive) {
+                        // Verlängern? Einfach neu starten
+                        clearTimeout(doubleBoostTimeout);
+                    }
+                    doubleBoostActive = true;
+                    doubleBoostTimeout = setTimeout(() => {
+                        doubleBoostActive = false;
+                        updateUI();
+                    }, 30000);
+                }, shopPhrases.double);
+            }
+
+            // Bambus-Regen
+            function buyRain() {
+                if (!gameActive) return;
+                buyItem(200, () => {
+                    if (rainBoostActive) clearTimeout(rainBoostTimeout);
+                    rainBoostActive = true;
+                    rainBoostTimeout = setTimeout(() => {
+                        rainBoostActive = false;
+                        updateUI();
+                    }, 10000);
+                }, shopPhrases.rain);
+            }
+
+            // Glücksbambus
+            function buyLucky() {
+                if (!gameActive) return;
+                buyItem(150, () => {
+                    // sofort 50 Futter
+                    feed(50);
+                }, shopPhrases.lucky);
+            }
+
+            // Mehr Autoclicker (Upgrade)
+            function buyMoreAutoclicker() {
+                if (!gameActive) return;
+                buyItem(100, () => {
+                    autoclickerCount++;
+                    // Intervall neu starten (wenn vorhanden)
+                    if (autoclickerInterval) {
+                        clearInterval(autoclickerInterval);
+                        autoclickerInterval = setInterval(() => {
+                            if (gameActive && currentScore < MAX_SCORE) {
+                                feed(autoclickerCount);
+                            }
+                        }, 1000);
+                    }
+                }, shopPhrases.moreAutoclicker);
             }
 
             // ---------- Bambus-Klick ----------
@@ -346,53 +627,41 @@
                 if (currentScore >= MAX_SCORE) return;
                 if (bamboo.classList.contains('hidden')) return;
 
-                const index = parseInt(bamboo.dataset.index, 10);
+                // Füttern (1 Bambus)
+                feed(1);
 
-                // Score erhöhen (löst ggf. Meilenstein-Update aus)
-                increaseScore();
-
-                // Bambus verschwinden lassen
+                // Bambus verschwinden lassen (kurz)
                 bamboo.classList.add('hidden');
-
-                // Vorherigen Timeout löschen
-                if (bambooTimeouts[index]) {
-                    clearTimeout(bambooTimeouts[index]);
-                }
-
-                // Neuen Timeout zum Wiedereinblenden (1 Sekunde)
-                bambooTimeouts[index] = setTimeout(() => {
+                const index = parseInt(bamboo.dataset.index, 10);
+                setTimeout(() => {
                     if (gameActive && currentScore < MAX_SCORE) {
                         bamboo.classList.remove('hidden');
                     }
-                    bambooTimeouts[index] = null;
-                }, 1000);
+                }, 300);
             }
 
             // ---------- Reset ----------
             function resetGame() {
-                // Alle Timeouts abbrechen
-                for (let i = 0; i < bambooTimeouts.length; i++) {
-                    if (bambooTimeouts[i]) {
-                        clearTimeout(bambooTimeouts[i]);
-                        bambooTimeouts[i] = null;
-                    }
-                }
+                // Alle Timer löschen
+                if (autoclickerInterval) clearInterval(autoclickerInterval);
+                autoclickerInterval = null;
+                if (doubleBoostTimeout) clearTimeout(doubleBoostTimeout);
+                if (rainBoostTimeout) clearTimeout(rainBoostTimeout);
+                doubleBoostActive = false;
+                rainBoostActive = false;
 
-                // Bambusse wieder sichtbar
+                currentScore = 0;
+                bambooPoints = 0;
+                autoclickerCount = 0;
+                gameActive = true;
+                lastMilestone = 0;
+
+                // Alle Bambusse sichtbar
                 bambooElements.forEach(b => b.classList.remove('hidden'));
 
-                // Zustand zurücksetzen
-                currentScore = 0;
-                gameActive = true;
-                lastMilestone = -1;   // damit die Startnachricht beim nächsten check erscheint
-
-                // UI aktualisieren (setzt auch die Startnachricht)
-                pandaEmoji.textContent = "🐼";
-                winContainer.innerHTML = '';
-                updateScoreUI();
-                // Erzwinge die Anfangsnachricht (Meilenstein 0)
-                lastMilestone = -1; // sicherstellen
-                checkMilestoneAndUpdate(); // setzt Nachricht auf "Hey, ich bin ege..."
+                // Startnachricht
+                setPandaMessage("😃 Hey, ich bin ege! Fütter mich!");
+                updateUI();
             }
 
             // ---------- Event-Listener ----------
@@ -407,10 +676,15 @@
                 });
             });
 
-            document.getElementById('resetGameBtn').addEventListener('click', resetGame);
+            btnAutoclicker.addEventListener('click', buyAutoclicker);
+            btnDouble.addEventListener('click', buyDouble);
+            btnRain.addEventListener('click', buyRain);
+            btnLucky.addEventListener('click', buyLucky);
+            btnMoreAutoclicker.addEventListener('click', buyMoreAutoclicker);
+            resetBtn.addEventListener('click', resetGame);
 
-            // Initialisierung: Startnachricht anzeigen
-            resetGame(); // setzt alles auf Anfang
+            // Initialisierung
+            resetGame();
         })();
     </script>
 </body>
