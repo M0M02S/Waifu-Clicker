@@ -2,680 +2,412 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Waifu Clicker · Fullbody + fixer Shop</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🐼 Panda Spiel – Bambus füttern</title>
     <style>
-        /* ---------- RESET & BASE ---------- */
         * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-            user-select: none;
-            -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            font-family: 'Segoe UI', 'Roboto', system-ui, sans-serif;
-            background: linear-gradient(45deg, #160b0f, #2d1a24);
+            background: linear-gradient(145deg, #c0e0c0 0%, #a0c0a0 100%);
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 10px;
-            touch-action: manipulation;
+            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+            padding: 16px;
+            margin: 0;
         }
 
-        .game-wrapper {
-            max-width: 1100px;
+        .game-card {
+            max-width: 700px;
             width: 100%;
-            background: rgba(30, 15, 22, 0.7);
-            backdrop-filter: blur(16px);
-            border-radius: 70px;
-            padding: 30px 25px;
-            box-shadow: 0 30px 50px rgba(0,0,0,0.7), 0 0 0 3px #ff99bb, 0 0 20px #ffc0e0;
-            border: 2px solid #ffc1d0;
+            background: #fef9e8;
+            border-radius: 60px 60px 40px 40px;
+            box-shadow: 0 20px 30px rgba(0, 40, 0, 0.4), inset 0 2px 4px rgba(255, 255, 200, 0.6);
+            padding: 30px 20px 30px 20px;
+            border: 4px solid #6b4f3c;
+            transition: 0.3s;
         }
 
         h1 {
             text-align: center;
-            font-size: 4rem;
-            font-weight: 800;
-            color: #ffeef4;
-            text-shadow: 0 5px 0 #a12f5a, 0 10px 15px #00000050;
-            letter-spacing: 4px;
+            font-size: 2.8rem;
+            letter-spacing: 2px;
+            color: #2d4b2d;
+            text-shadow: 3px 3px 0 #c0d080;
+            margin-top: -10px;
             margin-bottom: 10px;
+            font-weight: 800;
+            word-break: break-word;
         }
 
-        /* ---------- STATS-LEISTE ---------- */
-        .stats-panel {
-            background: #ffeef5d0;
-            border-radius: 90px;
+        .panda-zone {
+            background: #dcd0b0;
+            border-radius: 100px 100px 60px 60px;
+            border: 5px solid #8b6b4d;
+            padding: 25px 15px 15px 15px;
+            margin: 15px 0 30px 0;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            box-shadow: inset 0 -5px 0 #6b4f3c, 0 8px 0 #4d3a2b;
+        }
+
+        .panda-emoji {
+            font-size: 7rem;
+            line-height: 1;
+            filter: drop-shadow(4px 8px 0 #3a2a1e);
+            transform: scaleX(-1);
+        }
+
+        .speech-bubble {
+            background: white;
+            border-radius: 40px 40px 40px 10px;
             padding: 18px 25px;
-            margin: 20px 0 30px;
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #2d4b2d;
+            border: 4px solid #6b4f3c;
+            box-shadow: 6px 6px 0 #3a5e3a;
+            max-width: 300px;
+            min-width: 200px;
+            text-align: center;
+            word-break: break-word;
+        }
+
+        .speech-bubble span {
+            display: inline-block;
+        }
+
+        .bamboo-forest {
+            background: #8b6b4d;
+            border-radius: 60px;
+            padding: 25px 15px;
+            margin: 15px 0 25px;
+            border: 4px solid #5e3e2b;
+            box-shadow: inset 0 -3px 0 #3e2b1c;
+        }
+
+        .bamboo-row {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .bamboo {
+            font-size: 6rem;
+            line-height: 1;
+            cursor: pointer;
+            transition: transform 0.1s ease, opacity 0.2s ease, filter 0.2s;
+            user-select: none;
+            filter: drop-shadow(2px 8px 0 #3a5e3a);
+            transform: rotate(2deg);
+        }
+
+        .bamboo:hover {
+            transform: scale(1.15) rotate(0deg);
+            filter: drop-shadow(4px 10px 0 #2d4b2d);
+        }
+
+        .bamboo:active {
+            transform: scale(0.95) rotate(-2deg);
+            filter: drop-shadow(0 4px 0 #1e3a1e);
+        }
+
+        .bamboo.hidden {
+            opacity: 0;
+            pointer-events: none;
+            transform: scale(0.8);
+            filter: none;
+            transition: opacity 0.3s, transform 0.3s;
+        }
+
+        .score-panel {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            background: #ead5b5;
+            border-radius: 50px;
+            padding: 15px 25px;
+            border: 4px solid #6b4f3c;
+            margin: 20px 0 15px;
+            font-weight: bold;
+            font-size: 1.8rem;
+            color: #1e3a1e;
+            box-shadow: 0 6px 0 #4d3a2b;
             flex-wrap: wrap;
             gap: 15px;
-            border: 4px solid white;
-            box-shadow: 0 12px 0 #b23b5c, inset 0 2px 15px #ffb0c5;
         }
 
-        .heart-mega {
-            background: white;
-            border-radius: 60px;
-            padding: 15px 35px;
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            box-shadow: 0 8px 0 #b23b5c;
-        }
-        .heart-mega span {
-            font-size: 4rem;
-            line-height: 1;
-        }
-        .heart-mega .points {
-            font-size: 4rem;
-            font-weight: 800;
-            color: #c1214b;
-        }
-
-        .stat-badges {
-            display: flex;
-            gap: 25px;
-            background: #ffdae9;
-            padding: 10px 30px;
-            border-radius: 50px;
-            font-size: 2rem;
-            font-weight: 600;
-            color: #5e1e34;
-            border: 3px solid white;
-        }
-        .stat-badges i {
-            margin-right: 6px;
-            color: #b23b5c;
-        }
-
-        /* ---------- WAIFU FULLBODY ---------- */
-        .waifu-zone {
-            position: relative;
-            display: flex;
-            justify-content: center;
-            margin: 20px 0 30px;
-            filter: drop-shadow(0 30px 25px #00000070);
-        }
-
-        .waifu-button {
-            background: none;
-            border: none;
-            cursor: pointer;
-            touch-action: manipulation;
-            padding: 0;
-            outline: none;
-            max-width: 500px;
-            width: 85vw;
-            height: auto;
-            transition: transform 0.15s cubic-bezier(0.2, 0.9, 0.3, 1.2);
-            position: relative;
-            z-index: 10;
-        }
-        .waifu-button:active {
-            transform: scale(0.96);
-        }
-
-        .waifu-svg {
-            width: 100%;
-            height: 100%;
-            display: block;
-            border-radius: 50px;
-            background: radial-gradient(circle at 30% 30%, #ffdee9, #e7b2cc);
-            box-shadow: 0 30px 0 #972b52, 0 0 0 8px white, 0 0 0 16px #ffb1cf;
-        }
-
-        /* Herzen-Container */
-        .heart-rain {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 25;
-            overflow: visible;
-        }
-        .heart-particle {
-            position: absolute;
-            font-size: 3rem;
-            opacity: 0;
-            animation: floatUp 1.2s ease-out forwards;
-            filter: drop-shadow(0 0 12px #ff4080);
-            text-shadow: 0 2px 10px white;
-        }
-        @keyframes floatUp {
-            0% { transform: translateY(0) scale(0.4); opacity: 1; }
-            100% { transform: translateY(-160px) scale(2); opacity: 0; }
-        }
-
-        /* ---------- UPGRADES (VIELE) ---------- */
-        .upgrades-area {
-            margin-top: 30px;
-        }
-        .upgrades-title {
-            font-size: 3rem;
-            color: #fff0f7;
-            text-shadow: 0 4px 0 #a03b5c;
-            margin-bottom: 25px;
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            background: #b23b5c70;
-            padding: 10px 35px;
-            border-radius: 90px;
-            width: fit-content;
-            backdrop-filter: blur(5px);
-        }
-
-        .upgrades-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 25px;
-        }
-
-        .upgrade-card {
-            background: #fff0f7;
-            border: 5px solid white;
-            border-radius: 50px;
-            padding: 25px 15px 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            box-shadow: 0 16px 0 #b23b5c, 0 12px 20px black;
-            transition: 0.07s linear;
-            touch-action: manipulation;
-        }
-        .upgrade-card:active {
-            transform: translateY(10px);
-            box-shadow: 0 6px 0 #b23b5c, 0 12px 20px black;
-        }
-
-        .upgrade-icon {
-            font-size: 5rem;
-            filter: drop-shadow(2px 6px 0 #c06a8a);
-        }
-        .upgrade-name {
-            font-size: 2.3rem;
-            font-weight: 700;
-            color: #2f1120;
-        }
-        .upgrade-desc {
-            font-size: 1.8rem;
-            background: #ffe0f0;
-            padding: 5px 25px;
+        .score-text {
+            background: #2d4b2d;
+            color: #f9f2d9;
+            padding: 12px 28px;
             border-radius: 40px;
-            margin: 15px 0 5px;
-            font-weight: 600;
-            color: #a01947;
+            font-size: 2rem;
+            border: 3px solid #fedb7a;
+            text-shadow: 2px 2px 0 #1e3a1e;
+            box-shadow: inset 0 -2px 0 #0f1e0f;
         }
-        .upgrade-price {
-            font-size: 2.5rem;
-            font-weight: 800;
-            background: white;
-            padding: 8px 30px;
-            border-radius: 60px;
-            margin: 12px 0;
-            color: #b23b5c;
-            border: 3px solid #ffa0c0;
+
+        .reset-btn {
+            background: #ffcf8a;
+            border: none;
+            font-size: 2rem;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-weight: bold;
+            color: #3a2a1e;
+            border: 4px solid #b37b48;
+            box-shadow: 0 7px 0 #8b5a2e, 0 8px 8px rgba(0,0,0,0.2);
+            cursor: pointer;
+            transition: 0.07s linear;
             display: inline-flex;
             align-items: center;
-            gap: 10px;
-        }
-        .upgrade-price span {
-            font-size: 2.5rem;
-        }
-        .buy-btn {
-            background: #ffb5cf;
-            border: none;
-            border-radius: 70px;
-            font-size: 2.2rem;
-            font-weight: bold;
-            padding: 15px 30px;
-            width: 100%;
-            border: 4px solid white;
-            box-shadow: 0 10px 0 #9f4465;
-            transition: 0.07s;
-            cursor: pointer;
-            color: #2c0e1b;
-        }
-        .buy-btn:active {
-            transform: translateY(8px);
-            box-shadow: 0 2px 0 #9f4465;
-        }
-        .buy-btn:disabled {
-            opacity: 0.4;
-            filter: grayscale(0.6);
-            pointer-events: none;
-            transform: none;
-            box-shadow: 0 8px 0 #6d3c4e;
+            gap: 6px;
         }
 
-        .footer {
+        .reset-btn:active {
+            transform: translateY(7px);
+            box-shadow: 0 0px 0 #8b5a2e, 0 5px 10px rgba(0,0,0,0.2);
+        }
+
+        .win-message {
+            color: #c44b1e;
+            font-size: 1.8rem;
             text-align: center;
-            margin-top: 40px;
-            color: #ffd9e5;
-            font-size: 2rem;
-            text-shadow: 0 2px 0 #b23b5c;
+            background: #ffecb3;
+            border-radius: 40px;
+            padding: 8px 20px;
+            border: 3px dashed #c44b1e;
         }
 
-        /* Kleine Feedback-Anzeige (optional) */
-        #debugConsole {
-            color: white;
-            background: rgba(0,0,0,0.5);
-            padding: 5px;
-            border-radius: 10px;
-            font-size: 1.2rem;
+        footer {
+            text-align: center;
+            color: #3d5e3d;
+            font-size: 1.4rem;
             margin-top: 10px;
-            text-align: center;
-        }
-
-        @media (max-width: 600px) {
-            h1 { font-size: 3rem; }
-            .heart-mega span { font-size: 2.8rem; }
-            .stat-badges { font-size: 1.6rem; }
-            .upgrade-name { font-size: 1.9rem; }
+            font-style: italic;
+            font-weight: 600;
+            text-shadow: 1px 1px 0 #b0b07a;
         }
     </style>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-    <div class="game-wrapper">
-        <h1>🌸WAIFU·FULLBODY🌸</h1>
+    <div class="game-card">
+        <h1>🐼 Panda Spiel</h1>
 
-        <div class="stats-panel">
-            <div class="heart-mega">
-                <span>❤️</span>
-                <span class="points" id="pointsDisplay">0</span>
-            </div>
-            <div class="stat-badges">
-                <div><i class="fas fa-fist-raised"></i> <span id="perClickDisplay">1</span></div>
-                <div><i class="fas fa-clock"></i> <span id="perSecDisplay">0</span></div>
-                <div><i class="fas fa-star"></i> <span id="critDisplay">0%</span></div>
+        <!-- Panda mit Sprechblase -->
+        <div class="panda-zone">
+            <div class="panda-emoji" aria-label="Panda">🐼</div>
+            <div class="speech-bubble" id="pandaMessage">
+                <span>😋 Ich habe Hunger!</span>
             </div>
         </div>
 
-        <!-- WAIFU BUTTON mit extrem detailliertem Fullbody SVG -->
-        <div class="waifu-zone">
-            <button class="waifu-button" id="waifuClickBtn">
-                <svg class="waifu-svg" viewBox="0 0 400 600" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <!-- Hintergrund-Verlauf -->
-                    <defs>
-                        <radialGradient id="skin" cx="200" cy="200" r="200" gradientUnits="userSpaceOnUse">
-                            <stop offset="0%" stop-color="#FFEAD2"/>
-                            <stop offset="100%" stop-color="#FCC6D3"/>
-                        </radialGradient>
-                        <linearGradient id="hair" x1="100" y1="80" x2="300" y2="400">
-                            <stop offset="0%" stop-color="#382013"/>
-                            <stop offset="100%" stop-color="#1E130C"/>
-                        </linearGradient>
-                        <linearGradient id="dress" x1="150" y1="300" x2="250" y2="500">
-                            <stop offset="0%" stop-color="#FBAAC3"/>
-                            <stop offset="100%" stop-color="#D96F9B"/>
-                        </linearGradient>
-                    </defs>
-
-                    <!-- Körper / Hals / Grundform -->
-                    <circle cx="200" cy="220" r="80" fill="url(#skin)"/>
-
-                    <!-- Ohren -->
-                    <ellipse cx="140" cy="210" rx="18" ry="25" fill="#FFDFC4"/>
-                    <ellipse cx="260" cy="210" rx="18" ry="25" fill="#FFDFC4"/>
-
-                    <!-- Gesicht und Hals -->
-                    <path d="M160 270 L240 270 L230 330 L170 330 Z" fill="#FFDFC4"/>
-
-                    <!-- Haare – sehr aufwändig -->
-                    <path d="M100 150 Q130 60 200 60 Q270 60 300 150 L290 190 Q260 130 200 130 Q140 130 110 190 Z" fill="url(#hair)"/>
-                    <path d="M80 200 Q70 270 120 320 Q140 280 130 220 Q120 190 80 200" fill="#2D1C11"/>
-                    <path d="M320 200 Q330 270 280 320 Q260 280 270 220 Q280 190 320 200" fill="#2D1C11"/>
-                    <path d="M170 150 Q180 100 200 100 Q220 100 230 150 L200 170 Z" fill="#2D1C11"/>
-                    <path d="M120 190 Q90 240 130 280 L150 250 Q130 220 120 190" fill="#3E281B"/>
-                    <path d="M280 190 Q310 240 270 280 L250 250 Q270 220 280 190" fill="#3E281B"/>
-
-                    <!-- Augen – riesig und glitzernd -->
-                    <ellipse cx="155" cy="200" rx="23" ry="28" fill="white"/>
-                    <ellipse cx="245" cy="200" rx="23" ry="28" fill="white"/>
-                    <circle cx="155" cy="208" r="13" fill="#AA7C5F"/>
-                    <circle cx="245" cy="208" r="13" fill="#AA7C5F"/>
-                    <circle cx="150" cy="205" r="6" fill="#1F120B"/>
-                    <circle cx="240" cy="205" r="6" fill="#1F120B"/>
-                    <circle cx="145" cy="193" r="4" fill="white"/>
-                    <circle cx="235" cy="193" r="4" fill="white"/>
-                    <circle cx="160" cy="193" r="2.5" fill="white"/>
-                    <circle cx="250" cy="193" r="2.5" fill="white"/>
-
-                    <!-- Mund -->
-                    <path d="M180 250 Q200 270, 220 250" stroke="#B2486F" stroke-width="6" fill="none" stroke-linecap="round"/>
-
-                    <!-- Haarschleife -->
-                    <path d="M200 70 L180 30 L220 30 L200 70" fill="#FF78A8" stroke="white" stroke-width="5"/>
-                    <ellipse cx="200" cy="90" rx="35" ry="18" fill="#FFA7D0" stroke="white" stroke-width="4"/>
-
-                    <!-- Oberkörper – Kleid -->
-                    <path d="M150 330 L250 330 L280 470 L120 470 Z" fill="url(#dress)" stroke="#E598B8" stroke-width="4"/>
-                    <ellipse cx="200" cy="400" rx="50" ry="20" fill="#FF5C9E" stroke="white" stroke-width="4"/>
-
-                    <!-- Arme -->
-                    <path d="M100 340 L70 420 L120 420 L130 370 Z" fill="#FFDFC4"/>
-                    <path d="M300 340 L330 420 L280 420 L270 370 Z" fill="#FFDFC4"/>
-
-                    <!-- Hände -->
-                    <circle cx="90" cy="430" r="20" fill="#FFDFC4"/>
-                    <circle cx="310" cy="430" r="20" fill="#FFDFC4"/>
-
-                    <!-- Rock / Falten -->
-                    <path d="M150 470 L250 470 L240 540 L160 540 Z" fill="#C95F89"/>
-                    <path d="M180 470 L200 550 L220 470" stroke="white" stroke-width="6" fill="none"/>
-
-                    <!-- Beine / Strümpfe -->
-                    <rect x="170" y="540" width="20" height="60" fill="#FFDFC4" rx="10"/>
-                    <rect x="210" y="540" width="20" height="60" fill="#FFDFC4" rx="10"/>
-                    <!-- Schuhe -->
-                    <ellipse cx="180" cy="600" rx="25" ry="12" fill="#38281E"/>
-                    <ellipse cx="220" cy="600" rx="25" ry="12" fill="#38281E"/>
-
-                    <!-- Accessoires: Glitzersterne -->
-                    <circle cx="130" cy="150" r="6" fill="#FFF9AA" opacity="0.8"/>
-                    <circle cx="270" cy="150" r="6" fill="#FFF9AA" opacity="0.8"/>
-                    <circle cx="60" cy="300" r="8" fill="#FFE793" opacity="0.7"/>
-                    <circle cx="340" cy="300" r="8" fill="#FFE793" opacity="0.7"/>
-
-                    <!-- zusätzliche Haardetails -->
-                    <path d="M120 250 Q100 280 110 320" stroke="#2D1C11" stroke-width="6" fill="none"/>
-                    <path d="M280 250 Q300 280 290 320" stroke="#2D1C11" stroke-width="6" fill="none"/>
-
-                    <!-- Glanzlicht im Kleid -->
-                    <circle cx="200" cy="360" r="15" fill="white" opacity="0.2"/>
-                </svg>
-            </button>
-            <div class="heart-rain" id="heartRain"></div>
-        </div>
-
-        <!-- UPGRADES -->
-        <div class="upgrades-area">
-            <div class="upgrades-title"><i class="fas fa-gem"></i> UPGRADES <i class="fas fa-gem"></i></div>
-            <div class="upgrades-grid">
-                <!-- Klick Upgrade 1 -->
-                <div class="upgrade-card">
-                    <div class="upgrade-icon">⚡❤️</div>
-                    <div class="upgrade-name">Kraft der Liebe</div>
-                    <div class="upgrade-desc">+1 pro Klick</div>
-                    <div class="upgrade-price"><span>❤️</span> <span id="priceClick1">20</span></div>
-                    <button class="buy-btn" id="buyClick1">Kaufen</button>
-                </div>
-                <!-- Auto Klicker 1 -->
-                <div class="upgrade-card">
-                    <div class="upgrade-icon">⏰💕</div>
-                    <div class="upgrade-name">Autolove</div>
-                    <div class="upgrade-desc">+1 pro Sek.</div>
-                    <div class="upgrade-price"><span>❤️</span> <span id="priceAuto1">10</span></div>
-                    <button class="buy-btn" id="buyAuto1">Kaufen</button>
-                </div>
-                <!-- Klick Upgrade 2 (stärker) -->
-                <div class="upgrade-card">
-                    <div class="upgrade-icon">💥💘</div>
-                    <div class="upgrade-name">Herzexplosion</div>
-                    <div class="upgrade-desc">+5 pro Klick</div>
-                    <div class="upgrade-price"><span>❤️</span> <span id="priceClick2">150</span></div>
-                    <button class="buy-btn" id="buyClick2">Kaufen</button>
-                </div>
-                <!-- Crit Upgrade -->
-                <div class="upgrade-card">
-                    <div class="upgrade-icon">✨💞</div>
-                    <div class="upgrade-name">kritische Liebe</div>
-                    <div class="upgrade-desc">+10% 2x dmg</div>
-                    <div class="upgrade-price"><span>❤️</span> <span id="priceCrit">300</span></div>
-                    <button class="buy-btn" id="buyCrit">Kaufen</button>
-                </div>
+        <!-- Bambuswald – die drei Halme -->
+        <div class="bamboo-forest">
+            <div class="bamboo-row" id="bambooContainer">
+                <div class="bamboo" data-index="0" aria-label="Bambus" role="button" tabindex="0">🎋</div>
+                <div class="bamboo" data-index="1" aria-label="Bambus" role="button" tabindex="0">🎋</div>
+                <div class="bamboo" data-index="2" aria-label="Bambus" role="button" tabindex="0">🎋</div>
             </div>
         </div>
-        <div class="footer">💖 klick sie – sie liebt dich 💖</div>
-        <!-- kleines unsichtbares Debug-Element (für uns) -->
-        <div id="debugConsole" style="display: none;"></div>
+
+        <!-- Punktestand + Reset -->
+        <div class="score-panel">
+            <div class="score-text" id="scoreDisplay">0 / 10</div>
+            <button class="reset-btn" id="resetGameBtn" aria-label="Neustart">🔄 Neustart</button>
+        </div>
+
+        <!-- Kleine Statuszeile (wird bei Sieg sichtbar) -->
+        <div id="winMessageContainer" style="min-height: 50px; text-align: center;"></div>
+
+        <footer>🥬 Klick auf Bambus – fütter den Panda!</footer>
     </div>
 
     <script>
         (function() {
-            // --- Spielzustand (robust) ---
-            let points = 0;
-            let clickPower = 1;        // Basis pro Klick
-            let autoLevel = 0;          // Autoklicker pro Sekunde
-            let critChance = 0;          // 0-1 (10% = 0.1)
+            // ---------- Spieleinstellungen ----------
+            const MAX_SCORE = 10;
+            let currentScore = 0;
+            let gameActive = true;               // true = spiel läuft, false = victory (keine weiteren Aktionen)
+            
+            // DOM elemente
+            const bambooElements = Array.from(document.querySelectorAll('.bamboo'));
+            const scoreDisplay = document.getElementById('scoreDisplay');
+            const pandaMessageBubble = document.querySelector('#pandaMessage span'); // das span innen
+            const winContainer = document.getElementById('winMessageContainer');
+            
+            // Timeout-Verwaltung für jeden Bambus (3 Stück)
+            let bambooTimeouts = [null, null, null];
 
-            // Upgrade-Level (für Preisberechnung)
-            let clickUpgrade1Count = 0;   // +1 pro Klick
-            let autoUpgradeCount = 0;      // +1 pro Sekunde
-            let clickUpgrade2Count = 0;    // +5 pro Klick
-            let critUpgradeCount = 0;       // +10% crit
+            // ---------- lustige Panda-Sprüche (je nach Hunger) ----------
+            const pandaPhrases = [
+                "😩 Ich habe Hunger!",      // 0-2
+                "😐 Lecker, mehr!",         // 3-5
+                "🙂 Fast satt...",           // 6-8
+                "🥰 Danke, ich bin satt!"    // 9-10 (ab 9)
+            ];
 
-            // Basispreise
-            const PRICE_CLICK1 = 20;
-            const PRICE_AUTO1 = 10;
-            const PRICE_CLICK2 = 150;
-            const PRICE_CRIT = 300;
-
-            // UI Elemente
-            const pointsSpan = document.getElementById('pointsDisplay');
-            const perClickSpan = document.getElementById('perClickDisplay');
-            const perSecSpan = document.getElementById('perSecDisplay');
-            const critSpan = document.getElementById('critDisplay');
-
-            const priceClick1Span = document.getElementById('priceClick1');
-            const priceAuto1Span = document.getElementById('priceAuto1');
-            const priceClick2Span = document.getElementById('priceClick2');
-            const priceCritSpan = document.getElementById('priceCrit');
-
-            const waifuBtn = document.getElementById('waifuClickBtn');
-            const heartContainer = document.getElementById('heartRain');
-
-            const buyClick1 = document.getElementById('buyClick1');
-            const buyAuto1 = document.getElementById('buyAuto1');
-            const buyClick2 = document.getElementById('buyClick2');
-            const buyCrit = document.getElementById('buyCrit');
-
-            // --- Hilfsfunktion für Debug (unsichtbar) ---
-            function debugLog(msg) {
-                const dbg = document.getElementById('debugConsole');
-                if (dbg) dbg.innerHTML = msg;
+            // Hilfsfunktion: Nachricht aktualisieren je nach Punktzahl
+            function updatePandaMessage() {
+                let msg = "";
+                if (currentScore >= MAX_SCORE) {
+                    msg = pandaPhrases[3] + " 🎉";
+                } else if (currentScore >= 7) {        // 7,8,9
+                    msg = pandaPhrases[2];
+                } else if (currentScore >= 3) {        // 3,4,5,6
+                    msg = pandaPhrases[1];
+                } else {
+                    msg = pandaPhrases[0];
+                }
+                pandaMessageBubble.textContent = msg;
             }
 
-            // --- Preisberechnung (steigend) ---
-            function getClick1Price() {
-                return PRICE_CLICK1 * (clickUpgrade1Count + 1);
-            }
-            function getAuto1Price() {
-                return PRICE_AUTO1 * (autoUpgradeCount + 1);
-            }
-            function getClick2Price() {
-                return PRICE_CLICK2 * (clickUpgrade2Count + 1);
-            }
-            function getCritPrice() {
-                return PRICE_CRIT * (critUpgradeCount + 1);
-            }
-
-            // --- Gesamt-Klickkraft berechnen ---
-            function totalClickPower() {
-                return 1 + clickUpgrade1Count * 1 + clickUpgrade2Count * 5;
-            }
-
-            // --- UI Update (stellt Preise und Punkte dar, deaktiviert Buttons) ---
-            function updateUI() {
-                pointsSpan.textContent = Math.floor(points);
-
-                perClickSpan.textContent = totalClickPower();
-
-                perSecSpan.textContent = autoUpgradeCount;
-
-                let critPercent = Math.min(critUpgradeCount * 10, 100);
-                critSpan.textContent = critPercent + '%';
-
-                priceClick1Span.textContent = getClick1Price();
-                priceAuto1Span.textContent = getAuto1Price();
-                priceClick2Span.textContent = getClick2Price();
-                priceCritSpan.textContent = getCritPrice();
-
-                // Buttons deaktivieren / aktivieren
-                buyClick1.disabled = points < getClick1Price();
-                buyAuto1.disabled = points < getAuto1Price();
-                buyClick2.disabled = points < getClick2Price();
-                buyCrit.disabled = points < getCritPrice();
-
-                debugLog(`Punkte: ${points} | Click: ${totalClickPower()}`);
-            }
-
-            // --- Herz-Partikel (mit Schutz vor Überlast) ---
-            function spawnHearts(anzahl = 15) {
-                if (!heartContainer) return;
-                if (heartContainer.children.length > 100) return;
-
-                for (let i = 0; i < anzahl; i++) {
-                    const heart = document.createElement('div');
-                    heart.className = 'heart-particle';
-                    const symbols = ['❤️', '💖', '💗', '💓', '💕', '💞', '💘', '🌸', '✨'];
-                    heart.textContent = symbols[Math.floor(Math.random() * symbols.length)];
-
-                    const left = 30 + Math.random() * 40; // %
-                    const top = 30 + Math.random() * 40;
-                    heart.style.left = left + '%';
-                    heart.style.top = top + '%';
-
-                    const duration = 0.9 + Math.random() * 0.9;
-                    heart.style.animation = `floatUp ${duration}s ease-out forwards`;
-                    heart.style.fontSize = (2 + Math.random() * 2) + 'rem';
-
-                    heartContainer.appendChild(heart);
-                    setTimeout(() => { if (heart.parentNode) heart.remove(); }, duration * 1200);
+            // Anzeige von Punktestand & Sieg-Botschaft
+            function updateScoreUI() {
+                scoreDisplay.textContent = `${currentScore} / ${MAX_SCORE}`;
+                
+                // Zusätzliche Sieg-Meldung einblenden
+                if (currentScore >= MAX_SCORE) {
+                    winContainer.innerHTML = '<div class="win-message">🥳 Der Panda ist glücklich und satt! 🥳</div>';
+                } else {
+                    winContainer.innerHTML = ''; // leeren
                 }
             }
 
-            // --- Klick-Handler für Waifu ---
-            function handleWaifuClick(e) {
-                e.preventDefault(); // Für mobile
+            // Sieg-Modus aktivieren (wird einmal aufgerufen)
+            function activateWinMode() {
+                gameActive = false;
 
-                let power = totalClickPower();
-                let multiplier = 1;
-                if (critUpgradeCount > 0) {
-                    let chance = Math.min(critUpgradeCount * 0.1, 1.0);
-                    if (Math.random() < chance) {
-                        multiplier = 2;
-                        spawnHearts(20); // Extraherzen bei Krit
+                // Alle laufenden Timeouts abbrechen (damit kein Bambus mehr auftaucht)
+                for (let i = 0; i < bambooTimeouts.length; i++) {
+                    if (bambooTimeouts[i]) {
+                        clearTimeout(bambooTimeouts[i]);
+                        bambooTimeouts[i] = null;
                     }
                 }
-                points += power * multiplier;
 
-                spawnHearts(10 + Math.floor(Math.random() * 8));
+                // Alle Bambusse sofort sichtbar machen (für den vollen Wald)
+                bambooElements.forEach(b => b.classList.remove('hidden'));
 
-                updateUI();
-
-                if (navigator.vibrate) navigator.vibrate(15);
+                // Panda Nachricht und UI updaten
+                updatePandaMessage();
+                updateScoreUI();
             }
 
-            // --- Kauf-Funktionen (mit sofortiger Prüfung) ---
-            function buyClickUpgrade1() {
-                let price = getClick1Price();
-                if (points >= price) {
-                    points -= price;
-                    clickUpgrade1Count++;
-                    updateUI();
-                    if (navigator.vibrate) navigator.vibrate(30);
+            // Punktestand erhöhen (durch Bambusklick)
+            function increaseScore() {
+                if (!gameActive) return;           // Sieg – keine Erhöhung mehr
+                if (currentScore >= MAX_SCORE) return;
+
+                currentScore++;
+                
+                // Prüfen ob maximale Punktzahl erreicht
+                if (currentScore >= MAX_SCORE) {
+                    activateWinMode();
                 } else {
-                    debugLog('Nicht genug Punkte für Kraft der Liebe');
+                    // Normales Update
+                    updatePandaMessage();
+                    updateScoreUI();
                 }
             }
 
-            function buyAutoUpgrade1() {
-                let price = getAuto1Price();
-                if (points >= price) {
-                    points -= price;
-                    autoUpgradeCount++;
-                    updateUI();
-                    if (navigator.vibrate) navigator.vibrate(30);
-                } else {
-                    debugLog('Nicht genug Punkte für Autolove');
+            // Handler für Bambus-Klick
+            function onBambooClick(event) {
+                const bamboo = event.currentTarget; // das jeweilige Bambus-div
+                
+                // Nur wenn Spiel aktiv, Bambus nicht versteckt und Punktestand noch nicht max
+                if (!gameActive) return;
+                if (currentScore >= MAX_SCORE) return;
+                if (bamboo.classList.contains('hidden')) return; // Sicherheitshalber
+
+                // Index ermitteln (data-index)
+                const index = parseInt(bamboo.dataset.index, 10);
+
+                // --- 1. Punktestand erhöhen ---
+                increaseScore();  // hier wird ggf. activateWinMode ausgelöst
+
+                // --- 2. Bambus verschwinden lassen (sofort) ---
+                bamboo.classList.add('hidden');
+
+                // --- 3. Vorherigen Timeout für diesen Bambus löschen (sollte keiner aktiv sein, aber sicher ist sicher) ---
+                if (bambooTimeouts[index]) {
+                    clearTimeout(bambooTimeouts[index]);
+                    bambooTimeouts[index] = null;
                 }
+
+                // --- 4. Neuen Timeout starten: nach 1 Sekunde wieder sichtbar (nur wenn Spiel noch aktiv UND nicht bereits Sieg) ---
+                bambooTimeouts[index] = setTimeout(() => {
+                    // Wichtig: Nur sichtbar machen, wenn das Spiel noch aktiv ist (nicht im Sieg-Modus)
+                    if (gameActive && currentScore < MAX_SCORE) {
+                        bamboo.classList.remove('hidden');
+                    } else {
+                        // Falls das Spiel vorbei ist, aber Bambus versteckt blieb: nicht einblenden.
+                        // (Im Win-Modus werden alle ohnehin sofort sichtbar gemacht, daher hier nichts tun)
+                    }
+                    bambooTimeouts[index] = null; // Referenz löschen
+                }, 1000);
             }
 
-            function buyClickUpgrade2() {
-                let price = getClick2Price();
-                if (points >= price) {
-                    points -= price;
-                    clickUpgrade2Count++;
-                    updateUI();
-                    if (navigator.vibrate) navigator.vibrate(30);
-                } else {
-                    debugLog('Nicht genug Punkte für Herzexplosion');
+            // ---------- Reset-Funktion ----------
+            function resetGame() {
+                // Alle laufenden Timeouts vernichten
+                for (let i = 0; i < bambooTimeouts.length; i++) {
+                    if (bambooTimeouts[i]) {
+                        clearTimeout(bambooTimeouts[i]);
+                        bambooTimeouts[i] = null;
+                    }
                 }
+
+                // Alle Bambusse wieder sichtbar machen (hidden-Klasse entfernen)
+                bambooElements.forEach(b => b.classList.remove('hidden'));
+
+                // Punktestand zurücksetzen
+                currentScore = 0;
+                gameActive = true;
+
+                // Panda-Sprüche & UI updaten
+                updatePandaMessage();
+                updateScoreUI();
+
+                // Eventuell Sieg-Text entfernen
+                winContainer.innerHTML = '';
             }
 
-            function buyCritUpgrade() {
-                let price = getCritPrice();
-                if (points >= price) {
-                    points -= price;
-                    critUpgradeCount++;
-                    updateUI();
-                    if (navigator.vibrate) navigator.vibrate(30);
-                } else {
-                    debugLog('Nicht genug Punkte für kritische Liebe');
-                }
-            }
-
-            // --- Autoklicker ---
-            function autoTick() {
-                if (autoUpgradeCount > 0) {
-                    points += autoUpgradeCount;
-                    updateUI();
-                }
-            }
-
-            // --- Event-Listener (robust) ---
-            waifuBtn.addEventListener('click', handleWaifuClick);
-            waifuBtn.addEventListener('touchstart', (e) => e.preventDefault(), { passive: false });
-            waifuBtn.addEventListener('touchend', (e) => {
-                e.preventDefault();
-                handleWaifuClick(e);
-            }, { passive: false });
-
-            // Shop-Buttons: Click-Listener
-            buyClick1.addEventListener('click', buyClickUpgrade1);
-            buyAuto1.addEventListener('click', buyAutoUpgrade1);
-            buyClick2.addEventListener('click', buyClickUpgrade2);
-            buyCrit.addEventListener('click', buyCritUpgrade);
-
-            // Touch-Geräte: Nur preventDefault auf touchstart, um Zoom zu vermeiden, click bleibt erhalten
-            [buyClick1, buyAuto1, buyClick2, buyCrit].forEach(btn => {
-                btn.addEventListener('touchstart', (e) => e.preventDefault(), { passive: false });
+            // ---------- Event-Listener für Bambus ----------
+            bambooElements.forEach((bamboo, idx) => {
+                // data-index setzen (falls nicht schon im HTML)
+                bamboo.dataset.index = idx;
+                bamboo.addEventListener('click', onBambooClick);
+                // kleine Tastaturbedienung
+                bamboo.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        bamboo.click();
+                    }
+                });
             });
 
-            // Zusätzlich: Falls die Buttons auf mobilen Geräten manchmal den Click nicht auslösen,
-            // können wir auch touchend nutzen (optional)
-            // Aber wir setzen der Sicherheit halber auch touchend, das den click模仿t
-            function makeTouchendHandler(fn) {
-                return (e) => {
-                    e.preventDefault();
-                    fn(e);
-                };
-            }
-            buyClick1.addEventListener('touchend', makeTouchendHandler(buyClickUpgrade1), { passive: false });
-            buyAuto1.addEventListener('touchend', makeTouchendHandler(buyAutoUpgrade1), { passive: false });
-            buyClick2.addEventListener('touchend', makeTouchendHandler(buyClickUpgrade2), { passive: false });
-            buyCrit.addEventListener('touchend', makeTouchendHandler(buyCritUpgrade), { passive: false });
-
-            // Autoklicker-Intervall
-            setInterval(autoTick, 1000);
+            // Reset-Knopf
+            const resetBtn = document.getElementById('resetGameBtn');
+            resetBtn.addEventListener('click', resetGame);
 
             // Initiale UI
-            updateUI();
+            updatePandaMessage();
+            updateScoreUI();
 
-            // Willkommensherzen
-            window.addEventListener('load', () => setTimeout(() => spawnHearts(20), 200));
+            // Kleine Dreingabe: falls jemand auf "Enter" im Reset-Button drückt – ist schon ok.
         })();
     </script>
 </body>
