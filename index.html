@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ege's Panda – 1000 Bambus + Shop</title>
+    <title>ege's Panda – Rebirth-Update</title>
     <style>
         * {
             box-sizing: border-box;
@@ -161,6 +161,16 @@
             text-shadow: 2px 2px 0 #5e3e2b;
         }
 
+        .rebirth-display {
+            background: #9b6b9b;
+            color: #f9d9f9;
+            padding: 12px 28px;
+            border-radius: 40px;
+            font-size: 2rem;
+            border: 3px solid #fedb7a;
+            text-shadow: 2px 2px 0 #4a2e4a;
+        }
+
         /* Shopbereich */
         .shop-area {
             background: #fef9e8;
@@ -290,12 +300,13 @@
             <div class="stats-panel">
                 <div class="score-text" id="scoreDisplay">0 / 1000</div>
                 <div class="currency" id="currencyDisplay">💰 0</div>
+                <div class="rebirth-display" id="rebirthDisplay">💫 0</div>
             </div>
 
             <div id="boostInfo" class="boost-info">Keine aktiven Boosts</div>
 
             <button class="reset-btn" id="resetGameBtn">🔄 Neustart</button>
-            <footer>🥬 Klick auf Bambus – ege freut sich (manchmal)</footer>
+            <footer>🥬 Klick auf Bambus – bei 1000 platzt ege und es gibt Rebirths!</footer>
         </div>
 
         <!-- Shop -->
@@ -331,6 +342,13 @@
                 <span class="item-price">Preis: 100 💰</span>
                 <button id="buyMoreAutoclicker">Mehr Autoclicker</button>
             </div>
+
+            <!-- Neues Rebirth-Item -->
+            <div class="shop-item">
+                <span class="item-desc">🌱 Rebirth-Bambus (sofort)</span>
+                <span class="item-price">Preis: 1 💫</span>
+                <button id="buyRebirthFood">Kaufen (+100 Futter)</button>
+            </div>
         </div>
     </div>
 
@@ -340,7 +358,8 @@
             const MAX_SCORE = 1000;
             const SATIATED = 500;   // ab 500 ist ege satt
             let currentScore = 0;
-            let bambooPoints = 0;       // Währung
+            let bambooPoints = 0;       // Währung (💰)
+            let rebirths = 0;            // Rebirth-Währung (💫)
             let gameActive = true;
 
             // Shop-Items Zustand
@@ -362,13 +381,14 @@
             let autoclickerInterval = null;
 
             // Meilensteinverfolgung (für 100er Schritte)
-            let lastMilestone = 0;   // letzter ausgelöster Hunderter
+            let lastMilestone = 0;
 
             // DOM-Elemente
             const pandaEmoji = document.getElementById('pandaEmoji');
             const messageSpan = document.getElementById('messageText');
             const scoreDisplay = document.getElementById('scoreDisplay');
             const currencyDisplay = document.getElementById('currencyDisplay');
+            const rebirthDisplay = document.getElementById('rebirthDisplay');
             const boostInfo = document.getElementById('boostInfo');
             const bambooElements = Array.from(document.querySelectorAll('.bamboo'));
             const resetBtn = document.getElementById('resetGameBtn');
@@ -379,6 +399,7 @@
             const btnRain = document.getElementById('buyRain');
             const btnLucky = document.getElementById('buyLucky');
             const btnMoreAutoclicker = document.getElementById('buyMoreAutoclicker');
+            const btnRebirthFood = document.getElementById('buyRebirthFood');
 
             // ---------- Sprüche-Sammlungen ----------
             const hungryPhrases = [
@@ -435,13 +456,15 @@
                 double: "ege: ⚡ Doppelklick! Jetzt geht's schnell!",
                 rain: "ege: 🌧️ Bambus-Regen! So viel auf einmal!",
                 lucky: "ege: 🍀 Glücksbambus! Lecker!",
-                moreAutoclicker: "ege: 🤖 Noch ein Helfer! Jetzt geht's richtig ab!"
+                moreAutoclicker: "ege: 🤖 Noch ein Helfer! Jetzt geht's richtig ab!",
+                rebirthFood: "ege: 🌱 Rebirth-Bambus! Noch mehr Futter!"
             };
 
             // ---------- Hilfsfunktionen ----------
             function updateUI() {
                 scoreDisplay.textContent = `${currentScore} / ${MAX_SCORE}`;
                 currencyDisplay.textContent = `💰 ${bambooPoints}`;
+                rebirthDisplay.textContent = `💫 ${rebirths}`;
 
                 // Boost-Info
                 let boosts = [];
@@ -450,23 +473,16 @@
                 if (autoclickerCount > 0) boosts.push(`🤖 ${autoclickerCount} Autoclicker`);
                 boostInfo.textContent = boosts.length ? "Aktiv: " + boosts.join(" · ") : "Keine aktiven Boosts";
 
-                // Shop-Buttons deaktivieren bei Spielende oder zu wenig Punkten
-                const buttons = [btnAutoclicker, btnDouble, btnRain, btnLucky, btnMoreAutoclicker];
-                buttons.forEach(btn => btn.disabled = !gameActive || bambooPoints < getPrice(btn.id));
+                // Shop-Buttons deaktivieren bei Spielende oder zu wenig Punkten/Rebirths
+                btnAutoclicker.disabled = !gameActive || bambooPoints < 50;
+                btnDouble.disabled = !gameActive || bambooPoints < 100;
+                btnRain.disabled = !gameActive || bambooPoints < 200;
+                btnLucky.disabled = !gameActive || bambooPoints < 150;
+                btnMoreAutoclicker.disabled = !gameActive || bambooPoints < 100;
+                btnRebirthFood.disabled = !gameActive || rebirths < 1;
             }
 
-            function getPrice(buttonId) {
-                switch(buttonId) {
-                    case 'buyAutoclicker': return 50;
-                    case 'buyDouble': return 100;
-                    case 'buyRain': return 200;
-                    case 'buyLucky': return 150;
-                    case 'buyMoreAutoclicker': return 100;
-                    default: return 0;
-                }
-            }
-
-            // Panda-Nachricht setzen (optional erzwungener Text)
+            // Panda-Nachricht setzen
             function setPandaMessage(text, isSpecial = true) {
                 if (!gameActive && currentScore >= MAX_SCORE) {
                     pandaEmoji.textContent = "💥";
@@ -491,7 +507,6 @@
             function checkMilestone(oldScore, newScore) {
                 for (let m = 100; m <= 1000; m += 100) {
                     if (oldScore < m && newScore >= m) {
-                        // Meilenstein erreicht
                         setPandaMessage(milestonePhrases[m] || getRandomPhasePhrase());
                         return true;
                     }
@@ -515,11 +530,11 @@
                 const multiplier = getCurrentMultiplier();
                 const totalFeed = amount * multiplier;
                 const oldScore = currentScore;
-                const newScore = Math.min(oldScore + totalFeed, MAX_SCORE); // nicht über MAX
+                const newScore = Math.min(oldScore + totalFeed, MAX_SCORE);
                 const feedActual = newScore - oldScore;
 
                 currentScore = newScore;
-                bambooPoints += feedActual;  // bekommt auch Punkte (1 pro Bambus)
+                bambooPoints += feedActual;  // 1 Punkt pro Bambus
 
                 // Prüfen, ob Explosion
                 if (currentScore >= MAX_SCORE) {
@@ -532,7 +547,7 @@
                     // Meilenstein prüfen
                     const milestoneReached = checkMilestone(oldScore, currentScore);
                     if (!milestoneReached) {
-                        maybeRandomPhrase();  // nur wenn kein Meilenstein
+                        maybeRandomPhrase();
                     }
                 }
 
@@ -550,27 +565,21 @@
                 return true;
             }
 
-            // Autoclicker kaufen (permanent)
             function buyAutoclicker() {
-                if (!gameActive) return;
                 buyItem(50, () => {
                     autoclickerCount++;
                     if (autoclickerInterval) clearInterval(autoclickerInterval);
-                    // Neuen Intervall starten (jede Sekunde feed mit Anzahl)
                     autoclickerInterval = setInterval(() => {
                         if (gameActive && currentScore < MAX_SCORE) {
-                            feed(autoclickerCount);  // jeder Autoclicker gibt 1 pro Sekunde
+                            feed(autoclickerCount);
                         }
                     }, 1000);
                 }, shopPhrases.autoclicker);
             }
 
-            // Doppelklick (temporär)
             function buyDouble() {
-                if (!gameActive) return;
                 buyItem(100, () => {
                     if (doubleBoostActive) {
-                        // Verlängern? Einfach neu starten
                         clearTimeout(doubleBoostTimeout);
                     }
                     doubleBoostActive = true;
@@ -581,9 +590,7 @@
                 }, shopPhrases.double);
             }
 
-            // Bambus-Regen
             function buyRain() {
-                if (!gameActive) return;
                 buyItem(200, () => {
                     if (rainBoostActive) clearTimeout(rainBoostTimeout);
                     rainBoostActive = true;
@@ -594,21 +601,15 @@
                 }, shopPhrases.rain);
             }
 
-            // Glücksbambus
             function buyLucky() {
-                if (!gameActive) return;
                 buyItem(150, () => {
-                    // sofort 50 Futter
                     feed(50);
                 }, shopPhrases.lucky);
             }
 
-            // Mehr Autoclicker (Upgrade)
             function buyMoreAutoclicker() {
-                if (!gameActive) return;
                 buyItem(100, () => {
                     autoclickerCount++;
-                    // Intervall neu starten (wenn vorhanden)
                     if (autoclickerInterval) {
                         clearInterval(autoclickerInterval);
                         autoclickerInterval = setInterval(() => {
@@ -620,6 +621,16 @@
                 }, shopPhrases.moreAutoclicker);
             }
 
+            // Neues Rebirth-Item: Kaufe 100 Futter für 1 Rebirth
+            function buyRebirthFood() {
+                if (!gameActive) return;
+                if (rebirths < 1) return;
+                rebirths--;
+                feed(100);  // erhöht currentScore und gibt Punkte
+                setPandaMessage(shopPhrases.rebirthFood);
+                updateUI();
+            }
+
             // ---------- Bambus-Klick ----------
             function onBambooClick(event) {
                 const bamboo = event.currentTarget;
@@ -627,10 +638,8 @@
                 if (currentScore >= MAX_SCORE) return;
                 if (bamboo.classList.contains('hidden')) return;
 
-                // Füttern (1 Bambus)
                 feed(1);
 
-                // Bambus verschwinden lassen (kurz)
                 bamboo.classList.add('hidden');
                 const index = parseInt(bamboo.dataset.index, 10);
                 setTimeout(() => {
@@ -640,8 +649,13 @@
                 }, 300);
             }
 
-            // ---------- Reset ----------
+            // ---------- Reset mit Rebirth-Belohnung ----------
             function resetGame() {
+                // Vor dem Zurücksetzen: Wenn das Spiel vorbei ist (explodiert), bekommt man einen Rebirth
+                if (!gameActive && currentScore >= MAX_SCORE) {
+                    rebirths++;
+                }
+
                 // Alle Timer löschen
                 if (autoclickerInterval) clearInterval(autoclickerInterval);
                 autoclickerInterval = null;
@@ -681,6 +695,7 @@
             btnRain.addEventListener('click', buyRain);
             btnLucky.addEventListener('click', buyLucky);
             btnMoreAutoclicker.addEventListener('click', buyMoreAutoclicker);
+            btnRebirthFood.addEventListener('click', buyRebirthFood);
             resetBtn.addEventListener('click', resetGame);
 
             // Initialisierung
