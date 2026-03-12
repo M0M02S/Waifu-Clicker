@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🐼 Panda Spiel – Bambus füttern</title>
+    <title>ege's Panda Spiel 🐼</title>
     <style>
         * {
             box-sizing: border-box;
@@ -23,7 +23,7 @@
         }
 
         .game-card {
-            max-width: 700px;
+            max-width: 750px;
             width: 100%;
             background: #fef9e8;
             border-radius: 60px 60px 40px 40px;
@@ -65,6 +65,7 @@
             line-height: 1;
             filter: drop-shadow(4px 8px 0 #3a2a1e);
             transform: scaleX(-1);
+            transition: transform 0.2s, filter 0.2s;
         }
 
         .speech-bubble {
@@ -76,8 +77,8 @@
             color: #2d4b2d;
             border: 4px solid #6b4f3c;
             box-shadow: 6px 6px 0 #3a5e3a;
-            max-width: 300px;
-            min-width: 200px;
+            max-width: 350px;
+            min-width: 250px;
             text-align: center;
             word-break: break-word;
         }
@@ -204,17 +205,17 @@
 </head>
 <body>
     <div class="game-card">
-        <h1>🐼 Panda Spiel</h1>
+        <h1>🐼 ege's Panda Spiel</h1>
 
-        <!-- Panda mit Sprechblase -->
+        <!-- Panda ege mit Sprechblase -->
         <div class="panda-zone">
-            <div class="panda-emoji" aria-label="Panda">🐼</div>
+            <div class="panda-emoji" id="pandaEmoji" aria-label="Panda ege">🐼</div>
             <div class="speech-bubble" id="pandaMessage">
-                <span>😋 Ich habe Hunger!</span>
+                <span id="messageText">ege: 😋 Ich habe Hunger!</span>
             </div>
         </div>
 
-        <!-- Bambuswald – die drei Halme -->
+        <!-- Bambuswald – drei Halme -->
         <div class="bamboo-forest">
             <div class="bamboo-row" id="bambooContainer">
                 <div class="bamboo" data-index="0" aria-label="Bambus" role="button" tabindex="0">🎋</div>
@@ -225,69 +226,90 @@
 
         <!-- Punktestand + Reset -->
         <div class="score-panel">
-            <div class="score-text" id="scoreDisplay">0 / 10</div>
+            <div class="score-text" id="scoreDisplay">0 / 100</div>
             <button class="reset-btn" id="resetGameBtn" aria-label="Neustart">🔄 Neustart</button>
         </div>
 
-        <!-- Kleine Statuszeile (wird bei Sieg sichtbar) -->
+        <!-- Kleine Statuszeile (wird bei Explosion sichtbar) -->
         <div id="winMessageContainer" style="min-height: 50px; text-align: center;"></div>
 
-        <footer>🥬 Klick auf Bambus – fütter den Panda!</footer>
+        <footer>🥬 Klick auf Bambus – fütter ege, aber Vorsicht, er platzt bei 100!</footer>
     </div>
 
     <script>
         (function() {
             // ---------- Spieleinstellungen ----------
-            const MAX_SCORE = 10;
+            const MAX_SCORE = 100;          // Bei 100 platzt ege
+            const SATT_SCORE = 50;           // Ab 50 ist ege satt (andere Sprüche)
             let currentScore = 0;
-            let gameActive = true;               // true = spiel läuft, false = victory (keine weiteren Aktionen)
-            
+            let gameActive = true;           
+
             // DOM elemente
             const bambooElements = Array.from(document.querySelectorAll('.bamboo'));
             const scoreDisplay = document.getElementById('scoreDisplay');
-            const pandaMessageBubble = document.querySelector('#pandaMessage span'); // das span innen
+            const messageSpan = document.getElementById('messageText');
+            const pandaEmoji = document.getElementById('pandaEmoji');
             const winContainer = document.getElementById('winMessageContainer');
-            
+
             // Timeout-Verwaltung für jeden Bambus (3 Stück)
             let bambooTimeouts = [null, null, null];
 
-            // ---------- lustige Panda-Sprüche (je nach Hunger) ----------
-            const pandaPhrases = [
-                "😩 Ich habe Hunger!",      // 0-2
-                "😐 Lecker, mehr!",         // 3-5
-                "🙂 Fast satt...",           // 6-8
-                "🥰 Danke, ich bin satt!"    // 9-10 (ab 9)
+            // ---------- lustige Panda-Sprüche (getrennt nach Zustand) ----------
+            const hungryPhrases = [
+                "😋 Ich habe Hunger!",
+                "🎋 Bambus, bitte!",
+                "🙏 Fütter mich!",
+                "😩 Mampf, mampf!",
+                "🍽️ Ich will Bambus!"
             ];
 
-            // Hilfsfunktion: Nachricht aktualisieren je nach Punktzahl
-            function updatePandaMessage() {
-                let msg = "";
-                if (currentScore >= MAX_SCORE) {
-                    msg = pandaPhrases[3] + " 🎉";
-                } else if (currentScore >= 7) {        // 7,8,9
-                    msg = pandaPhrases[2];
-                } else if (currentScore >= 3) {        // 3,4,5,6
-                    msg = pandaPhrases[1];
-                } else {
-                    msg = pandaPhrases[0];
-                }
-                pandaMessageBubble.textContent = msg;
+            const fullPhrases = [
+                "😤 Es reicht!",
+                "🤰 Ich bin satt!",
+                "🛑 Hör auf!",
+                "🙅 Kein Bambus mehr!",
+                "💥 Ich platze gleich!"
+            ];
+
+            const explodedPhrase = "💥 BUMM! ege ist geplatzt!";
+
+            // Hilfsfunktion: zufälligen Index aus Array
+            function randomPhrase(arr) {
+                return arr[Math.floor(Math.random() * arr.length)];
             }
 
-            // Anzeige von Punktestand & Sieg-Botschaft
+            // Aktualisiert Sprechblase, Emoji und ggf. Explosion
+            function updatePandaMessage() {
+                // Platzen?
+                if (currentScore >= MAX_SCORE) {
+                    // Explosion
+                    pandaEmoji.textContent = "💥";
+                    messageSpan.textContent = "ege: " + explodedPhrase;
+                    winContainer.innerHTML = '<div class="win-message">😵 ege ist geplatzt! Neustart?</div>';
+                } else {
+                    // Normales Panda-Emoji
+                    pandaEmoji.textContent = "🐼";
+                    winContainer.innerHTML = ''; // leeren
+
+                    let phrase = "";
+                    if (currentScore >= SATT_SCORE) {
+                        // satt-phase (50-99)
+                        phrase = randomPhrase(fullPhrases);
+                    } else {
+                        // hungrig-phase (0-49)
+                        phrase = randomPhrase(hungryPhrases);
+                    }
+                    messageSpan.textContent = "ege: " + phrase;
+                }
+            }
+
+            // Anzeige von Punktestand
             function updateScoreUI() {
                 scoreDisplay.textContent = `${currentScore} / ${MAX_SCORE}`;
-                
-                // Zusätzliche Sieg-Meldung einblenden
-                if (currentScore >= MAX_SCORE) {
-                    winContainer.innerHTML = '<div class="win-message">🥳 Der Panda ist glücklich und satt! 🥳</div>';
-                } else {
-                    winContainer.innerHTML = ''; // leeren
-                }
             }
 
-            // Sieg-Modus aktivieren (wird einmal aufgerufen)
-            function activateWinMode() {
+            // ---------- Explosion / Game Over ----------
+            function explodePanda() {
                 gameActive = false;
 
                 // Alle laufenden Timeouts abbrechen (damit kein Bambus mehr auftaucht)
@@ -298,24 +320,24 @@
                     }
                 }
 
-                // Alle Bambusse sofort sichtbar machen (für den vollen Wald)
+                // Alle Bambusse sichtbar machen (für den finalen Anblick)
                 bambooElements.forEach(b => b.classList.remove('hidden'));
 
-                // Panda Nachricht und UI updaten
-                updatePandaMessage();
+                // Panda-Nachricht und Emoji updaten
+                updatePandaMessage();  // setzt Emoji auf 💥 und Text
                 updateScoreUI();
             }
 
             // Punktestand erhöhen (durch Bambusklick)
             function increaseScore() {
-                if (!gameActive) return;           // Sieg – keine Erhöhung mehr
+                if (!gameActive) return;           // Explosion – keine Erhöhung mehr
                 if (currentScore >= MAX_SCORE) return;
 
                 currentScore++;
                 
-                // Prüfen ob maximale Punktzahl erreicht
+                // Prüfen ob maximale Punktzahl erreicht (Platzen)
                 if (currentScore >= MAX_SCORE) {
-                    activateWinMode();
+                    explodePanda();
                 } else {
                     // Normales Update
                     updatePandaMessage();
@@ -325,38 +347,36 @@
 
             // Handler für Bambus-Klick
             function onBambooClick(event) {
-                const bamboo = event.currentTarget; // das jeweilige Bambus-div
-                
-                // Nur wenn Spiel aktiv, Bambus nicht versteckt und Punktestand noch nicht max
+                const bamboo = event.currentTarget;
+
                 if (!gameActive) return;
                 if (currentScore >= MAX_SCORE) return;
-                if (bamboo.classList.contains('hidden')) return; // Sicherheitshalber
+                if (bamboo.classList.contains('hidden')) return;
 
-                // Index ermitteln (data-index)
                 const index = parseInt(bamboo.dataset.index, 10);
 
-                // --- 1. Punktestand erhöhen ---
-                increaseScore();  // hier wird ggf. activateWinMode ausgelöst
+                // Punktestand erhöhen (kann explode auslösen)
+                increaseScore();  
 
-                // --- 2. Bambus verschwinden lassen (sofort) ---
+                // Bambus verschwinden lassen (sofort)
                 bamboo.classList.add('hidden');
 
-                // --- 3. Vorherigen Timeout für diesen Bambus löschen (sollte keiner aktiv sein, aber sicher ist sicher) ---
+                // Vorherigen Timeout für diesen Bambus löschen
                 if (bambooTimeouts[index]) {
                     clearTimeout(bambooTimeouts[index]);
                     bambooTimeouts[index] = null;
                 }
 
-                // --- 4. Neuen Timeout starten: nach 1 Sekunde wieder sichtbar (nur wenn Spiel noch aktiv UND nicht bereits Sieg) ---
+                // Neuen Timeout starten: nach 1 Sekunde wieder sichtbar (nur wenn Spiel aktiv und nicht explodiert)
                 bambooTimeouts[index] = setTimeout(() => {
-                    // Wichtig: Nur sichtbar machen, wenn das Spiel noch aktiv ist (nicht im Sieg-Modus)
                     if (gameActive && currentScore < MAX_SCORE) {
                         bamboo.classList.remove('hidden');
                     } else {
-                        // Falls das Spiel vorbei ist, aber Bambus versteckt blieb: nicht einblenden.
-                        // (Im Win-Modus werden alle ohnehin sofort sichtbar gemacht, daher hier nichts tun)
+                        // Wenn explodiert, bleibt er versteckt? Wir machen alle sichtbar in explode, also hier nichts.
+                        // Aber falls ein Timeout nach dem Platzen noch ausgelöst wird (durch Race-Condition), 
+                        // dann nicht einblenden, weil gameActive false ist.
                     }
-                    bambooTimeouts[index] = null; // Referenz löschen
+                    bambooTimeouts[index] = null;
                 }, 1000);
             }
 
@@ -370,24 +390,26 @@
                     }
                 }
 
-                // Alle Bambusse wieder sichtbar machen (hidden-Klasse entfernen)
+                // Alle Bambusse wieder sichtbar machen
                 bambooElements.forEach(b => b.classList.remove('hidden'));
 
                 // Punktestand zurücksetzen
                 currentScore = 0;
                 gameActive = true;
 
+                // Panda-Emoji wieder normal
+                pandaEmoji.textContent = "🐼";
+
                 // Panda-Sprüche & UI updaten
                 updatePandaMessage();
                 updateScoreUI();
 
-                // Eventuell Sieg-Text entfernen
+                // Eventuelle Explosionsmeldung entfernen
                 winContainer.innerHTML = '';
             }
 
             // ---------- Event-Listener für Bambus ----------
             bambooElements.forEach((bamboo, idx) => {
-                // data-index setzen (falls nicht schon im HTML)
                 bamboo.dataset.index = idx;
                 bamboo.addEventListener('click', onBambooClick);
                 // kleine Tastaturbedienung
@@ -406,8 +428,6 @@
             // Initiale UI
             updatePandaMessage();
             updateScoreUI();
-
-            // Kleine Dreingabe: falls jemand auf "Enter" im Reset-Button drückt – ist schon ok.
         })();
     </script>
 </body>
