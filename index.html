@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ege's Panda – Skin-Shop & Speicherung</title>
+    <title>ege's Panda – Skins mit Farbe & Effekten</title>
     <style>
         * {
             box-sizing: border-box;
@@ -71,10 +71,48 @@
             line-height: 1;
             filter: drop-shadow(8px 12px 0 #3a2a1e);
             transform: scaleX(-1);
-            transition: transform 0.2s;
+            transition: transform 0.2s, filter 0.3s, text-shadow 0.3s;
         }
         .panda-emoji:hover {
             transform: scaleX(-1) scale(1.05);
+        }
+
+        /* Skin-Klassen – verändern das Aussehen des Panda-Emojis */
+        .panda-emoji.skin-normal {
+            filter: drop-shadow(8px 12px 0 #3a2a1e);
+            text-shadow: none;
+        }
+        .panda-emoji.skin-gold {
+            filter: drop-shadow(0 0 15px gold) drop-shadow(8px 12px 0 #b8860b);
+            text-shadow: 0 0 10px gold, 0 0 20px #ffd700;
+        }
+        .panda-emoji.skin-ice {
+            filter: drop-shadow(0 0 10px cyan) drop-shadow(8px 12px 0 #2a5f7a);
+            text-shadow: 0 0 8px lightblue, 0 0 15px white;
+        }
+        .panda-emoji.skin-rainbow {
+            animation: rainbowGlow 3s infinite;
+            filter: drop-shadow(8px 12px 0 #4a2e4a);
+        }
+        @keyframes rainbowGlow {
+            0% { text-shadow: 0 0 10px red; }
+            14% { text-shadow: 0 0 10px orange; }
+            28% { text-shadow: 0 0 10px yellow; }
+            42% { text-shadow: 0 0 10px green; }
+            57% { text-shadow: 0 0 10px blue; }
+            71% { text-shadow: 0 0 10px indigo; }
+            85% { text-shadow: 0 0 10px violet; }
+            100% { text-shadow: 0 0 10px red; }
+        }
+        .panda-emoji.skin-secret {
+            filter: drop-shadow(0 0 20px purple) drop-shadow(8px 12px 0 #301934);
+            text-shadow: 0 0 15px magenta, 0 0 30px darkviolet;
+            animation: secretPulse 2s infinite;
+        }
+        @keyframes secretPulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.9; filter: drop-shadow(0 0 25px violet) drop-shadow(8px 12px 0 #301934); }
+            100% { opacity: 1; }
         }
 
         .speech-bubble {
@@ -338,12 +376,6 @@
             color: #a52a2a;
             text-shadow: 2px 2px 0 #ffcf8a;
         }
-
-        /* Skin-Shop spezifisch */
-        .skin-emoji {
-            font-size: 3rem;
-            margin-right: 10px;
-        }
     </style>
 </head>
 <body>
@@ -353,7 +385,7 @@
             <h1>🐼 ege's Panda</h1>
 
             <div class="panda-zone">
-                <div class="panda-emoji" id="pandaEmoji">🐼</div>
+                <div class="panda-emoji skin-normal" id="pandaEmoji">🐼</div>
                 <div class="speech-bubble" id="pandaMessage">
                     <span id="messageText">ege: 😃 Hey, ich bin ege! Fütter mich!</span>
                 </div>
@@ -470,13 +502,53 @@
 
     <script>
         (function() {
-            // ---------- Skin-Daten ----------
+            // ---------- Skin-Daten mit CSS-Klassen ----------
             const skinList = [
-                { id: 'normal', name: 'Normaler Panda', emoji: '🐼', price: 0, currency: 'money' },
-                { id: 'gold', name: 'Gold-Panda', emoji: '🐼💰', price: 500, currency: 'money' },
-                { id: 'ice', name: 'Eis-Panda', emoji: '🐼❄️', price: 1000, currency: 'money' },
-                { id: 'rainbow', name: 'Regenbogen-Panda', emoji: '🐼🌈', price: 50, currency: 'rebirth' },
-                { id: 'secret', name: 'Secret Panda', emoji: '🐼💫', price: 100, currency: 'rebirth' }
+                { 
+                    id: 'normal', 
+                    name: 'Normaler Panda', 
+                    emoji: '🐼', 
+                    price: 0, 
+                    currency: 'money', 
+                    class: 'skin-normal',
+                    description: 'Der klassische Panda – immer da.' 
+                },
+                { 
+                    id: 'gold', 
+                    name: 'Gold-Panda', 
+                    emoji: '🐼', 
+                    price: 500, 
+                    currency: 'money', 
+                    class: 'skin-gold',
+                    description: 'Glänzend wie Gold – ein echter Schatz.' 
+                },
+                { 
+                    id: 'ice', 
+                    name: 'Eis-Panda', 
+                    emoji: '🐼', 
+                    price: 1000, 
+                    currency: 'money', 
+                    class: 'skin-ice',
+                    description: 'Kühler Blauschimmer – bringt frische Brise.' 
+                },
+                { 
+                    id: 'rainbow', 
+                    name: 'Regenbogen-Panda', 
+                    emoji: '🐼', 
+                    price: 50, 
+                    currency: 'rebirth', 
+                    class: 'skin-rainbow',
+                    description: 'Farbenpuder – leuchtet in allen Regenbogenfarben.' 
+                },
+                { 
+                    id: 'secret', 
+                    name: 'Secret Panda', 
+                    emoji: '🐼', 
+                    price: 100, 
+                    currency: 'rebirth', 
+                    class: 'skin-secret',
+                    description: 'Mysteriöser Schimmer – nur für Eingeweihte.' 
+                }
             ];
 
             // ---------- Spielzustand ----------
@@ -529,7 +601,7 @@
             const btnMegaMulti = document.getElementById('buyMegaMulti');
             const btnAutoTurbo = document.getElementById('buyAutoTurbo');
 
-            // ---------- Sprüche (wie gehabt) ----------
+            // ---------- Sprüche ----------
             const hungryPhrases = [
                 "😋 Bambus ist mein Leben!",
                 "🙏 Fütter mich, ich hab Hunger!",
@@ -599,9 +671,17 @@
                 return mult;
             }
 
-            function getCurrentSkinEmoji() {
+            // Aktualisiert die Skin-Klasse am Panda-Emoji
+            function applySkinClass() {
+                // Alle Skin-Klassen entfernen
+                pandaEmoji.classList.remove('skin-normal', 'skin-gold', 'skin-ice', 'skin-rainbow', 'skin-secret');
+                // Aktuelle Skin-Klasse hinzufügen
                 const skin = skinList.find(s => s.id === currentSkin);
-                return skin ? skin.emoji : '🐼';
+                if (skin) {
+                    pandaEmoji.classList.add(skin.class);
+                } else {
+                    pandaEmoji.classList.add('skin-normal');
+                }
             }
 
             function updateUI() {
@@ -616,8 +696,8 @@
                 if (autoclickerCount > 0) boosts.push(`🤖 ${autoclickerCount} Autoclicker`);
                 boostInfo.textContent = boosts.length ? "Aktiv: " + boosts.join(" · ") : "Keine aktiven Boosts";
 
-                // Panda-Emoji je nach Skin
-                pandaEmoji.textContent = getCurrentSkinEmoji();
+                // Panda-Emoji bleibt 🐼, aber Klasse wird gesetzt
+                applySkinClass();
 
                 // Buttons deaktivieren (Geld-Shop)
                 btnAutoclicker.disabled = !gameActive || bambooPoints < 50;
@@ -644,7 +724,8 @@
                     pandaEmoji.textContent = "💥";
                     messageSpan.textContent = "ege: " + explosionPhrase;
                 } else {
-                    pandaEmoji.textContent = getCurrentSkinEmoji();
+                    pandaEmoji.textContent = "🐼";  // Immer Panda-Emoji, Skin-Klasse bleibt
+                    applySkinClass();
                     messageSpan.textContent = text.startsWith('ege:') ? text : 'ege: ' + text;
                 }
             }
@@ -816,7 +897,7 @@
 
                     const descSpan = document.createElement('span');
                     descSpan.className = 'item-desc';
-                    descSpan.innerHTML = `<span class="skin-emoji">${skin.emoji}</span> ${skin.name}`;
+                    descSpan.innerHTML = `<span style="font-size:2.5rem; margin-right:10px;">🐼</span> ${skin.name}<br><small style="font-size:1.2rem; color:#5e3e2b;">${skin.description}</small>`;
                     itemDiv.appendChild(descSpan);
 
                     const priceSpan = document.createElement('span');
@@ -917,9 +998,7 @@
                     autoclickerCount,
                     autoclickerPower,
                     ownedSkins,
-                    currentSkin,
-                    doubleBoostActive,  // temporäre Boosts werden nicht gespeichert (laufen ab)
-                    rainBoostActive
+                    currentSkin
                 };
                 localStorage.setItem('egePandaSave', JSON.stringify(saveData));
             }
@@ -939,21 +1018,19 @@
                         ownedSkins = data.ownedSkins || ['normal'];
                         currentSkin = data.currentSkin || 'normal';
 
-                        // Temporäre Boosts nicht laden – laufen sonst ewig
+                        // Temporäre Boosts nicht laden
                         doubleBoostActive = false;
                         rainBoostActive = false;
-                        gameActive = true; // nach Laden ist Spiel aktiv, falls nicht explodiert
-                        lastMilestone = 0; // Meilensteine neu
+                        gameActive = true;
+                        lastMilestone = 0;
 
-                        // Falls currentScore bereits 10000, dann inaktiv setzen
                         if (currentScore >= 10000) {
                             gameActive = false;
                         }
 
-                        // Rebirth-Multiplikator aus rebirths neu berechnen (falls nicht gespeichert)
+                        // Rebirth-Multiplikator aus rebirths berechnen
                         rebirthMultiplier = Math.pow(2, rebirths);
 
-                        // Autoclicker neu starten
                         restartAutoclicker();
 
                         updateUI();
@@ -962,7 +1039,6 @@
                         console.warn("Fehler beim Laden", e);
                     }
                 } else {
-                    // Neustart mit Standardwerten
                     resetGame();
                 }
             }
