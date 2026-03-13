@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ege's Panda – Rebirth-Shop erweitert</title>
+    <title>ege's Panda – Rebirths verdoppeln Klicks</title>
     <style>
         * {
             box-sizing: border-box;
@@ -39,7 +39,6 @@
             box-shadow: 0 30px 40px rgba(0, 0, 0, 0.5), inset 0 2px 10px #ffeeaa;
             padding: 35px 25px;
             backdrop-filter: blur(2px);
-            transition: 0.3s;
         }
 
         h1 {
@@ -374,11 +373,11 @@
                 <div class="rebirth-display" id="rebirthDisplay">💫 0</div>
             </div>
 
-            <div class="multiplier-display" id="multiplierDisplay">⚡ Permanenter Multi: 1.0x</div>
+            <div class="multiplier-display" id="multiplierDisplay">⚡ Multi: 1.0x | Rebirth: 1x</div>
             <div id="boostInfo" class="boost-info">Keine aktiven Boosts</div>
 
             <button class="reset-btn" id="resetGameBtn">🔄 Neustart</button>
-            <footer>🥬 10.000 bis zum Platzen · 5.000 satt</footer>
+            <footer>🥬 10.000 bis zum Platzen · 5.000 satt · Jeder Rebirth = 2× Klickkraft</footer>
         </div>
 
         <!-- Shop (erweitert) -->
@@ -466,7 +465,8 @@
             let currentScore = 0;
             let bambooPoints = 0;       // 💰
             let rebirths = 0;            // 💫
-            let permanentMultiplier = 1.0;
+            let permanentMultiplier = 1.0; // durch Käufe erhöht
+            let rebirthMultiplier = 1;    // 2^rebirths (jeder Rebirth verdoppelt)
             let autoclickerCount = 0;
             let autoclickerPower = 1;    // Jeder Autoclicker gibt standardmäßig 1, kann durch Turbo erhöht werden
 
@@ -509,35 +509,7 @@
             const btnAutoTurbo = document.getElementById('buyAutoTurbo');
 
             // ---------- Sprüche ----------
-            const hungryPhrases = [ /* ... */ ];
-            const satedPhrases = [ /* ... */ ];
-            const explosionPhrase = "💥 BUMM! ege ist geplatzt!";
-            const milestonePhrases = { /* ... */ };
-            const shopPhrases = {
-                autoclicker: "ege: 🤖 Ein Autoclicker!",
-                autoclicker2: "ege: 🤖🤖 Zwei Autoclicker auf einmal!",
-                double: "ege: ⚡ Doppelklick!",
-                rain: "ege: 🌧️ Bambus-Regen!",
-                lucky: "ege: 🍀 Glücksbambus!",
-                moreAutoclicker: "ege: 🤖 Noch ein Helfer!",
-                rebirthFood: "ege: 🌱 Rebirth-Bambus!",
-                miniMulti: "ege: ✨ Kleiner Multi!",
-                rebirthMulti: "ege: ✨ Noch mehr Kraft!",
-                megaMulti: "ege: 💥 MEGA Multi!",
-                autoTurbo: "ege: 🤖💨 Autoclicker Turbo!"
-            };
-
-            // (Der vollständige Satz an Sprüchen ist im vorherigen Code enthalten – zur Platzersparnis hier nur die neuen)
-            // Wir kopieren die Arrays aus der vorherigen Version – für die Funktionalität reicht es, sie hier zu definieren.
-            // Der Einfachheit halber übernehmen wir die bestehenden Arrays aus dem vorherigen Code.
-            // (Im tatsächlichen Code müssen sie vorhanden sein, hier kürze ich ab)
-            // Bitte im endgültigen Code die vollständigen Arrays einfügen.
-            // Wir haben sie in der vorherigen Antwort, ich verwende sie hier wieder.
-
-            // Hier nur die wichtigsten Funktionen – die Arrays müssen noch ergänzt werden.
-            // Für die Demo füge ich sie kurz ein:
-
-            const hungryPhrasesFull = [
+            const hungryPhrases = [
                 "😋 Bambus ist mein Leben!",
                 "🙏 Fütter mich, ich hab Hunger!",
                 "🎋 Noch mehr Bambus!",
@@ -553,7 +525,7 @@
                 "🙂 Noch ein bisschen …"
             ];
 
-            const satedPhrasesFull = [
+            const satedPhrases = [
                 "😑 Ich bin satt. Hör auf!",
                 "😒 Im Ernst, es reicht.",
                 "😤 Du ignorierst mich!",
@@ -569,7 +541,9 @@
                 "😱 ... bitte stopp!"
             ];
 
-            const milestonePhrasesFull = {
+            const explosionPhrase = "💥 BUMM! ege ist geplatzt!";
+
+            const milestonePhrases = {
                 1000: "ege: 😮 1000! Das ist erst der Anfang!",
                 2000: "ege: 😌 2000 Bambus – noch 3000 bis satt.",
                 3000: "ege: 😋 3000! Halbzeit?",
@@ -582,9 +556,24 @@
                 10000: "ege: 💥 10000 – tschüss!"
             };
 
+            const shopPhrases = {
+                autoclicker: "ege: 🤖 Ein Autoclicker!",
+                autoclicker2: "ege: 🤖🤖 Zwei Autoclicker auf einmal!",
+                double: "ege: ⚡ Doppelklick!",
+                rain: "ege: 🌧️ Bambus-Regen!",
+                lucky: "ege: 🍀 Glücksbambus!",
+                moreAutoclicker: "ege: 🤖 Noch ein Helfer!",
+                rebirthFood: "ege: 🌱 Rebirth-Bambus!",
+                miniMulti: "ege: ✨ Kleiner Multi!",
+                rebirthMulti: "ege: ✨ Noch mehr Kraft!",
+                megaMulti: "ege: 💥 MEGA Multi!",
+                autoTurbo: "ege: 🤖💨 Autoclicker Turbo!"
+            };
+
             // ---------- Hilfsfunktionen ----------
             function getCurrentMultiplier() {
-                let mult = permanentMultiplier;
+                // Gesamtmultiplikator = (gekaufter Multi) * (Rebirth-Multi) * (temporäre Boosts)
+                let mult = permanentMultiplier * rebirthMultiplier;
                 if (doubleBoostActive) mult *= 2;
                 if (rainBoostActive) mult *= 5;
                 return mult;
@@ -594,7 +583,7 @@
                 scoreDisplay.textContent = `${currentScore} / ${MAX_SCORE}`;
                 currencyDisplay.textContent = `💰 ${bambooPoints}`;
                 rebirthDisplay.textContent = `💫 ${rebirths}`;
-                multiplierDisplay.textContent = `⚡ Permanenter Multi: ${permanentMultiplier.toFixed(1)}x | Autoclicker: ${autoclickerCount} (x${autoclickerPower})`;
+                multiplierDisplay.textContent = `⚡ Multi: ${permanentMultiplier.toFixed(1)}x | Rebirth: ${rebirthMultiplier}x | Auto: ${autoclickerCount} (x${autoclickerPower})`;
 
                 let boosts = [];
                 if (doubleBoostActive) boosts.push("⚡ Doppelklick");
@@ -629,16 +618,16 @@
             function getRandomPhasePhrase() {
                 if (currentScore >= MAX_SCORE) return explosionPhrase;
                 if (currentScore >= SATIATED) {
-                    return satedPhrasesFull[Math.floor(Math.random() * satedPhrasesFull.length)];
+                    return satedPhrases[Math.floor(Math.random() * satedPhrases.length)];
                 } else {
-                    return hungryPhrasesFull[Math.floor(Math.random() * hungryPhrasesFull.length)];
+                    return hungryPhrases[Math.floor(Math.random() * hungryPhrases.length)];
                 }
             }
 
             function checkMilestone(oldScore, newScore) {
                 for (let m = 1000; m <= 10000; m += 1000) {
                     if (oldScore < m && newScore >= m) {
-                        setPandaMessage(milestonePhrasesFull[m] || getRandomPhasePhrase());
+                        setPandaMessage(milestonePhrases[m] || getRandomPhasePhrase());
                         return true;
                     }
                 }
@@ -804,10 +793,14 @@
 
             // ---------- Reset mit Rebirth-Belohnung ----------
             function resetGame() {
+                // Vor dem Zurücksetzen: Wenn das Spiel vorbei ist (explodiert), bekommt man einen Rebirth
                 if (!gameActive && currentScore >= MAX_SCORE) {
                     rebirths++;
+                    // Jeder Rebirth verdoppelt den Rebirth-Multiplikator (2^rebirths)
+                    rebirthMultiplier = Math.pow(2, rebirths);
                 }
 
+                // Alle Timer löschen
                 if (autoclickerInterval) clearInterval(autoclickerInterval);
                 autoclickerInterval = null;
                 if (doubleBoostTimeout) clearTimeout(doubleBoostTimeout);
@@ -817,12 +810,14 @@
 
                 currentScore = 0;
                 bambooPoints = 0;
-                // Permanente Upgrades bleiben: autoclickerCount, permanentMultiplier, autoclickerPower
+                // Permanente Upgrades bleiben: autoclickerCount, permanentMultiplier, autoclickerPower, rebirthMultiplier
                 gameActive = true;
                 lastMilestone = 0;
 
+                // Alle Bambusse sichtbar
                 bambooElements.forEach(b => b.classList.remove('hidden'));
 
+                // Startnachricht
                 setPandaMessage("😃 Hey, ich bin ege! Fütter mich!");
                 updateUI();
                 restartAutoclicker(); // falls Autoclicker vorhanden
