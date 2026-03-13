@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ege's Panda – Rebirths verdoppeln Klicks</title>
+    <title>ege's Panda – Skin-Shop & Speicherung</title>
     <style>
         * {
             box-sizing: border-box;
@@ -251,7 +251,17 @@
             text-shadow: 2px 2px 0 #b0b07a;
         }
 
-        /* Shopbereich – scrollbar */
+        /* Rechte Spalte – scrollbar */
+        .right-column {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+
+        /* Shop-Bereiche */
         .shop-area {
             background: #fef9e8;
             border-radius: 60px;
@@ -262,22 +272,6 @@
             flex-direction: column;
             gap: 25px;
             backdrop-filter: blur(2px);
-            max-height: 90vh;
-            overflow-y: auto;
-            scrollbar-width: thin;
-            scrollbar-color: #8b6b4d #fef9e8;
-        }
-
-        .shop-area::-webkit-scrollbar {
-            width: 8px;
-        }
-        .shop-area::-webkit-scrollbar-track {
-            background: #fef9e8;
-            border-radius: 10px;
-        }
-        .shop-area::-webkit-scrollbar-thumb {
-            background: #8b6b4d;
-            border-radius: 10px;
         }
 
         .shop-title {
@@ -344,6 +338,12 @@
             color: #a52a2a;
             text-shadow: 2px 2px 0 #ffcf8a;
         }
+
+        /* Skin-Shop spezifisch */
+        .skin-emoji {
+            font-size: 3rem;
+            margin-right: 10px;
+        }
     </style>
 </head>
 <body>
@@ -380,95 +380,115 @@
             <footer>🥬 10.000 bis zum Platzen · 5.000 satt · Jeder Rebirth = 2× Klickkraft</footer>
         </div>
 
-        <!-- Shop (erweitert) -->
-        <div class="shop-area">
-            <div class="shop-title">🛒 Bambus-Shop</div>
+        <!-- Rechte Spalte: Shops -->
+        <div class="right-column">
+            <!-- Normaler Shop (Geld & Rebirths) -->
+            <div class="shop-area">
+                <div class="shop-title">🛒 Bambus-Shop</div>
 
-            <!-- Geld-Items (💰) -->
-            <div class="shop-item">
-                <span class="item-desc">🤖 Autoclicker (einzeln)</span>
-                <span class="item-price">Preis: 50 💰</span>
-                <button id="buyAutoclicker">Kaufen (1 Klick/Sek)</button>
+                <!-- Geld-Items (💰) -->
+                <div class="shop-item">
+                    <span class="item-desc">🤖 Autoclicker (einzeln)</span>
+                    <span class="item-price">Preis: 50 💰</span>
+                    <button id="buyAutoclicker">Kaufen (1 Klick/Sek)</button>
+                </div>
+
+                <div class="shop-item">
+                    <span class="item-desc">🤖🤖 Autoclicker-Paket (2 Stück)</span>
+                    <span class="item-price">Preis: 100 💰</span>
+                    <button id="buyAutoclicker2">Kaufen (2 Autoclicker)</button>
+                </div>
+
+                <div class="shop-item">
+                    <span class="item-desc">⚡ Doppelklick (30 Sek.)</span>
+                    <span class="item-price">Preis: 100 💰</span>
+                    <button id="buyDouble">Kaufen (2x pro Klick)</button>
+                </div>
+
+                <div class="shop-item">
+                    <span class="item-desc">🌧️ Bambus-Regen (10 Sek., 5x)</span>
+                    <span class="item-price">Preis: 200 💰</span>
+                    <button id="buyRain">Kaufen (5x Multiplier)</button>
+                </div>
+
+                <div class="shop-item">
+                    <span class="item-desc">🍀 Glücksbambus (sofort)</span>
+                    <span class="item-price">Preis: 150 💰</span>
+                    <button id="buyLucky">Kaufen (+50 Futter)</button>
+                </div>
+
+                <div class="shop-item">
+                    <span class="item-desc">📈 Autoclicker +1 (Upgrade)</span>
+                    <span class="item-price">Preis: 100 💰</span>
+                    <button id="buyMoreAutoclicker">Mehr Autoclicker</button>
+                </div>
+
+                <!-- Trennlinie / Rebirth-Items (💫) -->
+                <div style="border-top: 4px dashed #8b6b4d; margin: 10px 0;"></div>
+                <div class="shop-title" style="font-size: 2.2rem;">✨ Rebirth-Shop</div>
+
+                <div class="shop-item">
+                    <span class="item-desc">🌱 Rebirth-Bambus (sofort)</span>
+                    <span class="item-price">Preis: 2 💫</span>
+                    <button id="buyRebirthFood">Kaufen (+200 Futter)</button>
+                </div>
+
+                <div class="shop-item">
+                    <span class="item-desc">✨ Mini-Multi +0.1 (permanent)</span>
+                    <span class="item-price">Preis: 3 💫</span>
+                    <button id="buyMiniMulti">Kaufen (+0.1 Multi)</button>
+                </div>
+
+                <div class="shop-item">
+                    <span class="item-desc">⚡ Rebirth-Multi +0.2 (permanent)</span>
+                    <span class="item-price">Preis: 5 💫</span>
+                    <button id="buyRebirthMulti">Multiplikator erhöhen</button>
+                </div>
+
+                <div class="shop-item">
+                    <span class="item-desc">💥 Mega-Multi +0.5 (permanent)</span>
+                    <span class="item-price">Preis: 10 💫</span>
+                    <button id="buyMegaMulti">Multi +0.5</button>
+                </div>
+
+                <div class="shop-item">
+                    <span class="item-desc">🤖 Autoclicker-Turbo (verdoppelt Effekt)</span>
+                    <span class="item-price">Preis: 8 💫</span>
+                    <button id="buyAutoTurbo">Autoclicker 2x effektiv</button>
+                </div>
             </div>
 
-            <div class="shop-item">
-                <span class="item-desc">🤖🤖 Autoclicker-Paket (2 Stück)</span>
-                <span class="item-price">Preis: 100 💰</span>
-                <button id="buyAutoclicker2">Kaufen (2 Autoclicker)</button>
-            </div>
-
-            <div class="shop-item">
-                <span class="item-desc">⚡ Doppelklick (30 Sek.)</span>
-                <span class="item-price">Preis: 100 💰</span>
-                <button id="buyDouble">Kaufen (2x pro Klick)</button>
-            </div>
-
-            <div class="shop-item">
-                <span class="item-desc">🌧️ Bambus-Regen (10 Sek., 5x)</span>
-                <span class="item-price">Preis: 200 💰</span>
-                <button id="buyRain">Kaufen (5x Multiplier)</button>
-            </div>
-
-            <div class="shop-item">
-                <span class="item-desc">🍀 Glücksbambus (sofort)</span>
-                <span class="item-price">Preis: 150 💰</span>
-                <button id="buyLucky">Kaufen (+50 Futter)</button>
-            </div>
-
-            <div class="shop-item">
-                <span class="item-desc">📈 Autoclicker +1 (Upgrade)</span>
-                <span class="item-price">Preis: 100 💰</span>
-                <button id="buyMoreAutoclicker">Mehr Autoclicker</button>
-            </div>
-
-            <!-- Trennlinie / Rebirth-Items (💫) -->
-            <div style="border-top: 4px dashed #8b6b4d; margin: 10px 0;"></div>
-            <div class="shop-title" style="font-size: 2.2rem;">✨ Rebirth-Shop</div>
-
-            <div class="shop-item">
-                <span class="item-desc">🌱 Rebirth-Bambus (sofort)</span>
-                <span class="item-price">Preis: 2 💫</span>
-                <button id="buyRebirthFood">Kaufen (+200 Futter)</button>
-            </div>
-
-            <div class="shop-item">
-                <span class="item-desc">✨ Mini-Multi +0.1 (permanent)</span>
-                <span class="item-price">Preis: 3 💫</span>
-                <button id="buyMiniMulti">Kaufen (+0.1 Multi)</button>
-            </div>
-
-            <div class="shop-item">
-                <span class="item-desc">⚡ Rebirth-Multi +0.2 (permanent)</span>
-                <span class="item-price">Preis: 5 💫</span>
-                <button id="buyRebirthMulti">Multiplikator erhöhen</button>
-            </div>
-
-            <div class="shop-item">
-                <span class="item-desc">💥 Mega-Multi +0.5 (permanent)</span>
-                <span class="item-price">Preis: 10 💫</span>
-                <button id="buyMegaMulti">Multi +0.5</button>
-            </div>
-
-            <div class="shop-item">
-                <span class="item-desc">🤖 Autoclicker-Turbo (verdoppelt Effekt)</span>
-                <span class="item-price">Preis: 8 💫</span>
-                <button id="buyAutoTurbo">Autoclicker 2x effektiv</button>
+            <!-- Skin-Shop -->
+            <div class="shop-area" id="skinShop">
+                <div class="shop-title">🎨 Skin-Shop</div>
+                <div id="skinContainer">
+                    <!-- Dynamisch per JS befüllt -->
+                </div>
             </div>
         </div>
     </div>
 
     <script>
         (function() {
-            // ---------- Konstanten ----------
-            const MAX_SCORE = 10000;
-            const SATIATED = 5000;
+            // ---------- Skin-Daten ----------
+            const skinList = [
+                { id: 'normal', name: 'Normaler Panda', emoji: '🐼', price: 0, currency: 'money' },
+                { id: 'gold', name: 'Gold-Panda', emoji: '🐼💰', price: 500, currency: 'money' },
+                { id: 'ice', name: 'Eis-Panda', emoji: '🐼❄️', price: 1000, currency: 'money' },
+                { id: 'rainbow', name: 'Regenbogen-Panda', emoji: '🐼🌈', price: 50, currency: 'rebirth' },
+                { id: 'secret', name: 'Secret Panda', emoji: '🐼💫', price: 100, currency: 'rebirth' }
+            ];
+
+            // ---------- Spielzustand ----------
             let currentScore = 0;
-            let bambooPoints = 0;       // 💰
-            let rebirths = 0;            // 💫
-            let permanentMultiplier = 1.0; // durch Käufe erhöht
-            let rebirthMultiplier = 1;    // 2^rebirths (jeder Rebirth verdoppelt)
+            let bambooPoints = 0;               // 💰
+            let rebirths = 0;                    // 💫
+            let permanentMultiplier = 1.0;        // durch Käufe
+            let rebirthMultiplier = 1;            // 2^rebirths
             let autoclickerCount = 0;
-            let autoclickerPower = 1;    // Jeder Autoclicker gibt standardmäßig 1, kann durch Turbo erhöht werden
+            let autoclickerPower = 1;             // Basis 1, kann durch Turbo erhöht werden
+            let ownedSkins = ['normal'];           // besessene Skin-IDs
+            let currentSkin = 'normal';             // aktiver Skin
 
             let gameActive = true;
 
@@ -494,8 +514,9 @@
             const boostInfo = document.getElementById('boostInfo');
             const bambooElements = Array.from(document.querySelectorAll('.bamboo'));
             const resetBtn = document.getElementById('resetGameBtn');
+            const skinContainer = document.getElementById('skinContainer');
 
-            // Shop-Buttons
+            // Shop-Buttons (Geld & Rebirth)
             const btnAutoclicker = document.getElementById('buyAutoclicker');
             const btnAutoclicker2 = document.getElementById('buyAutoclicker2');
             const btnDouble = document.getElementById('buyDouble');
@@ -508,7 +529,7 @@
             const btnMegaMulti = document.getElementById('buyMegaMulti');
             const btnAutoTurbo = document.getElementById('buyAutoTurbo');
 
-            // ---------- Sprüche ----------
+            // ---------- Sprüche (wie gehabt) ----------
             const hungryPhrases = [
                 "😋 Bambus ist mein Leben!",
                 "🙏 Fütter mich, ich hab Hunger!",
@@ -572,15 +593,19 @@
 
             // ---------- Hilfsfunktionen ----------
             function getCurrentMultiplier() {
-                // Gesamtmultiplikator = (gekaufter Multi) * (Rebirth-Multi) * (temporäre Boosts)
                 let mult = permanentMultiplier * rebirthMultiplier;
                 if (doubleBoostActive) mult *= 2;
                 if (rainBoostActive) mult *= 5;
                 return mult;
             }
 
+            function getCurrentSkinEmoji() {
+                const skin = skinList.find(s => s.id === currentSkin);
+                return skin ? skin.emoji : '🐼';
+            }
+
             function updateUI() {
-                scoreDisplay.textContent = `${currentScore} / ${MAX_SCORE}`;
+                scoreDisplay.textContent = `${currentScore} / 10000`;
                 currencyDisplay.textContent = `💰 ${bambooPoints}`;
                 rebirthDisplay.textContent = `💫 ${rebirths}`;
                 multiplierDisplay.textContent = `⚡ Multi: ${permanentMultiplier.toFixed(1)}x | Rebirth: ${rebirthMultiplier}x | Auto: ${autoclickerCount} (x${autoclickerPower})`;
@@ -591,7 +616,10 @@
                 if (autoclickerCount > 0) boosts.push(`🤖 ${autoclickerCount} Autoclicker`);
                 boostInfo.textContent = boosts.length ? "Aktiv: " + boosts.join(" · ") : "Keine aktiven Boosts";
 
-                // Buttons deaktivieren
+                // Panda-Emoji je nach Skin
+                pandaEmoji.textContent = getCurrentSkinEmoji();
+
+                // Buttons deaktivieren (Geld-Shop)
                 btnAutoclicker.disabled = !gameActive || bambooPoints < 50;
                 btnAutoclicker2.disabled = !gameActive || bambooPoints < 100;
                 btnDouble.disabled = !gameActive || bambooPoints < 100;
@@ -603,21 +631,27 @@
                 btnRebirthMulti.disabled = !gameActive || rebirths < 5;
                 btnMegaMulti.disabled = !gameActive || rebirths < 10;
                 btnAutoTurbo.disabled = !gameActive || rebirths < 8;
+
+                // Skin-Shop rendern (aktualisiert auch die Buttons dort)
+                renderSkinShop();
+
+                // Speichern nach jeder Änderung
+                saveGame();
             }
 
             function setPandaMessage(text) {
-                if (!gameActive && currentScore >= MAX_SCORE) {
+                if (!gameActive && currentScore >= 10000) {
                     pandaEmoji.textContent = "💥";
                     messageSpan.textContent = "ege: " + explosionPhrase;
                 } else {
-                    pandaEmoji.textContent = "🐼";
+                    pandaEmoji.textContent = getCurrentSkinEmoji();
                     messageSpan.textContent = text.startsWith('ege:') ? text : 'ege: ' + text;
                 }
             }
 
             function getRandomPhasePhrase() {
-                if (currentScore >= MAX_SCORE) return explosionPhrase;
-                if (currentScore >= SATIATED) {
+                if (currentScore >= 10000) return explosionPhrase;
+                if (currentScore >= 5000) {
                     return satedPhrases[Math.floor(Math.random() * satedPhrases.length)];
                 } else {
                     return hungryPhrases[Math.floor(Math.random() * hungryPhrases.length)];
@@ -643,18 +677,18 @@
 
             function feed(amount = 1) {
                 if (!gameActive) return;
-                if (currentScore >= MAX_SCORE) return;
+                if (currentScore >= 10000) return;
 
                 const multiplier = getCurrentMultiplier();
                 const totalFeed = amount * multiplier;
                 const oldScore = currentScore;
-                const newScore = Math.min(oldScore + totalFeed, MAX_SCORE);
+                const newScore = Math.min(oldScore + totalFeed, 10000);
                 const feedActual = newScore - oldScore;
 
                 currentScore = newScore;
                 bambooPoints += feedActual;
 
-                if (currentScore >= MAX_SCORE) {
+                if (currentScore >= 10000) {
                     gameActive = false;
                     setPandaMessage(explosionPhrase);
                     if (autoclickerInterval) clearInterval(autoclickerInterval);
@@ -671,14 +705,14 @@
                 if (autoclickerInterval) clearInterval(autoclickerInterval);
                 if (autoclickerCount > 0) {
                     autoclickerInterval = setInterval(() => {
-                        if (gameActive && currentScore < MAX_SCORE) {
+                        if (gameActive && currentScore < 10000) {
                             feed(autoclickerCount * autoclickerPower);
                         }
                     }, 1000);
                 }
             }
 
-            // ---------- Shop-Käufe ----------
+            // ---------- Shop-Käufe (Geld & Rebirth) ----------
             function buyItem(price, currency, callback, successMessage) {
                 if (!gameActive) return false;
                 if (currency === 'money' && bambooPoints < price) return false;
@@ -691,7 +725,6 @@
                 return true;
             }
 
-            // Geld-Käufe
             btnAutoclicker.addEventListener('click', () => {
                 buyItem(50, 'money', () => {
                     autoclickerCount++;
@@ -741,7 +774,6 @@
                 }, shopPhrases.moreAutoclicker);
             });
 
-            // Rebirth-Käufe
             btnRebirthFood.addEventListener('click', () => {
                 buyItem(2, 'rebirth', () => {
                     feed(200);
@@ -768,16 +800,71 @@
 
             btnAutoTurbo.addEventListener('click', () => {
                 buyItem(8, 'rebirth', () => {
-                    autoclickerPower *= 2; // verdoppelt die Stärke aller Autoclicker
+                    autoclickerPower *= 2;
                     restartAutoclicker();
                 }, shopPhrases.autoTurbo);
             });
+
+            // ---------- Skin-Shop Logik ----------
+            function renderSkinShop() {
+                skinContainer.innerHTML = '';
+                skinList.forEach(skin => {
+                    const owned = ownedSkins.includes(skin.id);
+                    const active = currentSkin === skin.id;
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = 'shop-item';
+
+                    const descSpan = document.createElement('span');
+                    descSpan.className = 'item-desc';
+                    descSpan.innerHTML = `<span class="skin-emoji">${skin.emoji}</span> ${skin.name}`;
+                    itemDiv.appendChild(descSpan);
+
+                    const priceSpan = document.createElement('span');
+                    priceSpan.className = 'item-price';
+                    priceSpan.textContent = skin.price === 0 ? 'Kostenlos' : `Preis: ${skin.price} ${skin.currency === 'money' ? '💰' : '💫'}`;
+                    itemDiv.appendChild(priceSpan);
+
+                    const actionBtn = document.createElement('button');
+                    if (owned && active) {
+                        actionBtn.textContent = 'Aktiv';
+                        actionBtn.disabled = true;
+                    } else if (owned && !active) {
+                        actionBtn.textContent = 'Ausrüsten';
+                        actionBtn.addEventListener('click', () => {
+                            currentSkin = skin.id;
+                            setPandaMessage(`ege: Jetzt trage ich ${skin.name}!`);
+                            updateUI();
+                        });
+                    } else {
+                        // Nicht besessen
+                        actionBtn.textContent = `Kaufen (${skin.price} ${skin.currency === 'money' ? '💰' : '💫'})`;
+                        actionBtn.disabled = !gameActive || (skin.currency === 'money' ? bambooPoints < skin.price : rebirths < skin.price);
+                        actionBtn.addEventListener('click', () => {
+                            if (skin.currency === 'money' && bambooPoints >= skin.price) {
+                                bambooPoints -= skin.price;
+                                ownedSkins.push(skin.id);
+                                currentSkin = skin.id; // automatisch ausrüsten
+                                setPandaMessage(`ege: ${skin.name} gekauft!`);
+                                updateUI();
+                            } else if (skin.currency === 'rebirth' && rebirths >= skin.price) {
+                                rebirths -= skin.price;
+                                ownedSkins.push(skin.id);
+                                currentSkin = skin.id;
+                                setPandaMessage(`ege: ${skin.name} gekauft!`);
+                                updateUI();
+                            }
+                        });
+                    }
+                    itemDiv.appendChild(actionBtn);
+                    skinContainer.appendChild(itemDiv);
+                });
+            }
 
             // ---------- Bambus-Klick ----------
             function onBambooClick(event) {
                 const bamboo = event.currentTarget;
                 if (!gameActive) return;
-                if (currentScore >= MAX_SCORE) return;
+                if (currentScore >= 10000) return;
                 if (bamboo.classList.contains('hidden')) return;
 
                 feed(1);
@@ -785,7 +872,7 @@
                 bamboo.classList.add('hidden');
                 const index = parseInt(bamboo.dataset.index, 10);
                 setTimeout(() => {
-                    if (gameActive && currentScore < MAX_SCORE) {
+                    if (gameActive && currentScore < 10000) {
                         bamboo.classList.remove('hidden');
                     }
                 }, 300);
@@ -793,10 +880,8 @@
 
             // ---------- Reset mit Rebirth-Belohnung ----------
             function resetGame() {
-                // Vor dem Zurücksetzen: Wenn das Spiel vorbei ist (explodiert), bekommt man einen Rebirth
-                if (!gameActive && currentScore >= MAX_SCORE) {
+                if (!gameActive && currentScore >= 10000) {
                     rebirths++;
-                    // Jeder Rebirth verdoppelt den Rebirth-Multiplikator (2^rebirths)
                     rebirthMultiplier = Math.pow(2, rebirths);
                 }
 
@@ -810,17 +895,76 @@
 
                 currentScore = 0;
                 bambooPoints = 0;
-                // Permanente Upgrades bleiben: autoclickerCount, permanentMultiplier, autoclickerPower, rebirthMultiplier
+                // Permanente Upgrades bleiben: autoclickerCount, permanentMultiplier, autoclickerPower, rebirthMultiplier, ownedSkins, currentSkin
                 gameActive = true;
                 lastMilestone = 0;
 
-                // Alle Bambusse sichtbar
                 bambooElements.forEach(b => b.classList.remove('hidden'));
 
-                // Startnachricht
                 setPandaMessage("😃 Hey, ich bin ege! Fütter mich!");
                 updateUI();
-                restartAutoclicker(); // falls Autoclicker vorhanden
+                restartAutoclicker();
+            }
+
+            // ---------- Speicherfunktionen ----------
+            function saveGame() {
+                const saveData = {
+                    currentScore,
+                    bambooPoints,
+                    rebirths,
+                    permanentMultiplier,
+                    rebirthMultiplier,
+                    autoclickerCount,
+                    autoclickerPower,
+                    ownedSkins,
+                    currentSkin,
+                    doubleBoostActive,  // temporäre Boosts werden nicht gespeichert (laufen ab)
+                    rainBoostActive
+                };
+                localStorage.setItem('egePandaSave', JSON.stringify(saveData));
+            }
+
+            function loadGame() {
+                const saved = localStorage.getItem('egePandaSave');
+                if (saved) {
+                    try {
+                        const data = JSON.parse(saved);
+                        currentScore = data.currentScore || 0;
+                        bambooPoints = data.bambooPoints || 0;
+                        rebirths = data.rebirths || 0;
+                        permanentMultiplier = data.permanentMultiplier || 1.0;
+                        rebirthMultiplier = data.rebirthMultiplier || 1;
+                        autoclickerCount = data.autoclickerCount || 0;
+                        autoclickerPower = data.autoclickerPower || 1;
+                        ownedSkins = data.ownedSkins || ['normal'];
+                        currentSkin = data.currentSkin || 'normal';
+
+                        // Temporäre Boosts nicht laden – laufen sonst ewig
+                        doubleBoostActive = false;
+                        rainBoostActive = false;
+                        gameActive = true; // nach Laden ist Spiel aktiv, falls nicht explodiert
+                        lastMilestone = 0; // Meilensteine neu
+
+                        // Falls currentScore bereits 10000, dann inaktiv setzen
+                        if (currentScore >= 10000) {
+                            gameActive = false;
+                        }
+
+                        // Rebirth-Multiplikator aus rebirths neu berechnen (falls nicht gespeichert)
+                        rebirthMultiplier = Math.pow(2, rebirths);
+
+                        // Autoclicker neu starten
+                        restartAutoclicker();
+
+                        updateUI();
+                        setPandaMessage("😃 Willkommen zurück, ege!");
+                    } catch (e) {
+                        console.warn("Fehler beim Laden", e);
+                    }
+                } else {
+                    // Neustart mit Standardwerten
+                    resetGame();
+                }
             }
 
             // ---------- Event-Listener ----------
@@ -837,8 +981,13 @@
 
             resetBtn.addEventListener('click', resetGame);
 
-            // Initialisierung
-            resetGame();
+            // Beim Laden der Seite gespeicherten Zustand laden
+            loadGame();
+
+            // Vor dem Schließen speichern (zusätzlich)
+            window.addEventListener('beforeunload', () => {
+                saveGame();
+            });
         })();
     </script>
 </body>
