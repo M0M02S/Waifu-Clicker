@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ege's Panda – Rebirth-Shop fix</title>
+    <title>ege's Panda – +0.25 pro Rebirth</title>
     <style>
         * {
             box-sizing: border-box;
@@ -442,11 +442,11 @@
                 <div class="rebirth-display" id="rebirthDisplay">💫 0</div>
             </div>
 
-            <div class="multiplier-display" id="multiplierDisplay">⚡ Multi: 1.0x | Rebirth: 1x</div>
+            <div class="multiplier-display" id="multiplierDisplay">⚡ Multi: 1.0x | Rebirth: +0.00x</div>
             <div id="boostInfo" class="boost-info">Keine aktiven Boosts</div>
 
             <button class="reset-btn" id="resetGameBtn">🔄 Neustart</button>
-            <footer>🥬 Ziel steigt mit Rebirths · Jeder Rebirth +1000</footer>
+            <footer>🥬 Ziel steigt mit Rebirths · Jeder Rebirth +0,25 Multi</footer>
         </div>
 
         <!-- Rechte Spalte: Shops -->
@@ -544,7 +544,7 @@
             const BASE_MAX = 10000;
             const REBIRTH_STEP = 1000; // pro Rebirth +1000
 
-            // ---------- Skin-Daten mit detaillierten Beschreibungen ----------
+            // ---------- Skin-Daten ----------
             const skinList = [
                 { 
                     id: 'normal', 
@@ -593,7 +593,7 @@
             let bambooPoints = 0;               // 💰
             let rebirths = 0;                    // 💫
             let permanentMultiplier = 1.0;        // durch Rebirth-Käufe erhöht (für Clicks & Bots)
-            let rebirthMultiplier = 1;            // 2^rebirths (zusätzlicher Multi)
+            let rebirthBonus = 0;                  // linearer Bonus pro Rebirth: +0.25 pro Rebirth (additiv zu permanentMultiplier)
             let autoclickerCount = 0;
             let autoclickerPower = 1;             // Basis 1, kann durch Turbo erhöht werden
             let ownedSkins = ['normal'];           // besessene Skin-IDs
@@ -610,8 +610,8 @@
             // Autoclicker-Intervall
             let autoclickerInterval = null;
 
-            // Meilensteinverfolgung (letzter erreichter Prozentsatz)
-            let lastMilestonePercent = 0; // 0,10,20,...,100
+            // Meilensteinverfolgung
+            let lastMilestonePercent = 0;
 
             // DOM-Elemente
             const pandaEmoji = document.getElementById('pandaEmoji');
@@ -638,12 +638,81 @@
             const btnMegaMulti = document.getElementById('buyMegaMulti');
             const btnAutoTurbo = document.getElementById('buyAutoTurbo');
 
-            // ---------- Hilfsfunktionen für dynamisches Ziel ----------
+            // ---------- Hilfsfunktionen ----------
             function getMaxScore() {
                 return BASE_MAX + rebirths * REBIRTH_STEP;
             }
 
-            // ---------- Sprüche (dynamisch) ----------
+            // ---------- Multiplikator-Berechnung ----------
+            function getCurrentMultiplier() {
+                // Gesamtmulti = (permanentMultiplier + rebirthBonus) * temporäre Boosts
+                let base = permanentMultiplier + rebirthBonus;
+                let mult = base;
+                if (doubleBoostActive) mult *= 2;
+                if (rainBoostActive) mult *= 5;
+                return mult;
+            }
+
+            // ---------- Skin anwenden ----------
+            function applySkinClass() {
+                pandaEmoji.classList.remove('skin-normal', 'skin-gold', 'skin-ice', 'skin-rainbow', 'skin-secret');
+                const skin = skinList.find(s => s.id === currentSkin);
+                if (skin) {
+                    pandaEmoji.classList.add(skin.class);
+                } else {
+                    pandaEmoji.classList.add('skin-normal');
+                }
+            }
+
+            // ---------- UI aktualisieren ----------
+            function updateUI() {
+                const max = getMaxScore();
+                scoreDisplay.textContent = `${currentScore} / ${max}`;
+                currencyDisplay.textContent = `💰 ${bambooPoints}`;
+                rebirthDisplay.textContent = `💫 ${rebirths}`;
+                multiplierDisplay.textContent = `⚡ Multi: ${(permanentMultiplier + rebirthBonus).toFixed(2)}x | Rebirth: +${rebirthBonus.toFixed(2)}x | Auto: ${autoclickerCount} (x${autoclickerPower})`;
+
+                let boosts = [];
+                if (doubleBoostActive) boosts.push("⚡ Doppelklick");
+                if (rainBoostActive) boosts.push("🌧️ 5x Bambus");
+                if (autoclickerCount > 0) boosts.push(`🤖 ${autoclickerCount} Autoclicker`);
+                boostInfo.textContent = boosts.length ? "Aktiv: " + boosts.join(" · ") : "Keine aktiven Boosts";
+
+                applySkinClass();
+
+                // Geld-Shop-Buttons (nur bei aktivem Spiel)
+                btnAutoclicker.disabled = !gameActive || bambooPoints < 50;
+                btnAutoclicker2.disabled = !gameActive || bambooPoints < 100;
+                btnDouble.disabled = !gameActive || bambooPoints < 100;
+                btnRain.disabled = !gameActive || bambooPoints < 200;
+                btnLucky.disabled = !gameActive || bambooPoints < 150;
+                btnMoreAutoclicker.disabled = !gameActive || bambooPoints < 100;
+
+                // Rebirth-Shop-Buttons – immer verfügbar, wenn genug Rebirths
+                btnRebirthFood.disabled = rebirths < 2;
+                btnMiniMulti.disabled = rebirths < 3;
+                btnRebirthMulti.disabled = rebirths < 5;
+                btnMegaMulti.disabled = rebirths < 10;
+                btnAutoTurbo.disabled = rebirths < 8;
+
+                // Skin-Shop rendern
+                renderSkinShop();
+
+                saveGame();
+            }
+
+            function setPandaMessage(text) {
+                if (!gameActive && currentScore >= getMaxScore()) {
+                    pandaEmoji.textContent = "💥";
+                    messageSpan.textContent = "ege: " + "💥 BUMM! ege ist geplatzt!";
+                } else {
+                    pandaEmoji.textContent = "🐼";
+                    applySkinClass();
+                    messageSpan.textContent = text.startsWith('ege:') ? text : 'ege: ' + text;
+                }
+            }
+
+            // ---------- Sprüche ----------
             const hungryPhrases = [
                 "😋 Bambus ist mein Leben!",
                 "🙏 Fütter mich, ich hab Hunger!",
@@ -678,7 +747,6 @@
 
             const explosionPhrase = "💥 BUMM! ege ist geplatzt!";
 
-            // Generiere Meilenstein-Spruch basierend auf Prozent
             function getMilestonePhrase(percent) {
                 const max = getMaxScore();
                 const remaining = max - currentScore;
@@ -688,74 +756,6 @@
                 if (percent >= 50) return `ege: 😐 ${percent}% geschafft. Noch ${remaining} bis zum Ende.`;
                 if (percent >= 25) return `ege: 😌 ${percent}% – weiter so!`;
                 return `ege: 😃 ${percent}% – guter Anfang!`;
-            }
-
-            // ---------- Multiplikator-Berechnung ----------
-            function getCurrentMultiplier() {
-                // permanentMultiplier (durch Rebirth-Käufe) + rebirthMultiplier (2^rebirths) multiplizieren sich
-                let mult = permanentMultiplier * rebirthMultiplier;
-                if (doubleBoostActive) mult *= 2;
-                if (rainBoostActive) mult *= 5;
-                return mult;
-            }
-
-            // ---------- Skin anwenden ----------
-            function applySkinClass() {
-                pandaEmoji.classList.remove('skin-normal', 'skin-gold', 'skin-ice', 'skin-rainbow', 'skin-secret');
-                const skin = skinList.find(s => s.id === currentSkin);
-                if (skin) {
-                    pandaEmoji.classList.add(skin.class);
-                } else {
-                    pandaEmoji.classList.add('skin-normal');
-                }
-            }
-
-            // ---------- UI aktualisieren ----------
-            function updateUI() {
-                const max = getMaxScore();
-                scoreDisplay.textContent = `${currentScore} / ${max}`;
-                currencyDisplay.textContent = `💰 ${bambooPoints}`;
-                rebirthDisplay.textContent = `💫 ${rebirths}`;
-                multiplierDisplay.textContent = `⚡ Multi: ${permanentMultiplier.toFixed(1)}x | Rebirth: ${rebirthMultiplier}x | Auto: ${autoclickerCount} (x${autoclickerPower})`;
-
-                let boosts = [];
-                if (doubleBoostActive) boosts.push("⚡ Doppelklick");
-                if (rainBoostActive) boosts.push("🌧️ 5x Bambus");
-                if (autoclickerCount > 0) boosts.push(`🤖 ${autoclickerCount} Autoclicker`);
-                boostInfo.textContent = boosts.length ? "Aktiv: " + boosts.join(" · ") : "Keine aktiven Boosts";
-
-                applySkinClass();
-
-                // Geld-Shop-Buttons (nur bei aktivem Spiel, weil sie Bambuspunkte verbrauchen)
-                btnAutoclicker.disabled = !gameActive || bambooPoints < 50;
-                btnAutoclicker2.disabled = !gameActive || bambooPoints < 100;
-                btnDouble.disabled = !gameActive || bambooPoints < 100;
-                btnRain.disabled = !gameActive || bambooPoints < 200;
-                btnLucky.disabled = !gameActive || bambooPoints < 150;
-                btnMoreAutoclicker.disabled = !gameActive || bambooPoints < 100;
-
-                // Rebirth-Shop-Buttons – immer verfügbar, wenn genug Rebirths (auch bei gameActive = false)
-                btnRebirthFood.disabled = rebirths < 2;
-                btnMiniMulti.disabled = rebirths < 3;
-                btnRebirthMulti.disabled = rebirths < 5;
-                btnMegaMulti.disabled = rebirths < 10;
-                btnAutoTurbo.disabled = rebirths < 8;
-
-                // Skin-Shop rendern (Buttons dort werden separat deaktiviert)
-                renderSkinShop();
-
-                saveGame();
-            }
-
-            function setPandaMessage(text) {
-                if (!gameActive && currentScore >= getMaxScore()) {
-                    pandaEmoji.textContent = "💥";
-                    messageSpan.textContent = "ege: " + explosionPhrase;
-                } else {
-                    pandaEmoji.textContent = "🐼";
-                    applySkinClass();
-                    messageSpan.textContent = text.startsWith('ege:') ? text : 'ege: ' + text;
-                }
             }
 
             function getRandomPhasePhrase() {
@@ -768,12 +768,10 @@
                 }
             }
 
-            // Prüft, ob ein neuer 10%-Meilenstein erreicht wurde
             function checkMilestone(oldScore, newScore) {
                 const max = getMaxScore();
                 const oldPercent = Math.floor(oldScore / max * 100);
                 const newPercent = Math.floor(newScore / max * 100);
-                // Meilensteine bei 10%,20%,...,100%
                 for (let p = 10; p <= 100; p += 10) {
                     if (oldPercent < p && newPercent >= p) {
                         setPandaMessage(getMilestonePhrase(p));
@@ -816,7 +814,6 @@
                 updateUI();
             }
 
-            // Autoclicker-Intervall neu starten
             function restartAutoclicker() {
                 if (autoclickerInterval) clearInterval(autoclickerInterval);
                 if (autoclickerCount > 0) {
@@ -830,7 +827,6 @@
 
             // ---------- Shop-Käufe ----------
             function buyItem(price, currency, callback, successMessage) {
-                // Keine gameActive-Prüfung für Rebirth-Käufe, weil sie auch nach dem Platzen möglich sein sollen
                 if (currency === 'money' && bambooPoints < price) return false;
                 if (currency === 'rebirth' && rebirths < price) return false;
                 if (currency === 'money') bambooPoints -= price;
@@ -841,7 +837,7 @@
                 return true;
             }
 
-            // Geld-Käufe (nur bei aktivem Spiel, aber buyItem prüft schon gameActive nicht; wir lassen es trotzdem zu, aber die Buttons sind bei inaktiv deaktiviert)
+            // Geld-Käufe
             btnAutoclicker.addEventListener('click', () => {
                 buyItem(50, 'money', () => {
                     autoclickerCount++;
@@ -891,7 +887,7 @@
                 }, "ege: 🤖 Noch ein Helfer!");
             });
 
-            // Rebirth-Käufe (immer möglich, wenn genug Rebirths)
+            // Rebirth-Käufe
             btnRebirthFood.addEventListener('click', () => {
                 buyItem(2, 'rebirth', () => {
                     feed(200);
@@ -955,7 +951,6 @@
                         });
                     } else {
                         actionBtn.textContent = `Kaufen (${skin.price} ${skin.currency === 'money' ? '💰' : '💫'})`;
-                        // Skin-Kauf auch nach Platzen möglich – keine gameActive-Prüfung
                         actionBtn.disabled = (skin.currency === 'money' ? bambooPoints < skin.price : rebirths < skin.price);
                         actionBtn.addEventListener('click', () => {
                             if (skin.currency === 'money' && bambooPoints >= skin.price) {
@@ -1001,7 +996,7 @@
                 const max = getMaxScore();
                 if (!gameActive && currentScore >= max) {
                     rebirths++;
-                    rebirthMultiplier = Math.pow(2, rebirths);
+                    rebirthBonus = rebirths * 0.25; // +0.25 pro Rebirth
                 }
 
                 // Alle Timer löschen
@@ -1031,7 +1026,7 @@
                     bambooPoints,
                     rebirths,
                     permanentMultiplier,
-                    rebirthMultiplier,
+                    rebirthBonus,
                     autoclickerCount,
                     autoclickerPower,
                     ownedSkins,
@@ -1049,7 +1044,7 @@
                         bambooPoints = data.bambooPoints || 0;
                         rebirths = data.rebirths || 0;
                         permanentMultiplier = data.permanentMultiplier || 1.0;
-                        rebirthMultiplier = data.rebirthMultiplier || 1;
+                        rebirthBonus = data.rebirthBonus || 0;
                         autoclickerCount = data.autoclickerCount || 0;
                         autoclickerPower = data.autoclickerPower || 1;
                         ownedSkins = data.ownedSkins || ['normal'];
@@ -1064,9 +1059,6 @@
                         if (currentScore >= max) {
                             gameActive = false;
                         }
-
-                        // rebirthMultiplier aus rebirths berechnen (falls nicht gespeichert)
-                        rebirthMultiplier = Math.pow(2, rebirths);
 
                         restartAutoclicker();
 
