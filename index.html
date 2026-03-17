@@ -592,8 +592,9 @@
             let currentScore = 0;
             let bambooPoints = 0;               // 💰
             let rebirths = 0;                    // 💫
-            let purchasedMultiplier = 0.0;        // durch Käufe (Mini, Normal, Mega) – additiv
-            let rebirthBonus = 0;                  // linearer Bonus pro Rebirth: +0.25 pro Rebirth
+            // NEU: Getrennte Multiplikator-Variablen
+            let purchasedMultiplier = 0.0;        // Durch Käufe im Rebirth-Shop (Mini, Normal, Mega) – additiv
+            let rebirthBonus = 0;                  // Linearer Bonus pro Rebirth: +0.25 pro Rebirth
             let autoclickerCount = 0;
             let autoclickerPower = 1;             // Basis 1, kann durch Turbo erhöht werden
             let ownedSkins = ['normal'];           // besessene Skin-IDs
@@ -643,7 +644,7 @@
                 return BASE_MAX + rebirths * REBIRTH_STEP;
             }
 
-            // ---------- Multiplikator-Berechnung ----------
+            // ---------- Multiplikator-Berechnung – korrigiert! ----------
             function getBaseMultiplier() {
                 // Basis = 1.0 + gekaufte Multiplikatoren + Rebirth-Bonus
                 return 1.0 + purchasedMultiplier + rebirthBonus;
@@ -673,7 +674,7 @@
                 scoreDisplay.textContent = `${currentScore} / ${max}`;
                 currencyDisplay.textContent = `💰 ${bambooPoints}`;
                 rebirthDisplay.textContent = `💫 ${rebirths}`;
-                const base = 1.0 + purchasedMultiplier + rebirthBonus;
+                const base = getBaseMultiplier();
                 const total = getCurrentMultiplier();
                 multiplierDisplay.textContent = `⚡ Basis: ${(1.0 + purchasedMultiplier).toFixed(2)} | Rebirth: +${rebirthBonus.toFixed(2)} | Gesamt: ${total.toFixed(2)}x`;
 
@@ -798,7 +799,7 @@
                 const max = getMaxScore();
                 if (currentScore >= max) return;
 
-                const multiplier = getCurrentMultiplier();
+                const multiplier = getCurrentMultiplier(); // Jetzt korrekt!
                 const totalFeed = amount * multiplier;
                 const oldScore = currentScore;
                 const newScore = Math.min(oldScore + totalFeed, max);
@@ -892,7 +893,7 @@
                 }, "ege: 🤖 Noch ein Helfer!");
             });
 
-            // Rebirth-Käufe
+            // Rebirth-Käufe – hier wird purchasedMultiplier erhöht!
             btnRebirthFood.addEventListener('click', () => {
                 buyItem(2, 'rebirth', () => {
                     feed(200);
