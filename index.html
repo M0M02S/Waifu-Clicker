@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ege's Panda – +0.25 pro Rebirth</title>
+    <title>ege's Panda – Multiplikatoren fix</title>
     <style>
         * {
             box-sizing: border-box;
@@ -77,7 +77,7 @@
             transform: scaleX(-1) scale(1.05);
         }
 
-        /* ---------- Detaillierte Skins ---------- */
+        /* Detaillierte Skins */
         .panda-emoji.skin-normal {
             filter: drop-shadow(8px 12px 0 #3a2a1e);
             text-shadow: none;
@@ -442,7 +442,7 @@
                 <div class="rebirth-display" id="rebirthDisplay">💫 0</div>
             </div>
 
-            <div class="multiplier-display" id="multiplierDisplay">⚡ Multi: 1.0x | Rebirth: +0.00x</div>
+            <div class="multiplier-display" id="multiplierDisplay">⚡ Basis: 1.00 | Rebirth: +0.00 | Gesamt: 1.00x</div>
             <div id="boostInfo" class="boost-info">Keine aktiven Boosts</div>
 
             <button class="reset-btn" id="resetGameBtn">🔄 Neustart</button>
@@ -592,8 +592,8 @@
             let currentScore = 0;
             let bambooPoints = 0;               // 💰
             let rebirths = 0;                    // 💫
-            let permanentMultiplier = 1.0;        // durch Rebirth-Käufe erhöht (für Clicks & Bots)
-            let rebirthBonus = 0;                  // linearer Bonus pro Rebirth: +0.25 pro Rebirth (additiv zu permanentMultiplier)
+            let purchasedMultiplier = 0.0;        // durch Käufe (Mini, Normal, Mega) – additiv
+            let rebirthBonus = 0;                  // linearer Bonus pro Rebirth: +0.25 pro Rebirth
             let autoclickerCount = 0;
             let autoclickerPower = 1;             // Basis 1, kann durch Turbo erhöht werden
             let ownedSkins = ['normal'];           // besessene Skin-IDs
@@ -644,13 +644,16 @@
             }
 
             // ---------- Multiplikator-Berechnung ----------
+            function getBaseMultiplier() {
+                // Basis = 1.0 + gekaufte Multiplikatoren + Rebirth-Bonus
+                return 1.0 + purchasedMultiplier + rebirthBonus;
+            }
+
             function getCurrentMultiplier() {
-                // Gesamtmulti = (permanentMultiplier + rebirthBonus) * temporäre Boosts
-                let base = permanentMultiplier + rebirthBonus;
-                let mult = base;
-                if (doubleBoostActive) mult *= 2;
-                if (rainBoostActive) mult *= 5;
-                return mult;
+                let base = getBaseMultiplier();
+                if (doubleBoostActive) base *= 2;
+                if (rainBoostActive) base *= 5;
+                return base;
             }
 
             // ---------- Skin anwenden ----------
@@ -670,12 +673,14 @@
                 scoreDisplay.textContent = `${currentScore} / ${max}`;
                 currencyDisplay.textContent = `💰 ${bambooPoints}`;
                 rebirthDisplay.textContent = `💫 ${rebirths}`;
-                multiplierDisplay.textContent = `⚡ Multi: ${(permanentMultiplier + rebirthBonus).toFixed(2)}x | Rebirth: +${rebirthBonus.toFixed(2)}x | Auto: ${autoclickerCount} (x${autoclickerPower})`;
+                const base = 1.0 + purchasedMultiplier + rebirthBonus;
+                const total = getCurrentMultiplier();
+                multiplierDisplay.textContent = `⚡ Basis: ${(1.0 + purchasedMultiplier).toFixed(2)} | Rebirth: +${rebirthBonus.toFixed(2)} | Gesamt: ${total.toFixed(2)}x`;
 
                 let boosts = [];
                 if (doubleBoostActive) boosts.push("⚡ Doppelklick");
                 if (rainBoostActive) boosts.push("🌧️ 5x Bambus");
-                if (autoclickerCount > 0) boosts.push(`🤖 ${autoclickerCount} Autoclicker`);
+                if (autoclickerCount > 0) boosts.push(`🤖 ${autoclickerCount} Autoclicker (x${autoclickerPower})`);
                 boostInfo.textContent = boosts.length ? "Aktiv: " + boosts.join(" · ") : "Keine aktiven Boosts";
 
                 applySkinClass();
@@ -896,19 +901,19 @@
 
             btnMiniMulti.addEventListener('click', () => {
                 buyItem(3, 'rebirth', () => {
-                    permanentMultiplier += 0.1;
+                    purchasedMultiplier += 0.1;
                 }, "ege: ✨ Kleiner Multi!");
             });
 
             btnRebirthMulti.addEventListener('click', () => {
                 buyItem(5, 'rebirth', () => {
-                    permanentMultiplier += 0.2;
+                    purchasedMultiplier += 0.2;
                 }, "ege: ✨ Noch mehr Kraft!");
             });
 
             btnMegaMulti.addEventListener('click', () => {
                 buyItem(10, 'rebirth', () => {
-                    permanentMultiplier += 0.5;
+                    purchasedMultiplier += 0.5;
                 }, "ege: 💥 MEGA Multi!");
             });
 
@@ -1025,7 +1030,7 @@
                     currentScore,
                     bambooPoints,
                     rebirths,
-                    permanentMultiplier,
+                    purchasedMultiplier,
                     rebirthBonus,
                     autoclickerCount,
                     autoclickerPower,
@@ -1043,7 +1048,7 @@
                         currentScore = data.currentScore || 0;
                         bambooPoints = data.bambooPoints || 0;
                         rebirths = data.rebirths || 0;
-                        permanentMultiplier = data.permanentMultiplier || 1.0;
+                        purchasedMultiplier = data.purchasedMultiplier || 0.0;
                         rebirthBonus = data.rebirthBonus || 0;
                         autoclickerCount = data.autoclickerCount || 0;
                         autoclickerPower = data.autoclickerPower || 1;
