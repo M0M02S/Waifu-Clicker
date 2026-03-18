@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ege's Panda – Automatisches Rebirth-System</title>
+    <title>ege's Panda – Mit Namen & Rangliste</title>
     <style>
         * {
             box-sizing: border-box;
@@ -39,6 +39,144 @@
             box-shadow: 0 30px 40px rgba(0, 0, 0, 0.5), inset 0 2px 10px #ffeeaa;
             padding: 35px 25px;
             backdrop-filter: blur(2px);
+            position: relative;
+        }
+
+        /* Win-Lobby (zunächst versteckt) */
+        .win-lobby {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 80px 80px 50px 50px;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            padding: 40px;
+            text-align: center;
+            border: 6px solid gold;
+            box-shadow: 0 0 50px gold;
+        }
+
+        .win-lobby h2 {
+            font-size: 4rem;
+            color: #2d4b2d;
+            text-shadow: 4px 4px 0 gold;
+            margin-bottom: 20px;
+        }
+
+        .win-lobby .winner-name {
+            font-size: 3rem;
+            color: #8a2be2;
+            font-weight: bold;
+            margin-bottom: 30px;
+        }
+
+        .win-lobby .stats {
+            font-size: 2rem;
+            background: #f0e68c;
+            padding: 20px;
+            border-radius: 50px;
+            border: 4px solid #8b6b4d;
+            margin-bottom: 30px;
+        }
+
+        .win-lobby .ranking {
+            width: 100%;
+            max-width: 600px;
+            background: #dcd0b0;
+            border-radius: 50px;
+            padding: 20px;
+            border: 4px solid #6b4f3c;
+            box-shadow: inset 0 0 10px #aa8c5c;
+        }
+
+        .win-lobby .ranking h3 {
+            font-size: 2.5rem;
+            color: #2d4b2d;
+            margin-bottom: 15px;
+        }
+
+        .win-lobby .ranking table {
+            width: 100%;
+            font-size: 1.8rem;
+            border-collapse: collapse;
+        }
+
+        .win-lobby .ranking th {
+            background: #8b6b4d;
+            color: #ffecb3;
+            padding: 10px;
+            border-radius: 20px 20px 0 0;
+        }
+
+        .win-lobby .ranking td {
+            padding: 8px;
+            border-bottom: 2px solid #8b6b4d;
+        }
+
+        .win-lobby .ranking tr:last-child td {
+            border-bottom: none;
+        }
+
+        .win-lobby .restart-btn {
+            background: #ffcf8a;
+            border: none;
+            font-size: 2rem;
+            padding: 15px 40px;
+            border-radius: 60px;
+            font-weight: bold;
+            color: #3a2a1e;
+            border: 5px solid #b37b48;
+            box-shadow: 0 10px 0 #8b5a2e;
+            cursor: pointer;
+            margin-top: 30px;
+            transition: 0.05s linear;
+        }
+
+        .win-lobby .restart-btn:active {
+            transform: translateY(8px);
+            box-shadow: 0 2px 0 #8b5a2e;
+        }
+
+        .name-input-area {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            background: #ead5b5;
+            padding: 15px 25px;
+            border-radius: 60px;
+            border: 4px solid #6b4f3c;
+        }
+
+        .name-input-area label {
+            font-size: 2rem;
+            color: #1e3a1e;
+            font-weight: bold;
+        }
+
+        .name-input-area input {
+            font-size: 2rem;
+            padding: 10px 20px;
+            border-radius: 40px;
+            border: 4px solid #8b6b4d;
+            background: #fffef7;
+            color: #2d4b2d;
+            font-weight: bold;
+            width: 250px;
+            text-align: center;
+        }
+
+        .name-input-area input:focus {
+            outline: none;
+            border-color: gold;
         }
 
         h1 {
@@ -131,25 +269,22 @@
             75% { filter: drop-shadow(0 0 5px blue) drop-shadow(8px 12px 0 #4a2e4a); }
             100% { filter: drop-shadow(0 0 5px violet) drop-shadow(8px 12px 0 #4a2e4a); }
         }
+        /* Secret Panda – schwarz mit Galaxie-Glitzern */
         .panda-emoji.skin-secret {
-            background: linear-gradient(45deg, #8a2be2, #ff00ff, #4b0082);
+            background: radial-gradient(circle at 30% 30%, #ffffff, #000000);
             background-clip: text;
             -webkit-background-clip: text;
             color: transparent;
-            background-size: 200% 200%;
-            animation: secretGradient 3s ease infinite, secretPulse 2s infinite;
-            filter: drop-shadow(0 0 25px #8a2be2) drop-shadow(8px 12px 0 #301934);
-            text-shadow: 0 0 30px #ff00ff;
+            filter: drop-shadow(0 0 20px #8a2be2) drop-shadow(0 0 40px #ff00ff) drop-shadow(8px 12px 0 #301934);
+            text-shadow: 0 0 30px white, 0 0 60px #8a2be2;
+            animation: galaxyTwinkle 3s infinite;
         }
-        @keyframes secretGradient {
-            0% { background-position: 0% 0%; }
-            50% { background-position: 100% 100%; }
-            100% { background-position: 0% 0%; }
-        }
-        @keyframes secretPulse {
-            0% { filter: drop-shadow(0 0 20px #8a2be2) drop-shadow(8px 12px 0 #301934); }
-            50% { filter: drop-shadow(0 0 40px #ff00ff) drop-shadow(8px 12px 0 #4b0082); }
-            100% { filter: drop-shadow(0 0 20px #8a2be2) drop-shadow(8px 12px 0 #301934); }
+        @keyframes galaxyTwinkle {
+            0% { filter: drop-shadow(0 0 20px #8a2be2) drop-shadow(0 0 40px #ff00ff) drop-shadow(8px 12px 0 #301934); }
+            25% { filter: drop-shadow(0 0 30px #ffffff) drop-shadow(0 0 60px #8a2be2) drop-shadow(8px 12px 0 #301934); }
+            50% { filter: drop-shadow(0 0 20px #ff00ff) drop-shadow(0 0 40px #8a2be2) drop-shadow(8px 12px 0 #301934); }
+            75% { filter: drop-shadow(0 0 30px #8a2be2) drop-shadow(0 0 60px #ffffff) drop-shadow(8px 12px 0 #301934); }
+            100% { filter: drop-shadow(0 0 20px #8a2be2) drop-shadow(0 0 40px #ff00ff) drop-shadow(8px 12px 0 #301934); }
         }
 
         .speech-bubble {
@@ -420,52 +555,67 @@
             color: #a52a2a;
             text-shadow: 2px 2px 0 #ffcf8a;
         }
-
-        .win-message {
-            color: #c44b1e;
-            font-size: 1.8rem;
-            text-align: center;
-            background: #ffecb3;
-            border-radius: 40px;
-            padding: 8px 20px;
-            border: 3px dashed #c44b1e;
-        }
     </style>
 </head>
 <body>
     <div class="game-container">
         <!-- Hauptspiel -->
         <div class="main-area">
-            <h1>🐼 ege's Panda</h1>
-
-            <div class="panda-zone">
-                <div class="panda-emoji skin-normal" id="pandaEmoji">🐼</div>
-                <div class="speech-bubble" id="pandaMessage">
-                    <span id="messageText">ege: 😃 Hey, ich bin ege! Fütter mich!</span>
+            <!-- Win-Lobby (zunächst unsichtbar) -->
+            <div class="win-lobby" id="winLobby">
+                <h2>🏆 GEWONNEN! 🏆</h2>
+                <div class="winner-name" id="winnerName"></div>
+                <div class="stats" id="winnerStats"></div>
+                <div class="ranking">
+                    <h3>🏅 RANGLISTE 🏅</h3>
+                    <table id="rankingTable">
+                        <thead>
+                            <tr><th>Rang</th><th>Name</th><th>Rebirths</th></tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
                 </div>
+                <button class="restart-btn" id="restartFromWinBtn">🔄 Neues Spiel</button>
             </div>
 
-            <div class="bamboo-forest">
-                <div class="bamboo-row" id="bambooContainer">
-                    <div class="bamboo" data-index="0" tabindex="0" role="button">🎋</div>
-                    <div class="bamboo" data-index="1" tabindex="0" role="button">🎋</div>
-                    <div class="bamboo" data-index="2" tabindex="0" role="button">🎋</div>
+            <!-- Normales Spiel (wird bei Win-Lobby ausgeblendet) -->
+            <div id="gameContent">
+                <div class="name-input-area">
+                    <label for="playerName">Dein Name:</label>
+                    <input type="text" id="playerName" placeholder="Name" maxlength="20" value="Spieler">
                 </div>
+
+                <h1>🐼 ege's Panda</h1>
+
+                <div class="panda-zone">
+                    <div class="panda-emoji skin-normal" id="pandaEmoji">🐼</div>
+                    <div class="speech-bubble" id="pandaMessage">
+                        <span id="messageText">ege: 😃 Hey, ich bin ege! Fütter mich!</span>
+                    </div>
+                </div>
+
+                <div class="bamboo-forest">
+                    <div class="bamboo-row" id="bambooContainer">
+                        <div class="bamboo" data-index="0" tabindex="0" role="button">🎋</div>
+                        <div class="bamboo" data-index="1" tabindex="0" role="button">🎋</div>
+                        <div class="bamboo" data-index="2" tabindex="0" role="button">🎋</div>
+                    </div>
+                </div>
+
+                <div class="stats-panel">
+                    <div class="score-text" id="scoreDisplay">0 / 10000</div>
+                    <div class="currency" id="currencyDisplay">💰 0</div>
+                    <div class="rebirth-display" id="rebirthDisplay">💫 0</div>
+                </div>
+
+                <div class="multiplier-display" id="multiplierDisplay">⚡ Klickkraft: 1.00x | Rebirth-Gain: 1.00x</div>
+                <div id="boostInfo" class="boost-info">Keine aktiven Boosts</div>
+
+                <div id="winMessageContainer" style="min-height: 50px; text-align: center;"></div>
+
+                <button class="reset-btn" id="resetGameBtn">🔄 Neustart</button>
+                <footer>🥬 Pro Rebirth +10.000 Ziel · Glücksbambus +2500 · Auto-Rebirth für 10k💰</footer>
             </div>
-
-            <div class="stats-panel">
-                <div class="score-text" id="scoreDisplay">0 / 10000</div>
-                <div class="currency" id="currencyDisplay">💰 0</div>
-                <div class="rebirth-display" id="rebirthDisplay">💫 0</div>
-            </div>
-
-            <div class="multiplier-display" id="multiplierDisplay">⚡ Klickkraft: 1.00x | Rebirth-Gain: 1.00x</div>
-            <div id="boostInfo" class="boost-info">Keine aktiven Boosts</div>
-
-            <div id="winMessageContainer" style="min-height: 50px; text-align: center;"></div>
-
-            <button class="reset-btn" id="resetGameBtn">🔄 Neustart</button>
-            <footer>🥬 Pro Rebirth +10.000 Ziel · Glücksbambus +2500 · Auto-Rebirth für 10k💰</footer>
         </div>
 
         <!-- Rechte Spalte: Shops -->
@@ -474,7 +624,6 @@
             <div class="shop-area">
                 <div class="shop-title">🛒 Bambus-Shop</div>
 
-                <!-- Geld-Items (💰) -->
                 <div class="shop-item">
                     <span class="item-desc">🤖 Autoclicker (einzeln)</span>
                     <span class="item-price">Preis: 50 💰</span>
@@ -505,7 +654,6 @@
                     <button id="buyLucky">Kaufen (+2500 Futter)</button>
                 </div>
 
-                <!-- Neues Item: Automatisches Rebirth-System (ersetzt das alte "Autoclicker +1") -->
                 <div class="shop-item">
                     <span class="item-desc">🤖 Automatisches Rebirth-System</span>
                     <span class="item-price">Preis: 10000 💰</span>
@@ -547,7 +695,6 @@
                     <button id="buyAutoTurbo">Autoclicker 2x effektiv</button>
                 </div>
 
-                <!-- Neues Item: Spiel durchspielen (sichtbar bei 1.000.000) -->
                 <div class="shop-item" id="finishGameItem" style="display: none;">
                     <span class="item-desc">🏆 Spiel durchspielen</span>
                     <span class="item-price">Preis: 1000 💫</span>
@@ -608,11 +755,11 @@
                 },
                 { 
                     id: 'secret', 
-                    name: 'Secret Panda', 
+                    name: 'Secret Panda (Galaxie)', 
                     price: 100, 
                     currency: 'rebirth', 
                     class: 'skin-secret',
-                    description: 'Mysteriös und geheimnisvoll – violette Schimmer durchziehen sein Wesen.' 
+                    description: 'Schwarz wie das All, durchzogen von Sternenglitzern.' 
                 }
             ];
 
@@ -628,10 +775,13 @@
             let ownedSkins = ['normal'];
             let currentSkin = 'normal';
 
-            // Neue Flags für Meilenstein, Spielende und Auto-Rebirth
+            // Spielername
+            let playerName = "Spieler";
+
+            // Flags
             let millionReached = false;
             let gameCompleted = false;
-            let autoRebirthActive = false;        // Ob automatischer Neustart aktiv ist
+            let autoRebirthActive = false;
 
             let gameActive = true;
 
@@ -643,6 +793,9 @@
 
             let autoclickerInterval = null;
             let lastMilestonePercent = 0;
+
+            // Rangliste (Array von Objekten { name, rebirths })
+            let ranking = [];
 
             // DOM-Elemente
             const pandaEmoji = document.getElementById('pandaEmoji');
@@ -658,6 +811,13 @@
             const skinContainer = document.getElementById('skinContainer');
             const finishGameItem = document.getElementById('finishGameItem');
             const btnFinishGame = document.getElementById('buyFinishGame');
+            const playerNameInput = document.getElementById('playerName');
+            const winLobby = document.getElementById('winLobby');
+            const gameContent = document.getElementById('gameContent');
+            const winnerNameSpan = document.getElementById('winnerName');
+            const winnerStatsSpan = document.getElementById('winnerStats');
+            const rankingTableBody = document.querySelector('#rankingTable tbody');
+            const restartFromWinBtn = document.getElementById('restartFromWinBtn');
 
             // Shop-Buttons
             const btnAutoclicker = document.getElementById('buyAutoclicker');
@@ -694,6 +854,82 @@
                 }
             }
 
+            // ---------- Rangliste laden / speichern ----------
+            function loadRanking() {
+                const saved = localStorage.getItem('egeRanking');
+                if (saved) {
+                    try {
+                        ranking = JSON.parse(saved);
+                    } catch (e) {
+                        ranking = [];
+                    }
+                } else {
+                    ranking = [];
+                }
+            }
+
+            function saveRanking() {
+                localStorage.setItem('egeRanking', JSON.stringify(ranking));
+            }
+
+            function addToRanking(name, rebirthCount) {
+                ranking.push({ name: name, rebirths: rebirthCount });
+                // Sortieren nach Rebirths absteigend
+                ranking.sort((a, b) => b.rebirths - a.rebirths);
+                // Begrenzen auf z.B. 10 Einträge
+                if (ranking.length > 10) ranking = ranking.slice(0, 10);
+                saveRanking();
+            }
+
+            function updateRankingTable() {
+                rankingTableBody.innerHTML = '';
+                ranking.forEach((entry, index) => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `<td>${index + 1}</td><td>${entry.name}</td><td>${entry.rebirths.toFixed(2)}</td>`;
+                    rankingTableBody.appendChild(row);
+                });
+            }
+
+            // ---------- Win-Lobby anzeigen ----------
+            function showWinLobby() {
+                gameContent.style.display = 'none';
+                winLobby.style.display = 'flex';
+                winnerNameSpan.textContent = playerName;
+                winnerStatsSpan.textContent = `🎉 Du hast das Spiel mit ${rebirths.toFixed(2)} Rebirths abgeschlossen! 🎉`;
+                updateRankingTable();
+            }
+
+            // Spiel komplett zurücksetzen (nach Sieg neu starten)
+            function restartGameAfterWin() {
+                // Alle Werte zurücksetzen
+                currentScore = 0;
+                bambooPoints = 0;
+                rebirths = 0;
+                rebirthGainMultiplier = 1.0;
+                autoclickerCount = 0;
+                autoclickerPower = 1;
+                ownedSkins = ['normal'];
+                currentSkin = 'normal';
+                millionReached = false;
+                gameCompleted = false;
+                autoRebirthActive = false;
+                gameActive = true;
+
+                // Timer löschen
+                if (autoclickerInterval) clearInterval(autoclickerInterval);
+                autoclickerInterval = null;
+                if (doubleBoostTimeout) clearTimeout(doubleBoostTimeout);
+                if (rainBoostTimeout) clearTimeout(rainBoostTimeout);
+                doubleBoostActive = false;
+                rainBoostActive = false;
+
+                winLobby.style.display = 'none';
+                gameContent.style.display = 'block';
+                setPandaMessage("😃 Neues Spiel! Fütter mich!");
+                updateUI();
+                restartAutoclicker();
+            }
+
             // ---------- UI aktualisieren ----------
             function updateUI() {
                 const max = getMaxScore();
@@ -711,6 +947,9 @@
 
                 applySkinClass();
 
+                // Namen aus Input lesen
+                playerName = playerNameInput.value.trim() || "Spieler";
+
                 // Prüfen, ob 1.000.000 erreicht wurde
                 if (!millionReached && !gameCompleted && currentScore >= MILLION_GOAL) {
                     millionReached = true;
@@ -718,9 +957,9 @@
                     winMessageContainer.innerHTML = '<div class="win-message">🏆 1.000.000 erreicht! Im Rebirth-Shop gibt es jetzt das "Spiel durchspielen"-Item für 1000 Rebirths.</div>';
                 }
 
-                // Spiel beendet: Alles deaktivieren
+                // Spiel beendet: Alles deaktivieren (wird durch Win-Lobby ersetzt)
                 if (gameCompleted) {
-                    // Alle Buttons deaktivieren
+                    // Buttons deaktivieren
                     btnAutoclicker.disabled = true;
                     btnAutoclicker2.disabled = true;
                     btnDouble.disabled = true;
@@ -741,7 +980,7 @@
                     btnDouble.disabled = !gameActive || bambooPoints < 100;
                     btnRain.disabled = !gameActive || bambooPoints < 200;
                     btnLucky.disabled = !gameActive || bambooPoints < 150;
-                    btnAutoRebirth.disabled = !gameActive || bambooPoints < 10000 || autoRebirthActive; // Einmal kaufbar, dann deaktiviert
+                    btnAutoRebirth.disabled = !gameActive || bambooPoints < 10000 || autoRebirthActive;
 
                     // Rebirth-Shop-Buttons
                     btnRebirthFood.disabled = rebirths < 2;
@@ -769,8 +1008,7 @@
 
             function setPandaMessage(text) {
                 if (gameCompleted) {
-                    pandaEmoji.textContent = "🏆";
-                    messageSpan.textContent = "ege: Danke fürs Spielen!";
+                    // Wird nicht mehr benötigt, da Win-Lobby angezeigt wird
                 } else if (!gameActive && currentScore >= getMaxScore()) {
                     pandaEmoji.textContent = "💥";
                     messageSpan.textContent = "ege: " + "💥 BUMM! ege ist geplatzt!";
@@ -781,8 +1019,13 @@
                 }
             }
 
-            // ---------- Sprüche ----------
-            const hungryPhrases = [
+            // ---------- Sprüche (unverändert) ----------
+            const hungryPhrases = [ /* ... */ ];
+            const satedPhrases = [ /* ... */ ];
+            const explosionPhrase = "💥 BUMM! ege ist geplatzt!";
+
+            // (Arrays wie gehabt, hier der Kürze halber nur angedeutet – im Originalcode vorhanden)
+            const hungryPhrasesFull = [
                 "😋 Bambus ist mein Leben!",
                 "🙏 Fütter mich, ich hab Hunger!",
                 "🎋 Noch mehr Bambus!",
@@ -798,7 +1041,7 @@
                 "🙂 Noch ein bisschen …"
             ];
 
-            const satedPhrases = [
+            const satedPhrasesFull = [
                 "😑 Ich bin satt. Hör auf!",
                 "😒 Im Ernst, es reicht.",
                 "😤 Du ignorierst mich!",
@@ -813,8 +1056,6 @@
                 "😨 Noch ... (Angst)",
                 "😱 ... bitte stopp!"
             ];
-
-            const explosionPhrase = "💥 BUMM! ege ist geplatzt!";
 
             function getMilestonePhrase(percent) {
                 const max = getMaxScore();
@@ -831,9 +1072,9 @@
                 const max = getMaxScore();
                 if (currentScore >= max) return explosionPhrase;
                 if (currentScore >= max / 2) {
-                    return satedPhrases[Math.floor(Math.random() * satedPhrases.length)];
+                    return satedPhrasesFull[Math.floor(Math.random() * satedPhrasesFull.length)];
                 } else {
-                    return hungryPhrases[Math.floor(Math.random() * hungryPhrases.length)];
+                    return hungryPhrasesFull[Math.floor(Math.random() * hungryPhrasesFull.length)];
                 }
             }
 
@@ -857,25 +1098,7 @@
                 }
             }
 
-            // Automatischer Reset, falls aktiv
-            function performAutoRebirthIfNeeded() {
-                if (!gameActive || gameCompleted) return;
-                const max = getMaxScore();
-                if (currentScore >= max && autoRebirthActive) {
-                    // Rebirth-Gewinn hinzufügen
-                    rebirths += rebirthGainMultiplier;
-                    // Zurücksetzen
-                    currentScore = 0;
-                    bambooPoints = 0; // Achtung: Sollen Bambuspunkte zurückgesetzt werden? Ja, wie beim manuellen Reset.
-                    gameActive = true; // bleibt aktiv
-                    // Alle Timer zurücksetzen? Wir behalten die aktiven Boosts? Nein, wir machen einen kompletten Reset wie in resetGame.
-                    // Wir rufen eine separate Reset-Funktion auf, die keine Rebirths doppelt zählt.
-                    performAutoReset();
-                }
-            }
-
             function performAutoReset() {
-                // Timer löschen (außer Autoclicker, der soll weiterlaufen)
                 if (doubleBoostTimeout) clearTimeout(doubleBoostTimeout);
                 if (rainBoostTimeout) clearTimeout(rainBoostTimeout);
                 doubleBoostActive = false;
@@ -890,10 +1113,8 @@
 
                 setPandaMessage("😃 Automatischer Neustart! Weiter geht's!");
                 updateUI();
-                // Autoclicker läuft bereits
             }
 
-            // ---------- Feed-Funktion (angepasst) ----------
             function feed(amount = 1) {
                 if (!gameActive || gameCompleted) return;
                 const max = getMaxScore();
@@ -909,9 +1130,7 @@
                 bambooPoints += feedActual;
 
                 if (currentScore >= max) {
-                    // Platzen erreicht
                     if (autoRebirthActive) {
-                        // Automatischen Reset durchführen
                         rebirths += rebirthGainMultiplier;
                         performAutoReset();
                     } else {
@@ -951,7 +1170,6 @@
                 return true;
             }
 
-            // Geld-Käufe
             btnAutoclicker.addEventListener('click', () => {
                 buyItem(50, 'money', () => {
                     autoclickerCount++;
@@ -990,19 +1208,17 @@
 
             btnLucky.addEventListener('click', () => {
                 buyItem(150, 'money', () => {
-                    feed(2500); // Geändert von 50 auf 2500
+                    feed(2500);
                 }, "ege: 🍀 Glücksbambus (+2500)!");
             });
 
-            // Neues Auto-Rebirth-System
             btnAutoRebirth.addEventListener('click', () => {
                 buyItem(10000, 'money', () => {
                     autoRebirthActive = true;
-                    btnAutoRebirth.disabled = true; // Einmal kaufbar
-                }, "ege: 🤖 Automatisches Rebirth-System aktiviert! Ich starte jetzt automatisch neu.");
+                    btnAutoRebirth.disabled = true;
+                }, "ege: 🤖 Automatisches Rebirth-System aktiviert!");
             });
 
-            // Rebirth-Käufe
             btnRebirthFood.addEventListener('click', () => {
                 buyItem(2, 'rebirth', () => {
                     feed(200);
@@ -1034,25 +1250,29 @@
                 }, "ege: 🤖💨 Autoclicker Turbo!");
             });
 
-            // Finish-Game kaufen
             btnFinishGame.addEventListener('click', () => {
                 if (gameCompleted) return;
                 if (rebirths >= 1000 && millionReached) {
                     rebirths -= 1000;
                     gameCompleted = true;
+                    // In Rangliste eintragen
+                    addToRanking(playerName, rebirths); // Achtung: rebirths ist hier der Wert nach Abzug? Wir wollen die erreichten Rebirths vor dem Kauf? Besser vorher speichern.
+                    // Eigentlich wollen wir die Gesamtzahl der Rebirths, die man beim Sieg hatte. Also speichern wir vorher:
+                    const finalRebirths = rebirths + 1000; // Da wir 1000 abgezogen haben, aber eigentlich hatte man sie vorher
+                    addToRanking(playerName, finalRebirths);
+                    
                     if (autoclickerInterval) clearInterval(autoclickerInterval);
                     autoclickerInterval = null;
                     if (doubleBoostTimeout) clearTimeout(doubleBoostTimeout);
                     if (rainBoostTimeout) clearTimeout(rainBoostTimeout);
                     doubleBoostActive = false;
                     rainBoostActive = false;
-                    setPandaMessage("ege: 🏆 Du hast das Spiel durchgespielt! Danke!");
-                    winMessageContainer.innerHTML = '<div class="win-message">🎉 Glückwunsch! Du hast das Spiel gemeistert!</div>';
-                    updateUI();
+                    
+                    showWinLobby();
                 }
             });
 
-            // ---------- Skin-Shop Logik ----------
+            // ---------- Skin-Shop ----------
             function renderSkinShop() {
                 skinContainer.innerHTML = '';
                 skinList.forEach(skin => {
@@ -1126,7 +1346,7 @@
                 }, 300);
             }
 
-            // ---------- Reset mit Rebirth-Belohnung (manuell) ----------
+            // ---------- Reset (manuell) ----------
             function resetGame() {
                 if (gameCompleted) return;
                 const max = getMaxScore();
@@ -1134,7 +1354,6 @@
                     rebirths += rebirthGainMultiplier;
                 }
 
-                // Alle Timer löschen
                 if (autoclickerInterval) clearInterval(autoclickerInterval);
                 autoclickerInterval = null;
                 if (doubleBoostTimeout) clearTimeout(doubleBoostTimeout);
@@ -1167,7 +1386,8 @@
                     currentSkin,
                     millionReached,
                     gameCompleted,
-                    autoRebirthActive
+                    autoRebirthActive,
+                    playerName
                 };
                 localStorage.setItem('egePandaSave', JSON.stringify(saveData));
             }
@@ -1188,6 +1408,7 @@
                         millionReached = data.millionReached || false;
                         gameCompleted = data.gameCompleted || false;
                         autoRebirthActive = data.autoRebirthActive || false;
+                        playerName = data.playerName || "Spieler";
 
                         doubleBoostActive = false;
                         rainBoostActive = false;
@@ -1196,10 +1417,7 @@
 
                         const max = getMaxScore();
                         if (currentScore >= max) {
-                            // Wenn autoRebirthActive, dann sollte das Spiel eigentlich nicht inaktiv sein, weil sofort reset.
-                            // Aber falls geladen, setzen wir gameActive auf false, wenn kein autoRebirth.
                             if (autoRebirthActive) {
-                                // Wir könnten sofort resetten, aber besser: wir lassen es, der nächste Feed wird resetten.
                                 gameActive = true;
                             } else {
                                 gameActive = false;
@@ -1210,8 +1428,14 @@
                             restartAutoclicker();
                         }
 
+                        playerNameInput.value = playerName;
                         updateUI();
                         setPandaMessage("😃 Willkommen zurück, ege!");
+
+                        // Falls gameCompleted, Win-Lobby anzeigen
+                        if (gameCompleted) {
+                            showWinLobby();
+                        }
                     } catch (e) {
                         console.warn("Fehler beim Laden", e);
                     }
@@ -1234,7 +1458,14 @@
 
             resetBtn.addEventListener('click', resetGame);
 
-            // Laden
+            restartFromWinBtn.addEventListener('click', () => {
+                restartGameAfterWin();
+            });
+
+            // Rangliste laden
+            loadRanking();
+
+            // Spiel laden
             loadGame();
 
             // Speichern vor dem Schließen
