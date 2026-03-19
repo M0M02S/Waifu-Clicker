@@ -725,8 +725,8 @@
                     <button id="adminAddMulti">Erhöhen</button>
                 </div>
                 <div class="shop-item">
-                    <span class="item-desc">🎯 Ziel sofort erreichen</span>
-                    <button id="adminCompleteGoal">Ausführen</button>
+                    <span class="item-desc">🎯 Sofort gewinnen (zur Rangliste)</span>
+                    <button id="adminCompleteGoal">Sieg erzwingen</button>
                 </div>
                 <div class="shop-item">
                     <span class="item-desc">🔓 Alle Skins freischalten</span>
@@ -998,21 +998,29 @@
 
             adminAddMulti.addEventListener('click', () => {
                 adminAction(() => {
-                    // Erhöht den permanenten Multiplikator (rebirthGainMultiplier)
                     rebirthGainMultiplier += 1.0;
                 });
             });
 
+            // === GEÄNDERT: Ziel sofort erreichen => Spiel direkt gewinnen ===
             adminCompleteGoal.addEventListener('click', () => {
                 adminAction(() => {
-                    currentScore = getMaxScore();
-                    feed(0); // löst Platzen aus (oder manuell behandeln)
-                    // Da feed nicht aufgerufen wird, setzen wir gameActive = false und zeigen Explosion
-                    gameActive = false;
-                    setPandaMessage("💥 BUMM! ege ist geplatzt!");
+                    // Spiel als gewonnen markieren
+                    gameCompleted = true;
+                    const finalRebirths = rebirths; // aktuelle Rebirths als Endstand
+                    addToRanking(playerName, finalRebirths);
+                    
+                    // Timer stoppen
                     if (autoclickerInterval) clearInterval(autoclickerInterval);
                     autoclickerInterval = null;
-                    updateUI();
+                    if (doubleBoostTimeout) clearTimeout(doubleBoostTimeout);
+                    if (rainBoostTimeout) clearTimeout(rainBoostTimeout);
+                    doubleBoostActive = false;
+                    rainBoostActive = false;
+                    
+                    // Win-Lobby anzeigen
+                    showWinLobby();
+                    // Kein updateUI nötig, da showWinLobby den Inhalt versteckt
                 });
             });
 
