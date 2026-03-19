@@ -40,108 +40,122 @@
             padding: 35px 25px;
             backdrop-filter: blur(2px);
             position: relative;
+            min-height: 800px; /* für bessere Darstellung */
         }
 
-        /* Win-Lobby (zunächst versteckt) */
+        /* ========== GEWINNER-LOBBY (komplett eigenständig) ========== */
         .win-lobby {
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
+            background: rgba(20, 40, 20, 0.98);
+            backdrop-filter: blur(8px);
             border-radius: 80px 80px 50px 50px;
             display: none;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            z-index: 100;
+            z-index: 200;
             padding: 40px;
             text-align: center;
             border: 6px solid gold;
-            box-shadow: 0 0 50px gold;
+            box-shadow: 0 0 50px gold, inset 0 0 30px #ffd700;
+            color: white;
+            font-family: 'Segoe UI', Roboto, sans-serif;
         }
 
         .win-lobby h2 {
-            font-size: 4rem;
-            color: #2d4b2d;
-            text-shadow: 4px 4px 0 gold;
+            font-size: 5rem;
+            color: gold;
+            text-shadow: 0 0 20px orange, 0 0 40px red;
             margin-bottom: 20px;
+            letter-spacing: 4px;
         }
 
         .win-lobby .winner-name {
-            font-size: 3rem;
-            color: #8a2be2;
-            font-weight: bold;
+            font-size: 3.5rem;
+            color: #ffecb3;
+            background: rgba(0,0,0,0.3);
+            padding: 15px 30px;
+            border-radius: 60px;
+            border: 2px solid gold;
             margin-bottom: 30px;
+            text-shadow: 2px 2px 0 #000;
         }
 
         .win-lobby .stats {
-            font-size: 2rem;
-            background: #f0e68c;
-            padding: 20px;
-            border-radius: 50px;
-            border: 4px solid #8b6b4d;
+            font-size: 2.2rem;
+            background: #2d4b2d;
+            color: #ffefc0;
+            padding: 20px 40px;
+            border-radius: 60px;
+            border: 4px solid #fedb7a;
             margin-bottom: 30px;
+            box-shadow: inset 0 -3px 0 #0f1e0f;
         }
 
         .win-lobby .ranking {
             width: 100%;
-            max-width: 600px;
-            background: #dcd0b0;
+            max-width: 700px;
+            background: #1e3a1e;
             border-radius: 50px;
-            padding: 20px;
-            border: 4px solid #6b4f3c;
-            box-shadow: inset 0 0 10px #aa8c5c;
+            padding: 25px;
+            border: 4px solid gold;
+            box-shadow: 0 0 30px rgba(255,215,0,0.5);
         }
 
         .win-lobby .ranking h3 {
-            font-size: 2.5rem;
-            color: #2d4b2d;
-            margin-bottom: 15px;
+            font-size: 3rem;
+            color: gold;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 0 #000;
         }
 
         .win-lobby .ranking table {
             width: 100%;
-            font-size: 1.8rem;
+            font-size: 2rem;
             border-collapse: collapse;
+            color: #ffefc0;
         }
 
         .win-lobby .ranking th {
             background: #8b6b4d;
-            color: #ffecb3;
-            padding: 10px;
+            color: gold;
+            padding: 12px;
+            font-size: 2.2rem;
             border-radius: 20px 20px 0 0;
         }
 
         .win-lobby .ranking td {
-            padding: 8px;
+            padding: 10px;
             border-bottom: 2px solid #8b6b4d;
-        }
-
-        .win-lobby .ranking tr:last-child td {
-            border-bottom: none;
         }
 
         .win-lobby .restart-btn {
             background: #ffcf8a;
             border: none;
-            font-size: 2rem;
-            padding: 15px 40px;
+            font-size: 2.5rem;
+            padding: 15px 50px;
             border-radius: 60px;
             font-weight: bold;
             color: #3a2a1e;
             border: 5px solid #b37b48;
-            box-shadow: 0 10px 0 #8b5a2e;
+            box-shadow: 0 10px 0 #8b5a2e, 0 0 30px gold;
             cursor: pointer;
-            margin-top: 30px;
+            margin-top: 40px;
             transition: 0.05s linear;
         }
 
         .win-lobby .restart-btn:active {
             transform: translateY(8px);
-            box-shadow: 0 2px 0 #8b5a2e;
+            box-shadow: 0 2px 0 #8b5a2e, 0 0 30px gold;
+        }
+
+        /* Normales Spiel (wird bei Win-Lobby ausgeblendet) */
+        #gameContent {
+            display: block;
         }
 
         .name-input-area {
@@ -560,7 +574,7 @@
     <div class="game-container">
         <!-- Hauptspiel -->
         <div class="main-area">
-            <!-- Win-Lobby -->
+            <!-- Win-Lobby (komplett eigenständig) -->
             <div class="win-lobby" id="winLobby">
                 <h2>🏆 GEWONNEN! 🏆</h2>
                 <div class="winner-name" id="winnerName"></div>
@@ -577,7 +591,7 @@
                 <button class="restart-btn" id="restartFromWinBtn">🔄 Neues Spiel</button>
             </div>
 
-            <!-- Normales Spiel -->
+            <!-- Normales Spiel (wird bei Win-Lobby ausgeblendet) -->
             <div id="gameContent">
                 <div class="name-input-area">
                     <label for="playerName">Dein Name:</label>
