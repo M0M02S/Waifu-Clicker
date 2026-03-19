@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ege's Panda – Mit Namen & Rangliste</title>
+    <title>ege's Panda – Admin-Panel für M0M02S</title>
     <style>
         * {
             box-sizing: border-box;
@@ -269,7 +269,6 @@
             75% { filter: drop-shadow(0 0 5px blue) drop-shadow(8px 12px 0 #4a2e4a); }
             100% { filter: drop-shadow(0 0 5px violet) drop-shadow(8px 12px 0 #4a2e4a); }
         }
-        /* Secret Panda – schwarz mit Galaxie-Glitzern */
         .panda-emoji.skin-secret {
             background: radial-gradient(circle at 30% 30%, #ffffff, #000000);
             background-clip: text;
@@ -561,7 +560,7 @@
     <div class="game-container">
         <!-- Hauptspiel -->
         <div class="main-area">
-            <!-- Win-Lobby (zunächst unsichtbar) -->
+            <!-- Win-Lobby -->
             <div class="win-lobby" id="winLobby">
                 <h2>🏆 GEWONNEN! 🏆</h2>
                 <div class="winner-name" id="winnerName"></div>
@@ -578,7 +577,7 @@
                 <button class="restart-btn" id="restartFromWinBtn">🔄 Neues Spiel</button>
             </div>
 
-            <!-- Normales Spiel (wird bei Win-Lobby ausgeblendet) -->
+            <!-- Normales Spiel -->
             <div id="gameContent">
                 <div class="name-input-area">
                     <label for="playerName">Dein Name:</label>
@@ -709,6 +708,39 @@
                     <!-- Dynamisch per JS befüllt -->
                 </div>
             </div>
+
+            <!-- Admin-Panel (nur für M0M02S) -->
+            <div class="shop-area" id="adminPanel" style="display: none;">
+                <div class="shop-title">⚙️ Admin-Panel</div>
+                <div class="shop-item">
+                    <span class="item-desc">💰 +10000 Geld</span>
+                    <button id="adminAddMoney">Hinzufügen</button>
+                </div>
+                <div class="shop-item">
+                    <span class="item-desc">💫 +10 Rebirths</span>
+                    <button id="adminAddRebirths">Hinzufügen</button>
+                </div>
+                <div class="shop-item">
+                    <span class="item-desc">⚡ +1.0 Multi (permanent)</span>
+                    <button id="adminAddMulti">Erhöhen</button>
+                </div>
+                <div class="shop-item">
+                    <span class="item-desc">🎯 Ziel sofort erreichen</span>
+                    <button id="adminCompleteGoal">Ausführen</button>
+                </div>
+                <div class="shop-item">
+                    <span class="item-desc">🔓 Alle Skins freischalten</span>
+                    <button id="adminUnlockSkins">Freischalten</button>
+                </div>
+                <div class="shop-item">
+                    <span class="item-desc">🤖 Auto-Rebirth aktivieren</span>
+                    <button id="adminEnableAutoRebirth">Aktivieren</button>
+                </div>
+                <div class="shop-item">
+                    <span class="item-desc">🔄 Multi zurücksetzen (1.0)</span>
+                    <button id="adminResetMulti">Zurücksetzen</button>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -819,6 +851,16 @@
             const rankingTableBody = document.querySelector('#rankingTable tbody');
             const restartFromWinBtn = document.getElementById('restartFromWinBtn');
 
+            // Admin-Panel Elemente
+            const adminPanel = document.getElementById('adminPanel');
+            const adminAddMoney = document.getElementById('adminAddMoney');
+            const adminAddRebirths = document.getElementById('adminAddRebirths');
+            const adminAddMulti = document.getElementById('adminAddMulti');
+            const adminCompleteGoal = document.getElementById('adminCompleteGoal');
+            const adminUnlockSkins = document.getElementById('adminUnlockSkins');
+            const adminEnableAutoRebirth = document.getElementById('adminEnableAutoRebirth');
+            const adminResetMulti = document.getElementById('adminResetMulti');
+
             // Shop-Buttons
             const btnAutoclicker = document.getElementById('buyAutoclicker');
             const btnAutoclicker2 = document.getElementById('buyAutoclicker2');
@@ -874,9 +916,7 @@
 
             function addToRanking(name, rebirthCount) {
                 ranking.push({ name: name, rebirths: rebirthCount });
-                // Sortieren nach Rebirths absteigend
                 ranking.sort((a, b) => b.rebirths - a.rebirths);
-                // Begrenzen auf z.B. 10 Einträge
                 if (ranking.length > 10) ranking = ranking.slice(0, 10);
                 saveRanking();
             }
@@ -901,7 +941,6 @@
 
             // Spiel komplett zurücksetzen (nach Sieg neu starten)
             function restartGameAfterWin() {
-                // Alle Werte zurücksetzen
                 currentScore = 0;
                 bambooPoints = 0;
                 rebirths = 0;
@@ -915,7 +954,6 @@
                 autoRebirthActive = false;
                 gameActive = true;
 
-                // Timer löschen
                 if (autoclickerInterval) clearInterval(autoclickerInterval);
                 autoclickerInterval = null;
                 if (doubleBoostTimeout) clearTimeout(doubleBoostTimeout);
@@ -929,6 +967,76 @@
                 updateUI();
                 restartAutoclicker();
             }
+
+            // ---------- Admin-Panel Sichtbarkeit ----------
+            function updateAdminPanelVisibility() {
+                if (playerName === "M0M02S") {
+                    adminPanel.style.display = 'block';
+                } else {
+                    adminPanel.style.display = 'none';
+                }
+            }
+
+            // ---------- Admin-Aktionen ----------
+            function adminAction(callback) {
+                if (playerName !== "M0M02S") return; // Sicherheitscheck
+                callback();
+                updateUI();
+            }
+
+            adminAddMoney.addEventListener('click', () => {
+                adminAction(() => {
+                    bambooPoints += 10000;
+                });
+            });
+
+            adminAddRebirths.addEventListener('click', () => {
+                adminAction(() => {
+                    rebirths += 10;
+                });
+            });
+
+            adminAddMulti.addEventListener('click', () => {
+                adminAction(() => {
+                    // Erhöht den permanenten Multiplikator (rebirthGainMultiplier)
+                    rebirthGainMultiplier += 1.0;
+                });
+            });
+
+            adminCompleteGoal.addEventListener('click', () => {
+                adminAction(() => {
+                    currentScore = getMaxScore();
+                    feed(0); // löst Platzen aus (oder manuell behandeln)
+                    // Da feed nicht aufgerufen wird, setzen wir gameActive = false und zeigen Explosion
+                    gameActive = false;
+                    setPandaMessage("💥 BUMM! ege ist geplatzt!");
+                    if (autoclickerInterval) clearInterval(autoclickerInterval);
+                    autoclickerInterval = null;
+                    updateUI();
+                });
+            });
+
+            adminUnlockSkins.addEventListener('click', () => {
+                adminAction(() => {
+                    skinList.forEach(skin => {
+                        if (!ownedSkins.includes(skin.id)) {
+                            ownedSkins.push(skin.id);
+                        }
+                    });
+                });
+            });
+
+            adminEnableAutoRebirth.addEventListener('click', () => {
+                adminAction(() => {
+                    autoRebirthActive = true;
+                });
+            });
+
+            adminResetMulti.addEventListener('click', () => {
+                adminAction(() => {
+                    rebirthGainMultiplier = 1.0;
+                });
+            });
 
             // ---------- UI aktualisieren ----------
             function updateUI() {
@@ -949,6 +1057,7 @@
 
                 // Namen aus Input lesen
                 playerName = playerNameInput.value.trim() || "Spieler";
+                updateAdminPanelVisibility();
 
                 // Prüfen, ob 1.000.000 erreicht wurde
                 if (!millionReached && !gameCompleted && currentScore >= MILLION_GOAL) {
@@ -957,9 +1066,8 @@
                     winMessageContainer.innerHTML = '<div class="win-message">🏆 1.000.000 erreicht! Im Rebirth-Shop gibt es jetzt das "Spiel durchspielen"-Item für 1000 Rebirths.</div>';
                 }
 
-                // Spiel beendet: Alles deaktivieren (wird durch Win-Lobby ersetzt)
+                // Spiel beendet: Alles deaktivieren
                 if (gameCompleted) {
-                    // Buttons deaktivieren
                     btnAutoclicker.disabled = true;
                     btnAutoclicker2.disabled = true;
                     btnDouble.disabled = true;
@@ -1008,7 +1116,7 @@
 
             function setPandaMessage(text) {
                 if (gameCompleted) {
-                    // Wird nicht mehr benötigt, da Win-Lobby angezeigt wird
+                    // Wird nicht benötigt, da Win-Lobby
                 } else if (!gameActive && currentScore >= getMaxScore()) {
                     pandaEmoji.textContent = "💥";
                     messageSpan.textContent = "ege: " + "💥 BUMM! ege ist geplatzt!";
@@ -1019,13 +1127,8 @@
                 }
             }
 
-            // ---------- Sprüche (unverändert) ----------
-            const hungryPhrases = [ /* ... */ ];
-            const satedPhrases = [ /* ... */ ];
-            const explosionPhrase = "💥 BUMM! ege ist geplatzt!";
-
-            // (Arrays wie gehabt, hier der Kürze halber nur angedeutet – im Originalcode vorhanden)
-            const hungryPhrasesFull = [
+            // ---------- Sprüche ----------
+            const hungryPhrases = [
                 "😋 Bambus ist mein Leben!",
                 "🙏 Fütter mich, ich hab Hunger!",
                 "🎋 Noch mehr Bambus!",
@@ -1041,7 +1144,7 @@
                 "🙂 Noch ein bisschen …"
             ];
 
-            const satedPhrasesFull = [
+            const satedPhrases = [
                 "😑 Ich bin satt. Hör auf!",
                 "😒 Im Ernst, es reicht.",
                 "😤 Du ignorierst mich!",
@@ -1056,6 +1159,8 @@
                 "😨 Noch ... (Angst)",
                 "😱 ... bitte stopp!"
             ];
+
+            const explosionPhrase = "💥 BUMM! ege ist geplatzt!";
 
             function getMilestonePhrase(percent) {
                 const max = getMaxScore();
@@ -1072,9 +1177,9 @@
                 const max = getMaxScore();
                 if (currentScore >= max) return explosionPhrase;
                 if (currentScore >= max / 2) {
-                    return satedPhrasesFull[Math.floor(Math.random() * satedPhrasesFull.length)];
+                    return satedPhrases[Math.floor(Math.random() * satedPhrases.length)];
                 } else {
-                    return hungryPhrasesFull[Math.floor(Math.random() * hungryPhrasesFull.length)];
+                    return hungryPhrases[Math.floor(Math.random() * hungryPhrases.length)];
                 }
             }
 
@@ -1255,10 +1360,7 @@
                 if (rebirths >= 1000 && millionReached) {
                     rebirths -= 1000;
                     gameCompleted = true;
-                    // In Rangliste eintragen
-                    addToRanking(playerName, rebirths); // Achtung: rebirths ist hier der Wert nach Abzug? Wir wollen die erreichten Rebirths vor dem Kauf? Besser vorher speichern.
-                    // Eigentlich wollen wir die Gesamtzahl der Rebirths, die man beim Sieg hatte. Also speichern wir vorher:
-                    const finalRebirths = rebirths + 1000; // Da wir 1000 abgezogen haben, aber eigentlich hatte man sie vorher
+                    const finalRebirths = rebirths + 1000; // Korrektur: wir haben vorher 1000 abgezogen, also waren es vorher rebirths+1000
                     addToRanking(playerName, finalRebirths);
                     
                     if (autoclickerInterval) clearInterval(autoclickerInterval);
@@ -1432,7 +1534,6 @@
                         updateUI();
                         setPandaMessage("😃 Willkommen zurück, ege!");
 
-                        // Falls gameCompleted, Win-Lobby anzeigen
                         if (gameCompleted) {
                             showWinLobby();
                         }
@@ -1457,9 +1558,12 @@
             });
 
             resetBtn.addEventListener('click', resetGame);
+            restartFromWinBtn.addEventListener('click', restartGameAfterWin);
 
-            restartFromWinBtn.addEventListener('click', () => {
-                restartGameAfterWin();
+            // Name-Change-Listener
+            playerNameInput.addEventListener('input', () => {
+                playerName = playerNameInput.value.trim() || "Spieler";
+                updateAdminPanelVisibility();
             });
 
             // Rangliste laden
