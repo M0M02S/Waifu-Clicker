@@ -544,7 +544,7 @@
 </div>
 
 <script>
-    // ========== SPIEL-LOGIK (vollständig, unverändert) ==========
+    // ========== SPIEL-LOGIK ==========
     const BASE_MAX = 10000;
     const REBIRTH_STEP = 10000;
     const MILLION_GOAL = 1000000;
@@ -619,9 +619,10 @@
     function showWinLobby() { gameContent.style.display = 'none'; winLobby.style.display = 'flex'; rightColumn.style.display = 'none'; winnerNameSpan.textContent = playerName; winnerStatsSpan.textContent = `🎉 Du hast das Spiel mit ${rebirths.toFixed(2)} Rebirths abgeschlossen! 🎉`; updateRankingTable(); }
     function hideWinLobby() { winLobby.style.display = 'none'; gameContent.style.display = 'block'; rightColumn.style.display = 'flex'; }
 
-    // Spiel-Reset (normal)
+    // Reset
     function resetGame() {
-        if (gameCompleted) return;
+        // Auch wenn gameCompleted true ist, erlauben wir einen Reset
+        gameCompleted = false;
         const max = getMaxScore();
         if (!gameActive && currentScore >= max) rebirths += rebirthGainMultiplier;
         if (autoclickerInterval) clearInterval(autoclickerInterval); autoclickerInterval = null;
@@ -633,22 +634,14 @@
         setPandaMessage("😃 Neues Spiel! Fütter mich!");
         updateUI();
         restartAutoclicker();
+        // Win-Lobby ausblenden, falls sichtbar
+        hideWinLobby();
     }
     function restartGameAfterWin() {
-        currentScore = 0; bambooPoints = 0; rebirths = 0; rebirthGainMultiplier = 1.0;
-        autoclickerCount = 0; autoclickerPower = 1; ownedSkins = ['normal']; currentSkin = 'normal';
-        millionReached = false; gameCompleted = false; autoRebirthActive = false; gameActive = true;
-        if (autoclickerInterval) clearInterval(autoclickerInterval);
-        autoclickerInterval = null;
-        if (doubleBoostTimeout) clearTimeout(doubleBoostTimeout);
-        if (rainBoostTimeout) clearTimeout(rainBoostTimeout);
-        doubleBoostActive = false; rainBoostActive = false;
-        hideWinLobby();
-        setPandaMessage("😃 Neues Spiel!");
-        updateUI();
-        restartAutoclicker();
+        resetGame(); // Reset und Win-Lobby verstecken
     }
 
+    // Feed
     function feed(amount) {
         if(!gameActive || gameCompleted) return;
         let max = getMaxScore();
@@ -710,7 +703,7 @@
     }
     function renderSkinShop(){ const skins = [{id:'normal',name:'Normaler Panda',price:0,currency:'money',desc:''},{id:'gold',name:'Gold-Panda',price:500,currency:'money',desc:''},{id:'ice',name:'Eis-Panda',price:1000,currency:'money',desc:''},{id:'rainbow',name:'Regenbogen-Panda',price:50,currency:'rebirth',desc:''},{id:'secret',name:'Secret Panda (Galaxie)',price:100,currency:'rebirth',desc:''}]; skinContainer.innerHTML=''; skins.forEach(skin=>{ const owned=ownedSkins.includes(skin.id); const active=currentSkin===skin.id; const div=document.createElement('div'); div.className='shop-item'; div.innerHTML=`<span class="item-desc">${skin.name}<br><small>${skin.desc}</small></span><span class="item-price">${skin.price===0?'Kostenlos':`Preis: ${skin.price} ${skin.currency==='money'?'💰':'💫'}`}</span>`; const btn=document.createElement('button'); if(owned&&active) btn.textContent='Aktiv',btn.disabled=true; else if(owned&&!active) btn.textContent='Ausrüsten',btn.onclick=()=>{currentSkin=skin.id; setPandaMessage(`Jetzt ${skin.name}!`); updateUI();}; else btn.textContent=`Kaufen (${skin.price} ${skin.currency==='money'?'💰':'💫'})`,btn.disabled=gameCompleted||(skin.currency==='money'?bambooPoints<skin.price:rebirths<skin.price),btn.onclick=()=>{ if(skin.currency==='money'&&bambooPoints>=skin.price){ bambooPoints-=skin.price; ownedSkins.push(skin.id); currentSkin=skin.id; setPandaMessage(`${skin.name} gekauft!`); updateUI(); } else if(skin.currency==='rebirth'&&rebirths>=skin.price){ rebirths-=skin.price; ownedSkins.push(skin.id); currentSkin=skin.id; setPandaMessage(`${skin.name} gekauft!`); updateUI(); } }; div.appendChild(btn); skinContainer.appendChild(div); }); }
     function saveGame(){ localStorage.setItem('egePandaSave',JSON.stringify({currentScore,bambooPoints,rebirths,rebirthGainMultiplier,autoclickerCount,autoclickerPower,ownedSkins,currentSkin,millionReached,gameCompleted,autoRebirthActive,playerName})); }
-    function loadGame(){ const saved=localStorage.getItem('egePandaSave'); if(saved){ const data=JSON.parse(saved); currentScore=data.currentScore||0; bambooPoints=data.bambooPoints||0; rebirths=data.rebirths||0; rebirthGainMultiplier=data.rebirthGainMultiplier||1; autoclickerCount=data.autoclickerCount||0; autoclickerPower=data.autoclickerPower||1; ownedSkins=data.ownedSkins||['normal']; currentSkin=data.currentSkin||'normal'; millionReached=data.millionReached||false; gameCompleted=data.gameCompleted||false; autoRebirthActive=data.autoRebirthActive||false; playerName=data.playerName||"Spieler"; playerNameInput.value=playerName; gameActive=true; if(currentScore>=getMaxScore()) gameActive=false; if(!gameCompleted) restartAutoclicker(); updateUI(); setPandaMessage("Willkommen zurück!"); } else resetGame(); }
+    function loadGame(){ const saved=localStorage.getItem('egePandaSave'); if(saved){ const data=JSON.parse(saved); currentScore=data.currentScore||0; bambooPoints=data.bambooPoints||0; rebirths=data.rebirths||0; rebirthGainMultiplier=data.rebirthGainMultiplier||1; autoclickerCount=data.autoclickerCount||0; autoclickerPower=data.autoclickerPower||1; ownedSkins=data.ownedSkins||['normal']; currentSkin=data.currentSkin||'normal'; millionReached=data.millionReached||false; gameCompleted=data.gameCompleted||false; autoRebirthActive=data.autoRebirthActive||false; playerName=data.playerName||"Spieler"; playerNameInput.value=playerName; gameActive=true; if(currentScore>=getMaxScore()) gameActive=false; if(!gameCompleted) restartAutoclicker(); updateUI(); setPandaMessage("Willkommen zurück!"); if(gameCompleted) showWinLobby(); } else resetGame(); }
 
     // Shop events
     function buyItem(price,currency,callback,msg){ if(gameCompleted) return false; if(currency==='money' && bambooPoints<price) return false; if(currency==='rebirth' && rebirths<price) return false; if(currency==='money') bambooPoints-=price; else rebirths-=price; callback(); setPandaMessage(msg); updateUI(); return true; }
@@ -742,8 +735,8 @@
     resetBtn.onclick=resetGame;
     restartFromWinBtn.onclick=restartGameAfterWin;
 
-    // ========== GAME HUB LOGIK (neu) ==========
-    let gameList = []; // { id, title, author, description, code, plays, players }
+    // ========== GAME HUB LOGIK ==========
+    let gameList = [];
 
     function loadGames() {
         const saved = localStorage.getItem('gameHubGames');
@@ -753,8 +746,6 @@
         updateHubStats();
     }
     function saveGames() { localStorage.setItem('gameHubGames', JSON.stringify(gameList)); }
-    
-    // Aktualisiert die Anzahl der aktuell spielenden Spieler (simuliert)
     function updateHubStats() {
         const hubStats = document.getElementById('hubStats');
         if (!hubStats) return;
@@ -762,7 +753,6 @@
         gameList.forEach(game => { totalPlayers += (game.players || 0); });
         hubStats.innerHTML = `🎮 Aktuell spielen: ${totalPlayers} Spieler in ${gameList.length} Spielen`;
     }
-    
     function renderGameGrid() {
         const container = document.getElementById('gameGridContainer');
         if (!container) return;
@@ -807,14 +797,12 @@
         const player = document.getElementById('gamePlayer');
         const iframe = document.getElementById('gameIframe');
         if (!hub || !player || !iframe) return;
-        // Spieleranzahl erhöhen
         game.players = (game.players || 0) + 1;
         saveGames();
         renderGameGrid();
         hub.style.display = 'none';
         player.style.display = 'flex';
         iframe.srcdoc = game.code;
-        // Nach 5 Sekunden wieder verringern (simuliert Spielende)
         setTimeout(() => {
             game.players = Math.max(0, (game.players || 1) - 1);
             saveGames();
@@ -846,7 +834,7 @@
                 alert("Titel und Code sind erforderlich!");
                 return;
             }
-            const newGame = { id: Date.now(), title, author, description: desc, code, plays: 0, players: 0, date: new Date().toISOString() };
+            const newGame = { id: Date.now(), title, author, description: desc, code, players: 0 };
             gameList.push(newGame);
             saveGames();
             renderGameGrid();
