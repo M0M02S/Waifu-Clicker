@@ -199,6 +199,18 @@
             color: #5e3e2b;
         }
 
+        .hub-stats {
+            text-align: center;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            background: #ead5b5;
+            padding: 10px;
+            border-radius: 50px;
+            display: inline-block;
+            width: auto;
+            align-self: center;
+        }
+
         .hub-buttons {
             display: flex;
             justify-content: center;
@@ -464,11 +476,10 @@
             <div class="ranking">
                 <h3>🏅 RANGLISTE 🏅</h3>
                 <table id="rankingTable">
-                    <thead>——
+                    <thead>
                         <th>Rang</th>
                         <th>Name</th>
                         <th>Rebirths</th>
-                    </tr>
                     </thead>
                     <tbody></tbody>
                 </table>
@@ -485,6 +496,7 @@
                 <h2>🎮 Game Hub</h2>
                 <p>Teile deine eigenen Spiele – Code in HTML/CSS/JS</p>
             </div>
+            <div class="hub-stats" id="hubStats"></div>
             <div class="hub-buttons">
                 <button id="backToGameBtn">🐼 Zurück zum Panda-Spiel</button>
                 <button id="showAddFormBtn">➕ Neues Spiel posten</button>
@@ -730,16 +742,27 @@
     resetBtn.onclick=resetGame;
     restartFromWinBtn.onclick=restartGameAfterWin;
 
-    // ========== GAME HUB LOGIK (NEU) ==========
-    let gameList = []; // { id, title, author, description, code, date }
+    // ========== GAME HUB LOGIK (neu) ==========
+    let gameList = []; // { id, title, author, description, code, plays, players }
 
     function loadGames() {
         const saved = localStorage.getItem('gameHubGames');
         if (saved) gameList = JSON.parse(saved);
         else gameList = [];
         renderGameGrid();
+        updateHubStats();
     }
     function saveGames() { localStorage.setItem('gameHubGames', JSON.stringify(gameList)); }
+    
+    // Aktualisiert die Anzahl der aktuell spielenden Spieler (simuliert)
+    function updateHubStats() {
+        const hubStats = document.getElementById('hubStats');
+        if (!hubStats) return;
+        let totalPlayers = 0;
+        gameList.forEach(game => { totalPlayers += (game.players || 0); });
+        hubStats.innerHTML = `🎮 Aktuell spielen: ${totalPlayers} Spieler in ${gameList.length} Spielen`;
+    }
+    
     function renderGameGrid() {
         const container = document.getElementById('gameGridContainer');
         if (!container) return;
@@ -752,6 +775,7 @@
                 <div class="author">von ${escapeHtml(game.author)}</div>
                 <div class="description">${escapeHtml(game.description)}</div>
                 <div class="card-buttons">
+                    <span style="font-size:1.2rem;">👥 ${game.players || 0} spielen</span>
                     <button class="play-btn">🎮 Spielen</button>
                     <button class="delete-btn">🗑️ Löschen</button>
                 </div>
@@ -764,6 +788,7 @@
                     gameList = gameList.filter(g => g.id !== game.id);
                     saveGames();
                     renderGameGrid();
+                    updateHubStats();
                 }
             };
             container.appendChild(card);
@@ -782,9 +807,20 @@
         const player = document.getElementById('gamePlayer');
         const iframe = document.getElementById('gameIframe');
         if (!hub || !player || !iframe) return;
+        // Spieleranzahl erhöhen
+        game.players = (game.players || 0) + 1;
+        saveGames();
+        renderGameGrid();
         hub.style.display = 'none';
         player.style.display = 'flex';
         iframe.srcdoc = game.code;
+        // Nach 5 Sekunden wieder verringern (simuliert Spielende)
+        setTimeout(() => {
+            game.players = Math.max(0, (game.players || 1) - 1);
+            saveGames();
+            renderGameGrid();
+            updateHubStats();
+        }, 5000);
     }
     function showAddGameForm() {
         const container = document.getElementById('addGameFormContainer');
@@ -810,11 +846,12 @@
                 alert("Titel und Code sind erforderlich!");
                 return;
             }
-            const newGame = { id: Date.now(), title, author, description: desc, code, date: new Date().toISOString() };
+            const newGame = { id: Date.now(), title, author, description: desc, code, plays: 0, players: 0, date: new Date().toISOString() };
             gameList.push(newGame);
             saveGames();
             renderGameGrid();
             container.style.display = 'none';
+            updateHubStats();
         };
         document.getElementById('cancelGameBtn').onclick = () => {
             container.style.display = 'none';
