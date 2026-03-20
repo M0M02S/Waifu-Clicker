@@ -631,8 +631,8 @@
             </div>
         </div>
 
-        <!-- Rechte Spalte: Shops -->
-        <div class="right-column">
+        <!-- Rechte Spalte: Shops – jetzt mit ID -->
+        <div class="right-column" id="rightColumn">
             <!-- Normaler Shop (Geld) -->
             <div class="shop-area">
                 <div class="shop-title">🛒 Bambus-Shop</div>
@@ -865,6 +865,9 @@
             const rankingTableBody = document.querySelector('#rankingTable tbody');
             const restartFromWinBtn = document.getElementById('restartFromWinBtn');
 
+            // Rechte Spalte
+            const rightColumn = document.getElementById('rightColumn');
+
             // Admin-Panel Elemente
             const adminPanel = document.getElementById('adminPanel');
             const adminAddMoney = document.getElementById('adminAddMoney');
@@ -948,6 +951,8 @@
             function showWinLobby() {
                 gameContent.style.display = 'none';
                 winLobby.style.display = 'flex';
+                // Rechte Spalte ausblenden
+                if (rightColumn) rightColumn.style.display = 'none';
                 winnerNameSpan.textContent = playerName;
                 winnerStatsSpan.textContent = `🎉 Du hast das Spiel mit ${rebirths.toFixed(2)} Rebirths abgeschlossen! 🎉`;
                 updateRankingTable();
@@ -977,6 +982,8 @@
 
                 winLobby.style.display = 'none';
                 gameContent.style.display = 'block';
+                // Rechte Spalte wieder einblenden
+                if (rightColumn) rightColumn.style.display = 'flex';
                 setPandaMessage("😃 Neues Spiel! Fütter mich!");
                 updateUI();
                 restartAutoclicker();
@@ -1550,6 +1557,9 @@
 
                         if (!gameCompleted) {
                             restartAutoclicker();
+                        } else {
+                            // Wenn geladen und Spiel beendet, rechte Spalte ausblenden
+                            if (rightColumn) rightColumn.style.display = 'none';
                         }
 
                         playerNameInput.value = playerName;
