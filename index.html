@@ -2,23 +2,24 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>ege's Panda – Game Hub</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ege's Panda – Admin-Panel für M0M02S</title>
     <style>
         * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
         }
 
         body {
             background: #2d4b2d url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" opacity="0.1"><path d="M20 10 L30 40 L20 70 L10 40 Z" fill="%23aaffaa"/><path d="M70 20 Q80 30 70 50 Q60 30 70 20" fill="%2388dd88"/></svg>');
-            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+            font-family: 'Segoe UI', 'Roboto', system-ui, sans-serif;
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 16px;
+            box-shadow: inset 0 0 100px rgba(0,20,0,0.5);
         }
 
         .game-container {
@@ -37,16 +38,12 @@
             border: 6px solid #6b4f3c;
             box-shadow: 0 30px 40px rgba(0, 0, 0, 0.5), inset 0 2px 10px #ffeeaa;
             padding: 35px 25px;
+            backdrop-filter: blur(2px);
             position: relative;
-            min-height: 800px;
+            min-height: 800px; /* für bessere Darstellung */
         }
 
-        /* ----- Spiel-Content (normal) ----- */
-        #gameContent {
-            display: block;
-        }
-
-        /* ----- Win-Lobby (vollflächig, kein Shop sichtbar) ----- */
+        /* ========== GEWINNER-LOBBY (komplett eigenständig) ========== */
         .win-lobby {
             position: absolute;
             top: 0;
@@ -66,6 +63,7 @@
             border: 6px solid gold;
             box-shadow: 0 0 50px gold, inset 0 0 30px #ffd700;
             color: white;
+            font-family: 'Segoe UI', Roboto, sans-serif;
         }
 
         .win-lobby h2 {
@@ -73,24 +71,29 @@
             color: gold;
             text-shadow: 0 0 20px orange, 0 0 40px red;
             margin-bottom: 20px;
+            letter-spacing: 4px;
         }
 
         .win-lobby .winner-name {
             font-size: 3.5rem;
+            color: #ffecb3;
             background: rgba(0,0,0,0.3);
             padding: 15px 30px;
             border-radius: 60px;
             border: 2px solid gold;
             margin-bottom: 30px;
+            text-shadow: 2px 2px 0 #000;
         }
 
         .win-lobby .stats {
             font-size: 2.2rem;
             background: #2d4b2d;
+            color: #ffefc0;
             padding: 20px 40px;
             border-radius: 60px;
             border: 4px solid #fedb7a;
             margin-bottom: 30px;
+            box-shadow: inset 0 -3px 0 #0f1e0f;
         }
 
         .win-lobby .ranking {
@@ -100,25 +103,29 @@
             border-radius: 50px;
             padding: 25px;
             border: 4px solid gold;
+            box-shadow: 0 0 30px rgba(255,215,0,0.5);
         }
 
         .win-lobby .ranking h3 {
             font-size: 3rem;
             color: gold;
             margin-bottom: 20px;
+            text-shadow: 2px 2px 0 #000;
         }
 
         .win-lobby .ranking table {
             width: 100%;
             font-size: 2rem;
-            color: #ffefc0;
             border-collapse: collapse;
+            color: #ffefc0;
         }
 
         .win-lobby .ranking th {
             background: #8b6b4d;
             color: gold;
             padding: 12px;
+            font-size: 2.2rem;
+            border-radius: 20px 20px 0 0;
         }
 
         .win-lobby .ranking td {
@@ -126,262 +133,34 @@
             border-bottom: 2px solid #8b6b4d;
         }
 
-        .win-lobby .restart-btn, .win-lobby .exit-btn {
+        .win-lobby .restart-btn {
             background: #ffcf8a;
             border: none;
-            font-size: 2.2rem;
-            padding: 15px 40px;
+            font-size: 2.5rem;
+            padding: 15px 50px;
             border-radius: 60px;
             font-weight: bold;
             color: #3a2a1e;
             border: 5px solid #b37b48;
-            box-shadow: 0 10px 0 #8b5a2e;
+            box-shadow: 0 10px 0 #8b5a2e, 0 0 30px gold;
             cursor: pointer;
-            margin: 20px 10px;
+            margin-top: 40px;
             transition: 0.05s linear;
-            display: inline-block;
         }
 
-        .win-lobby .restart-btn:active, .win-lobby .exit-btn:active {
+        .win-lobby .restart-btn:active {
             transform: translateY(8px);
-            box-shadow: 0 2px 0 #8b5a2e;
+            box-shadow: 0 2px 0 #8b5a2e, 0 0 30px gold;
         }
 
-        .win-lobby .exit-btn {
-            background: #9b6b9b;
-            border-color: #4a2e4a;
-            box-shadow: 0 10px 0 #301934;
+        /* Normales Spiel (wird bei Win-Lobby ausgeblendet) */
+        #gameContent {
+            display: block;
         }
 
-        /* ----- Game Hub (vollflächig) ----- */
-        .game-hub {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: #fef9e8;
-            border-radius: 80px 80px 50px 50px;
-            display: none;
-            flex-direction: column;
-            overflow-y: auto;
-            padding: 30px;
-            z-index: 210;
-        }
-
-        .game-hub::-webkit-scrollbar {
-            width: 10px;
-        }
-        .game-hub::-webkit-scrollbar-track {
-            background: #dcd0b0;
-            border-radius: 10px;
-        }
-        .game-hub::-webkit-scrollbar-thumb {
-            background: #8b6b4d;
-            border-radius: 10px;
-        }
-
-        .hub-header {
-            text-align: center;
-            margin-bottom: 30px;
-            border-bottom: 5px solid #8b6b4d;
-            padding-bottom: 20px;
-        }
-
-        .hub-header h2 {
-            font-size: 3.5rem;
-            color: #2d4b2d;
-            text-shadow: 3px 3px 0 #c0d080;
-        }
-
-        .hub-header p {
-            font-size: 1.6rem;
-            color: #5e3e2b;
-        }
-
-        .hub-stats {
-            text-align: center;
-            font-size: 1.8rem;
-            margin-bottom: 20px;
-            background: #ead5b5;
-            padding: 10px;
-            border-radius: 50px;
-            display: inline-block;
-            width: auto;
-            align-self: center;
-        }
-
-        .hub-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-
-        .hub-buttons button {
-            background: #ffcf8a;
-            border: none;
-            font-size: 1.8rem;
-            padding: 12px 30px;
-            border-radius: 50px;
-            font-weight: bold;
-            cursor: pointer;
-            border: 4px solid #b37b48;
-            box-shadow: 0 6px 0 #8b5a2e;
-            transition: 0.05s linear;
-        }
-
-        .hub-buttons button:active {
-            transform: translateY(5px);
-            box-shadow: 0 1px 0 #8b5a2e;
-        }
-
-        .game-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 25px;
-            margin-top: 20px;
-        }
-
-        .game-card {
-            background: #dcd0b0;
-            border: 4px solid #8b6b4d;
-            border-radius: 50px;
-            padding: 20px;
-            box-shadow: 0 8px 0 #6b4f3c;
-            transition: transform 0.1s;
-        }
-
-        .game-card h3 {
-            font-size: 2rem;
-            color: #2d4b2d;
-            margin-bottom: 8px;
-        }
-
-        .game-card .author {
-            font-size: 1.4rem;
-            color: #5e3e2b;
-            font-style: italic;
-        }
-
-        .game-card .description {
-            font-size: 1.4rem;
-            color: #1e3a1e;
-            margin: 12px 0;
-            max-height: 80px;
-            overflow-y: auto;
-        }
-
-        .game-card .card-buttons {
-            display: flex;
-            gap: 12px;
-            justify-content: flex-end;
-            margin-top: 15px;
-        }
-
-        .game-card button {
-            background: #ffcf8a;
-            border: none;
-            font-size: 1.4rem;
-            padding: 8px 20px;
-            border-radius: 40px;
-            font-weight: bold;
-            cursor: pointer;
-            border: 3px solid #b37b48;
-            box-shadow: 0 4px 0 #8b5a2e;
-            transition: 0.05s linear;
-        }
-
-        .game-card button:active {
-            transform: translateY(3px);
-            box-shadow: 0 1px 0 #8b5a2e;
-        }
-
-        .game-card button.delete-btn {
-            background: #c44b1e;
-            border-color: #8a2e0c;
-            color: white;
-            box-shadow: 0 4px 0 #5e2e1a;
-        }
-
-        .add-game-form {
-            background: #ead5b5;
-            border-radius: 60px;
-            padding: 25px;
-            margin-top: 30px;
-            border: 4px solid #6b4f3c;
-        }
-
-        .add-game-form h3 {
-            font-size: 2.2rem;
-            color: #2d4b2d;
-            margin-bottom: 20px;
-        }
-
-        .add-game-form input, .add-game-form textarea {
-            width: 100%;
-            padding: 12px;
-            margin-bottom: 15px;
-            border: 3px solid #8b6b4d;
-            border-radius: 40px;
-            font-size: 1.4rem;
-            background: #fffef7;
-        }
-
-        .add-game-form textarea {
-            height: 200px;
-            font-family: monospace;
-            resize: vertical;
-        }
-
-        .add-game-form button {
-            background: #2d4b2d;
-            color: white;
-            font-size: 1.8rem;
-            padding: 12px 30px;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        /* Spiel-Player (wenn ein Spiel gestartet wird) */
-        .game-player {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: #000;
-            border-radius: 80px 80px 50px 50px;
-            display: none;
-            flex-direction: column;
-            z-index: 220;
-        }
-
-        .game-player iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-            border-radius: 80px 80px 50px 50px;
-        }
-
-        .game-player .back-btn {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            background: #ffcf8a;
-            padding: 10px 25px;
-            border-radius: 40px;
-            font-weight: bold;
-            cursor: pointer;
-            border: 3px solid #b37b48;
-            z-index: 10;
-        }
-
-        /* ----- Normale Spiel-Elemente (unverändert) ----- */
         .name-input-area {
             display: flex;
+            align-items: center;
             justify-content: center;
             gap: 15px;
             margin-bottom: 20px;
@@ -390,508 +169,1436 @@
             border-radius: 60px;
             border: 4px solid #6b4f3c;
         }
-        .name-input-area label { font-size: 2rem; color: #1e3a1e; font-weight: bold; }
-        .name-input-area input { font-size: 2rem; padding: 10px 20px; border-radius: 40px; border: 4px solid #8b6b4d; background: #fffef7; width: 250px; text-align: center; }
-        h1 { text-align: center; font-size: 3.2rem; color: #2d4b2d; text-shadow: 4px 4px 0 #c0d080, 6px 6px 0 #6b4f3c; margin: -15px 0 15px; }
-        .panda-zone { background: #dcd0b0; border-radius: 120px 120px 70px 70px; border: 6px solid #8b6b4d; padding: 30px 20px; margin: 20px 0 35px; display: flex; align-items: center; justify-content: center; gap: 30px; box-shadow: inset 0 -8px 0 #6b4f3c, 0 12px 0 #4d3a2b; background: linear-gradient(145deg, #e5d5b5, #c5b090); }
-        .panda-emoji { font-size: 9rem; line-height: 1; filter: drop-shadow(8px 12px 0 #3a2a1e); transform: scaleX(-1); transition: transform 0.2s, filter 0.3s; }
-        .panda-emoji.skin-normal { filter: drop-shadow(8px 12px 0 #3a2a1e); text-shadow: none; }
-        .panda-emoji.skin-gold { background: linear-gradient(45deg, #ffd700, #b8860b, #ffd700); background-clip: text; -webkit-background-clip: text; color: transparent; filter: drop-shadow(0 0 15px gold) drop-shadow(8px 12px 0 #8b6910); text-shadow: 0 0 20px #ffaa00, 0 0 40px #ffaa00; animation: goldSparkle 2s infinite; }
-        @keyframes goldSparkle { 0% { filter: drop-shadow(0 0 10px gold) drop-shadow(8px 12px 0 #8b6910); } 50% { filter: drop-shadow(0 0 25px #ffd700) drop-shadow(8px 12px 0 #b8860b); } 100% { filter: drop-shadow(0 0 10px gold) drop-shadow(8px 12px 0 #8b6910); } }
-        .panda-emoji.skin-ice { background: linear-gradient(135deg, #a0e0ff, #ffffff, #a0e0ff); background-clip: text; -webkit-background-clip: text; color: transparent; filter: drop-shadow(0 0 15px cyan) drop-shadow(8px 12px 0 #2a5f7a); text-shadow: 0 0 15px white, 0 0 30px #00ffff; opacity: 0.95; animation: iceShimmer 3s infinite; }
-        @keyframes iceShimmer { 0% { filter: drop-shadow(0 0 10px cyan) drop-shadow(8px 12px 0 #2a5f7a); } 50% { filter: drop-shadow(0 0 20px #ffffff) drop-shadow(8px 12px 0 #1e3f5a); } 100% { filter: drop-shadow(0 0 10px cyan) drop-shadow(8px 12px 0 #2a5f7a); } }
-        .panda-emoji.skin-rainbow { background: linear-gradient(90deg, red, orange, yellow, green, blue, indigo, violet); background-clip: text; -webkit-background-clip: text; color: transparent; background-size: 400% 100%; animation: rainbowMove 5s linear infinite, rainbowGlow 2s infinite; filter: drop-shadow(8px 12px 0 #4a2e4a); }
-        @keyframes rainbowMove { 0% { background-position: 0% 50%; } 100% { background-position: 100% 50%; } }
-        @keyframes rainbowGlow { 0% { filter: drop-shadow(0 0 5px red) drop-shadow(8px 12px 0 #4a2e4a); } 25% { filter: drop-shadow(0 0 5px yellow) drop-shadow(8px 12px 0 #4a2e4a); } 50% { filter: drop-shadow(0 0 5px green) drop-shadow(8px 12px 0 #4a2e4a); } 75% { filter: drop-shadow(0 0 5px blue) drop-shadow(8px 12px 0 #4a2e4a); } 100% { filter: drop-shadow(0 0 5px violet) drop-shadow(8px 12px 0 #4a2e4a); } }
-        .panda-emoji.skin-secret { background: radial-gradient(circle at 30% 30%, #ffffff, #000000); background-clip: text; -webkit-background-clip: text; color: transparent; filter: drop-shadow(0 0 20px #8a2be2) drop-shadow(0 0 40px #ff00ff) drop-shadow(8px 12px 0 #301934); text-shadow: 0 0 30px white, 0 0 60px #8a2be2; animation: galaxyTwinkle 3s infinite; }
-        @keyframes galaxyTwinkle { 0% { filter: drop-shadow(0 0 20px #8a2be2) drop-shadow(0 0 40px #ff00ff) drop-shadow(8px 12px 0 #301934); } 25% { filter: drop-shadow(0 0 30px #ffffff) drop-shadow(0 0 60px #8a2be2) drop-shadow(8px 12px 0 #301934); } 50% { filter: drop-shadow(0 0 20px #ff00ff) drop-shadow(0 0 40px #8a2be2) drop-shadow(8px 12px 0 #301934); } 75% { filter: drop-shadow(0 0 30px #8a2be2) drop-shadow(0 0 60px #ffffff) drop-shadow(8px 12px 0 #301934); } 100% { filter: drop-shadow(0 0 20px #8a2be2) drop-shadow(0 0 40px #ff00ff) drop-shadow(8px 12px 0 #301934); } }
-        .speech-bubble { background: #fffef7; border-radius: 50px 50px 50px 15px; padding: 22px 30px; font-size: 1.9rem; font-weight: bold; color: #2d4b2d; border: 5px solid #6b4f3c; box-shadow: 10px 10px 0 #3a5e3a; width: 400px; min-width: 400px; text-align: center; word-break: break-word; background: linear-gradient(135deg, #fff, #f0ead0); }
-        .bamboo-forest { background: #8b6b4d; border-radius: 80px; padding: 30px 20px; margin: 20px 0 30px; border: 6px solid #5e3e2b; background: #9b7b5a; }
-        .bamboo-row { display: flex; justify-content: center; gap: 30px; flex-wrap: wrap; }
-        .bamboo { font-size: 8rem; line-height: 1; cursor: pointer; filter: drop-shadow(4px 12px 0 #3a5e3a); transform: rotate(2deg); user-select: none; }
-        .bamboo:hover { transform: scale(1.2) rotate(0deg); filter: drop-shadow(8px 15px 0 #2d4b2d); }
-        .bamboo:active { transform: scale(0.9) rotate(-3deg); }
-        .bamboo.hidden { opacity: 0; pointer-events: none; transform: scale(0.7); transition: 0.25s; }
-        .stats-panel { display: flex; justify-content: space-between; background: #ead5b5; border-radius: 70px; padding: 20px 30px; border: 6px solid #6b4f3c; margin: 25px 0 20px; flex-wrap: wrap; gap: 15px; background: linear-gradient(145deg, #f5e5c5, #d5b590); }
-        .score-text, .currency, .rebirth-display { background: #2d4b2d; color: #f9f2d9; padding: 15px 35px; border-radius: 60px; font-size: 2.3rem; border: 4px solid #fedb7a; white-space: nowrap; }
-        .currency { background: #b38b60; }
-        .rebirth-display { background: #9b6b9b; }
-        .multiplier-display { background: #3f7e3f; color: #ffefc0; padding: 10px 25px; border-radius: 40px; font-size: 1.8rem; width: fit-content; margin: 10px auto; }
-        .boost-info { background: #ead5b5; border-radius: 50px; padding: 15px 25px; font-size: 1.6rem; text-align: center; border: 4px solid #6b4f3c; min-height: 70px; }
-        .reset-btn { background: #ffcf8a; border: none; font-size: 2.2rem; padding: 15px 40px; border-radius: 60px; font-weight: bold; border: 5px solid #b37b48; box-shadow: 0 10px 0 #8b5a2e; cursor: pointer; width: 100%; margin-top: 20px; }
-        .reset-btn:active { transform: translateY(8px); box-shadow: 0 2px 0 #8b5a2e; }
-        footer { text-align: center; color: #3d5e3d; font-size: 1.6rem; margin-top: 20px; }
 
-        /* Rechte Spalte – Shops */
-        .right-column { display: flex; flex-direction: column; gap: 25px; max-height: 90vh; overflow-y: auto; padding-right: 5px; }
-        .shop-area { background: #fef9e8; border-radius: 60px; border: 6px solid #6b4f3c; padding: 30px 20px; box-shadow: 0 30px 30px rgba(0, 0, 0, 0.5), inset 0 0 10px #ffefc0; display: flex; flex-direction: column; gap: 25px; }
-        .shop-title { font-size: 2.8rem; color: #2d4b2d; text-align: center; border-bottom: 5px solid #8b6b4d; padding-bottom: 15px; font-weight: 800; }
-        .shop-item { background: #dcd0b0; border: 4px solid #8b6b4d; border-radius: 50px; padding: 20px; display: flex; flex-direction: column; gap: 10px; box-shadow: 0 8px 0 #6b4f3c; }
-        .shop-item button { background: #ffcf8a; border: none; font-size: 1.8rem; padding: 15px; border-radius: 50px; font-weight: bold; border: 4px solid #b37b48; box-shadow: 0 6px 0 #8b5a2e; cursor: pointer; transition: 0.05s linear; }
-        .shop-item button:active { transform: translateY(5px); box-shadow: 0 1px 0 #8b5a2e; }
-        .item-desc { font-size: 1.6rem; color: #1e3a1e; font-weight: 600; }
-        .item-price { font-size: 2rem; font-weight: bold; color: #a52a2a; }
+        .name-input-area label {
+            font-size: 2rem;
+            color: #1e3a1e;
+            font-weight: bold;
+        }
+
+        .name-input-area input {
+            font-size: 2rem;
+            padding: 10px 20px;
+            border-radius: 40px;
+            border: 4px solid #8b6b4d;
+            background: #fffef7;
+            color: #2d4b2d;
+            font-weight: bold;
+            width: 250px;
+            text-align: center;
+        }
+
+        .name-input-area input:focus {
+            outline: none;
+            border-color: gold;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 3.2rem;
+            color: #2d4b2d;
+            text-shadow: 4px 4px 0 #c0d080, 6px 6px 0 #6b4f3c;
+            margin: -15px 0 15px;
+            letter-spacing: 2px;
+            font-weight: 900;
+        }
+
+        .panda-zone {
+            background: #dcd0b0;
+            border-radius: 120px 120px 70px 70px;
+            border: 6px solid #8b6b4d;
+            padding: 30px 20px 20px;
+            margin: 20px 0 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            box-shadow: inset 0 -8px 0 #6b4f3c, 0 12px 0 #4d3a2b;
+            background: linear-gradient(145deg, #e5d5b5, #c5b090);
+        }
+
+        .panda-emoji {
+            font-size: 9rem;
+            line-height: 1;
+            filter: drop-shadow(8px 12px 0 #3a2a1e);
+            transform: scaleX(-1);
+            transition: transform 0.2s, filter 0.3s;
+        }
+        .panda-emoji:hover {
+            transform: scaleX(-1) scale(1.05);
+        }
+
+        /* Detaillierte Skins */
+        .panda-emoji.skin-normal {
+            filter: drop-shadow(8px 12px 0 #3a2a1e);
+            text-shadow: none;
+        }
+        .panda-emoji.skin-gold {
+            background: linear-gradient(45deg, #ffd700, #b8860b, #ffd700);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            filter: drop-shadow(0 0 15px gold) drop-shadow(8px 12px 0 #8b6910);
+            text-shadow: 0 0 20px #ffaa00, 0 0 40px #ffaa00;
+            animation: goldSparkle 2s infinite;
+        }
+        @keyframes goldSparkle {
+            0% { filter: drop-shadow(0 0 10px gold) drop-shadow(8px 12px 0 #8b6910); }
+            50% { filter: drop-shadow(0 0 25px #ffd700) drop-shadow(8px 12px 0 #b8860b); }
+            100% { filter: drop-shadow(0 0 10px gold) drop-shadow(8px 12px 0 #8b6910); }
+        }
+        .panda-emoji.skin-ice {
+            background: linear-gradient(135deg, #a0e0ff, #ffffff, #a0e0ff);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            filter: drop-shadow(0 0 15px cyan) drop-shadow(8px 12px 0 #2a5f7a);
+            text-shadow: 0 0 15px white, 0 0 30px #00ffff;
+            opacity: 0.95;
+            animation: iceShimmer 3s infinite;
+        }
+        @keyframes iceShimmer {
+            0% { filter: drop-shadow(0 0 10px cyan) drop-shadow(8px 12px 0 #2a5f7a); }
+            50% { filter: drop-shadow(0 0 20px #ffffff) drop-shadow(8px 12px 0 #1e3f5a); }
+            100% { filter: drop-shadow(0 0 10px cyan) drop-shadow(8px 12px 0 #2a5f7a); }
+        }
+        .panda-emoji.skin-rainbow {
+            background: linear-gradient(90deg, red, orange, yellow, green, blue, indigo, violet);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            background-size: 400% 100%;
+            animation: rainbowMove 5s linear infinite, rainbowGlow 2s infinite;
+            filter: drop-shadow(8px 12px 0 #4a2e4a);
+        }
+        @keyframes rainbowMove {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
+        }
+        @keyframes rainbowGlow {
+            0% { filter: drop-shadow(0 0 5px red) drop-shadow(8px 12px 0 #4a2e4a); }
+            25% { filter: drop-shadow(0 0 5px yellow) drop-shadow(8px 12px 0 #4a2e4a); }
+            50% { filter: drop-shadow(0 0 5px green) drop-shadow(8px 12px 0 #4a2e4a); }
+            75% { filter: drop-shadow(0 0 5px blue) drop-shadow(8px 12px 0 #4a2e4a); }
+            100% { filter: drop-shadow(0 0 5px violet) drop-shadow(8px 12px 0 #4a2e4a); }
+        }
+        .panda-emoji.skin-secret {
+            background: radial-gradient(circle at 30% 30%, #ffffff, #000000);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            filter: drop-shadow(0 0 20px #8a2be2) drop-shadow(0 0 40px #ff00ff) drop-shadow(8px 12px 0 #301934);
+            text-shadow: 0 0 30px white, 0 0 60px #8a2be2;
+            animation: galaxyTwinkle 3s infinite;
+        }
+        @keyframes galaxyTwinkle {
+            0% { filter: drop-shadow(0 0 20px #8a2be2) drop-shadow(0 0 40px #ff00ff) drop-shadow(8px 12px 0 #301934); }
+            25% { filter: drop-shadow(0 0 30px #ffffff) drop-shadow(0 0 60px #8a2be2) drop-shadow(8px 12px 0 #301934); }
+            50% { filter: drop-shadow(0 0 20px #ff00ff) drop-shadow(0 0 40px #8a2be2) drop-shadow(8px 12px 0 #301934); }
+            75% { filter: drop-shadow(0 0 30px #8a2be2) drop-shadow(0 0 60px #ffffff) drop-shadow(8px 12px 0 #301934); }
+            100% { filter: drop-shadow(0 0 20px #8a2be2) drop-shadow(0 0 40px #ff00ff) drop-shadow(8px 12px 0 #301934); }
+        }
+
+        .speech-bubble {
+            background: #fffef7;
+            border-radius: 50px 50px 50px 15px;
+            padding: 22px 30px;
+            font-size: 1.9rem;
+            font-weight: bold;
+            color: #2d4b2d;
+            border: 5px solid #6b4f3c;
+            box-shadow: 10px 10px 0 #3a5e3a, inset -2px -2px 0 #bba88a;
+            width: 400px;
+            min-width: 400px;
+            max-width: 400px;
+            text-align: center;
+            word-break: break-word;
+            overflow-wrap: break-word;
+            hyphens: auto;
+            background: linear-gradient(135deg, #fff, #f0ead0);
+        }
+
+        .bamboo-forest {
+            background: #8b6b4d;
+            border-radius: 80px;
+            padding: 30px 20px;
+            margin: 20px 0 30px;
+            border: 6px solid #5e3e2b;
+            box-shadow: inset 0 -5px 0 #3e2b1c, 0 10px 0 #4d3a2b;
+            background: #9b7b5a;
+        }
+
+        .bamboo-row {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .bamboo {
+            font-size: 8rem;
+            line-height: 1;
+            cursor: pointer;
+            transition: transform 0.15s ease, filter 0.2s;
+            filter: drop-shadow(4px 12px 0 #3a5e3a);
+            transform: rotate(2deg);
+            user-select: none;
+            text-shadow: 0 0 5px #d4f7d4;
+        }
+
+        .bamboo:hover {
+            transform: scale(1.2) rotate(0deg);
+            filter: drop-shadow(8px 15px 0 #2d4b2d);
+        }
+
+        .bamboo:active {
+            transform: scale(0.9) rotate(-3deg);
+            filter: drop-shadow(2px 5px 0 #1e3a1e);
+        }
+
+        .bamboo.hidden {
+            opacity: 0;
+            pointer-events: none;
+            transform: scale(0.7);
+            transition: 0.25s;
+        }
+
+        .stats-panel {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #ead5b5;
+            border-radius: 70px;
+            padding: 20px 30px;
+            border: 6px solid #6b4f3c;
+            margin: 25px 0 20px;
+            font-size: 2rem;
+            font-weight: bold;
+            color: #1e3a1e;
+            box-shadow: 0 10px 0 #4d3a2b, inset 0 -2px 5px #ffeeaa;
+            flex-wrap: wrap;
+            gap: 15px;
+            background: linear-gradient(145deg, #f5e5c5, #d5b590);
+            min-width: 100%;
+        }
+
+        .score-text {
+            background: #2d4b2d;
+            color: #f9f2d9;
+            padding: 15px 35px;
+            border-radius: 60px;
+            font-size: 2.3rem;
+            border: 4px solid #fedb7a;
+            text-shadow: 3px 3px 0 #1e3a1e;
+            box-shadow: inset 0 -3px 0 #0f1e0f;
+            white-space: nowrap;
+        }
+
+        .currency {
+            background: #b38b60;
+            color: #ffecb3;
+            padding: 15px 35px;
+            border-radius: 60px;
+            font-size: 2.3rem;
+            border: 4px solid #fedb7a;
+            text-shadow: 3px 3px 0 #5e3e2b;
+            white-space: nowrap;
+        }
+
+        .rebirth-display {
+            background: #9b6b9b;
+            color: #f9d9f9;
+            padding: 15px 35px;
+            border-radius: 60px;
+            font-size: 2.3rem;
+            border: 4px solid #fedb7a;
+            text-shadow: 3px 3px 0 #4a2e4a;
+            white-space: nowrap;
+        }
+
+        .multiplier-display {
+            background: #3f7e3f;
+            color: #ffefc0;
+            padding: 10px 25px;
+            border-radius: 40px;
+            font-size: 1.8rem;
+            border: 3px solid #fedb7a;
+            text-shadow: 2px 2px 0 #1e3a1e;
+            width: fit-content;
+            margin: 10px auto;
+        }
+
+        .boost-info {
+            background: #ead5b5;
+            border-radius: 50px;
+            padding: 15px 25px;
+            font-size: 1.6rem;
+            text-align: center;
+            border: 4px solid #6b4f3c;
+            box-shadow: inset 0 -2px 0 #3a2a1e;
+            margin: 10px 0;
+            min-height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .reset-btn {
+            background: #ffcf8a;
+            border: none;
+            font-size: 2.2rem;
+            padding: 15px 40px;
+            border-radius: 60px;
+            font-weight: bold;
+            color: #3a2a1e;
+            border: 5px solid #b37b48;
+            box-shadow: 0 10px 0 #8b5a2e, 0 5px 20px #00000055;
+            cursor: pointer;
+            width: 100%;
+            transition: 0.07s linear;
+            margin-top: 20px;
+        }
+
+        .reset-btn:active {
+            transform: translateY(8px);
+            box-shadow: 0 2px 0 #8b5a2e;
+        }
+
+        .reset-btn:disabled {
+            opacity: 0.5;
+            transform: none;
+            box-shadow: 0 10px 0 #8b5a2e;
+            pointer-events: none;
+        }
+
+        footer {
+            text-align: center;
+            color: #3d5e3d;
+            font-size: 1.6rem;
+            margin-top: 20px;
+            font-weight: 600;
+            text-shadow: 2px 2px 0 #b0b07a;
+        }
+
+        /* Rechte Spalte – scrollbar */
+        .right-column {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+
+        /* Shop-Bereiche */
+        .shop-area {
+            background: #fef9e8;
+            border-radius: 60px;
+            border: 6px solid #6b4f3c;
+            padding: 30px 20px;
+            box-shadow: 0 30px 30px rgba(0, 0, 0, 0.5), inset 0 0 10px #ffefc0;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            backdrop-filter: blur(2px);
+        }
+
+        .shop-title {
+            font-size: 2.8rem;
+            color: #2d4b2d;
+            text-align: center;
+            border-bottom: 5px solid #8b6b4d;
+            padding-bottom: 15px;
+            text-shadow: 3px 3px 0 #c0d080;
+            font-weight: 800;
+            position: sticky;
+            top: 0;
+            background: #fef9e8;
+            z-index: 2;
+        }
+
+        .shop-item {
+            background: #dcd0b0;
+            border: 4px solid #8b6b4d;
+            border-radius: 50px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            box-shadow: 0 8px 0 #6b4f3c, inset 0 -2px 5px #ffeeaa;
+            background: linear-gradient(145deg, #ecd9b0, #ccb890);
+        }
+
+        .shop-item button {
+            background: #ffcf8a;
+            border: none;
+            font-size: 1.8rem;
+            padding: 15px;
+            border-radius: 50px;
+            font-weight: bold;
+            color: #3a2a1e;
+            border: 4px solid #b37b48;
+            box-shadow: 0 6px 0 #8b5a2e;
+            cursor: pointer;
+            transition: 0.05s linear;
+        }
+
+        .shop-item button:active {
+            transform: translateY(5px);
+            box-shadow: 0 1px 0 #8b5a2e;
+        }
+
+        .shop-item button:disabled {
+            opacity: 0.5;
+            transform: none;
+            box-shadow: 0 6px 0 #8b5a2e;
+            pointer-events: none;
+        }
+
+        .item-desc {
+            font-size: 1.6rem;
+            color: #1e3a1e;
+            font-weight: 600;
+        }
+
+        .item-price {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #a52a2a;
+            text-shadow: 2px 2px 0 #ffcf8a;
+        }
     </style>
 </head>
 <body>
-<div class="game-container">
-    <div class="main-area">
-        <!-- Normales Spiel -->
-        <div id="gameContent">
-            <div class="name-input-area">
-                <label for="playerName">Dein Name:</label>
-                <input type="text" id="playerName" maxlength="20" value="Spieler">
+    <div class="game-container">
+        <!-- Hauptspiel -->
+        <div class="main-area">
+            <!-- Win-Lobby (komplett eigenständig) -->
+            <div class="win-lobby" id="winLobby">
+                <h2>🏆 GEWONNEN! 🏆</h2>
+                <div class="winner-name" id="winnerName"></div>
+                <div class="stats" id="winnerStats"></div>
+                <div class="ranking">
+                    <h3>🏅 RANGLISTE 🏅</h3>
+                    <table id="rankingTable">
+                        <thead>
+                            <tr><th>Rang</th><th>Name</th><th>Rebirths</th></tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                <button class="restart-btn" id="restartFromWinBtn">🔄 Neues Spiel</button>
             </div>
-            <h1>🐼 ege's Panda</h1>
-            <div class="panda-zone">
-                <div class="panda-emoji skin-normal" id="pandaEmoji">🐼</div>
-                <div class="speech-bubble" id="pandaMessage">
-                    <span id="messageText">ege: 😃 Hey, ich bin ege! Fütter mich!</span>
+
+            <!-- Normales Spiel (wird bei Win-Lobby ausgeblendet) -->
+            <div id="gameContent">
+                <div class="name-input-area">
+                    <label for="playerName">Dein Name:</label>
+                    <input type="text" id="playerName" placeholder="Name" maxlength="20" value="Spieler">
+                </div>
+
+                <h1>🐼 ege's Panda</h1>
+
+                <div class="panda-zone">
+                    <div class="panda-emoji skin-normal" id="pandaEmoji">🐼</div>
+                    <div class="speech-bubble" id="pandaMessage">
+                        <span id="messageText">ege: 😃 Hey, ich bin ege! Fütter mich!</span>
+                    </div>
+                </div>
+
+                <div class="bamboo-forest">
+                    <div class="bamboo-row" id="bambooContainer">
+                        <div class="bamboo" data-index="0" tabindex="0" role="button">🎋</div>
+                        <div class="bamboo" data-index="1" tabindex="0" role="button">🎋</div>
+                        <div class="bamboo" data-index="2" tabindex="0" role="button">🎋</div>
+                    </div>
+                </div>
+
+                <div class="stats-panel">
+                    <div class="score-text" id="scoreDisplay">0 / 10000</div>
+                    <div class="currency" id="currencyDisplay">💰 0</div>
+                    <div class="rebirth-display" id="rebirthDisplay">💫 0</div>
+                </div>
+
+                <div class="multiplier-display" id="multiplierDisplay">⚡ Klickkraft: 1.00x | Rebirth-Gain: 1.00x</div>
+                <div id="boostInfo" class="boost-info">Keine aktiven Boosts</div>
+
+                <div id="winMessageContainer" style="min-height: 50px; text-align: center;"></div>
+
+                <button class="reset-btn" id="resetGameBtn">🔄 Neustart</button>
+                <footer>🥬 Pro Rebirth +10.000 Ziel · Glücksbambus +2500 · Auto-Rebirth für 10k💰</footer>
+            </div>
+        </div>
+
+        <!-- Rechte Spalte: Shops -->
+        <div class="right-column">
+            <!-- Normaler Shop (Geld) -->
+            <div class="shop-area">
+                <div class="shop-title">🛒 Bambus-Shop</div>
+
+                <div class="shop-item">
+                    <span class="item-desc">🤖 Autoclicker (einzeln)</span>
+                    <span class="item-price">Preis: 50 💰</span>
+                    <button id="buyAutoclicker">Kaufen (1 Klick/Sek)</button>
+                </div>
+
+                <div class="shop-item">
+                    <span class="item-desc">🤖🤖 Autoclicker-Paket (2 Stück)</span>
+                    <span class="item-price">Preis: 100 💰</span>
+                    <button id="buyAutoclicker2">Kaufen (2 Autoclicker)</button>
+                </div>
+
+                <div class="shop-item">
+                    <span class="item-desc">⚡ Doppelklick (30 Sek.)</span>
+                    <span class="item-price">Preis: 100 💰</span>
+                    <button id="buyDouble">Kaufen (2x pro Klick)</button>
+                </div>
+
+                <div class="shop-item">
+                    <span class="item-desc">🌧️ Bambus-Regen (10 Sek., 5x)</span>
+                    <span class="item-price">Preis: 200 💰</span>
+                    <button id="buyRain">Kaufen (5x Multiplier)</button>
+                </div>
+
+                <div class="shop-item">
+                    <span class="item-desc">🍀 Glücksbambus (sofort)</span>
+                    <span class="item-price">Preis: 150 💰</span>
+                    <button id="buyLucky">Kaufen (+2500 Futter)</button>
+                </div>
+
+                <div class="shop-item">
+                    <span class="item-desc">🤖 Automatisches Rebirth-System</span>
+                    <span class="item-price">Preis: 10000 💰</span>
+                    <button id="buyAutoRebirth">Kaufen (automatischer Neustart bei Platzen)</button>
                 </div>
             </div>
-            <div class="bamboo-forest">
-                <div class="bamboo-row" id="bambooContainer">
-                    <div class="bamboo" data-index="0">🎋</div>
-                    <div class="bamboo" data-index="1">🎋</div>
-                    <div class="bamboo" data-index="2">🎋</div>
+
+            <!-- Rebirth-Shop (nur mit Rebirths) -->
+            <div class="shop-area">
+                <div class="shop-title">✨ Rebirth-Shop</div>
+
+                <div class="shop-item">
+                    <span class="item-desc">🌱 Rebirth-Bambus (sofort)</span>
+                    <span class="item-price">Preis: 2 💫</span>
+                    <button id="buyRebirthFood">Kaufen (+200 Futter)</button>
+                </div>
+
+                <div class="shop-item">
+                    <span class="item-desc">✨ Mini-Gain +0.1 (Rebirths pro Explosion)</span>
+                    <span class="item-price">Preis: 3 💫</span>
+                    <button id="buyMiniMulti">Kaufen (Rebirth-Gain +0.1)</button>
+                </div>
+
+                <div class="shop-item">
+                    <span class="item-desc">⚡ Normal-Gain +0.2 (Rebirths pro Explosion)</span>
+                    <span class="item-price">Preis: 5 💫</span>
+                    <button id="buyRebirthMulti">Kaufen (Rebirth-Gain +0.2)</button>
+                </div>
+
+                <div class="shop-item">
+                    <span class="item-desc">💥 Mega-Gain +0.5 (Rebirths pro Explosion)</span>
+                    <span class="item-price">Preis: 10 💫</span>
+                    <button id="buyMegaMulti">Kaufen (Rebirth-Gain +0.5)</button>
+                </div>
+
+                <div class="shop-item">
+                    <span class="item-desc">🤖 Autoclicker-Turbo (verdoppelt Effekt)</span>
+                    <span class="item-price">Preis: 8 💫</span>
+                    <button id="buyAutoTurbo">Autoclicker 2x effektiv</button>
+                </div>
+
+                <div class="shop-item" id="finishGameItem" style="display: none;">
+                    <span class="item-desc">🏆 Spiel durchspielen</span>
+                    <span class="item-price">Preis: 1000 💫</span>
+                    <button id="buyFinishGame">Kaufen (beendet das Spiel)</button>
                 </div>
             </div>
-            <div class="stats-panel">
-                <div class="score-text" id="scoreDisplay">0 / 10000</div>
-                <div class="currency" id="currencyDisplay">💰 0</div>
-                <div class="rebirth-display" id="rebirthDisplay">💫 0</div>
-            </div>
-            <div class="multiplier-display" id="multiplierDisplay">⚡ Klickkraft: 1.00x | Rebirth-Gain: 1.00x</div>
-            <div id="boostInfo" class="boost-info">Keine aktiven Boosts</div>
-            <div id="winMessageContainer" style="min-height: 50px; text-align: center;"></div>
-            <button class="reset-btn" id="resetGameBtn">🔄 Neustart</button>
-            <footer>🥬 Pro Rebirth +10.000 Ziel · Glücksbambus +2500 · Auto-Rebirth für 10k💰</footer>
-        </div>
 
-        <!-- Win-Lobby -->
-        <div class="win-lobby" id="winLobby">
-            <h2>🏆 GEWONNEN! 🏆</h2>
-            <div class="winner-name" id="winnerName"></div>
-            <div class="stats" id="winnerStats"></div>
-            <div class="ranking">
-                <h3>🏅 RANGLISTE 🏅</h3>
-                <table id="rankingTable">
-                    <thead>
-                        <th>Rang</th>
-                        <th>Name</th>
-                        <th>Rebirths</th>
-                    </thead>
-                    <tbody></tbody>
-                </table>
+            <!-- Skin-Shop -->
+            <div class="shop-area" id="skinShop">
+                <div class="shop-title">🎨 Skin-Shop</div>
+                <div id="skinContainer">
+                    <!-- Dynamisch per JS befüllt -->
+                </div>
             </div>
-            <div>
-                <button class="restart-btn" id="restartFromWinBtn">🔄 Nochmal spielen</button>
-                <button class="exit-btn" id="exitToHubBtn">🌐 Game Hub</button>
-            </div>
-        </div>
 
-        <!-- Game Hub (vollflächig) -->
-        <div class="game-hub" id="gameHub">
-            <div class="hub-header">
-                <h2>🎮 Game Hub</h2>
-                <p>Teile deine eigenen Spiele – Code in HTML/CSS/JS</p>
+            <!-- Admin-Panel (nur für M0M02S) -->
+            <div class="shop-area" id="adminPanel" style="display: none;">
+                <div class="shop-title">⚙️ Admin-Panel</div>
+                <div class="shop-item">
+                    <span class="item-desc">💰 +10000 Geld</span>
+                    <button id="adminAddMoney">Hinzufügen</button>
+                </div>
+                <div class="shop-item">
+                    <span class="item-desc">💫 +10 Rebirths</span>
+                    <button id="adminAddRebirths">Hinzufügen</button>
+                </div>
+                <div class="shop-item">
+                    <span class="item-desc">⚡ +1.0 Multi (permanent)</span>
+                    <button id="adminAddMulti">Erhöhen</button>
+                </div>
+                <div class="shop-item">
+                    <span class="item-desc">🎯 Sofort gewinnen (zur Rangliste)</span>
+                    <button id="adminCompleteGoal">Sieg erzwingen</button>
+                </div>
+                <div class="shop-item">
+                    <span class="item-desc">🔓 Alle Skins freischalten</span>
+                    <button id="adminUnlockSkins">Freischalten</button>
+                </div>
+                <div class="shop-item">
+                    <span class="item-desc">🤖 Auto-Rebirth aktivieren</span>
+                    <button id="adminEnableAutoRebirth">Aktivieren</button>
+                </div>
+                <div class="shop-item">
+                    <span class="item-desc">🔄 Multi zurücksetzen (1.0)</span>
+                    <button id="adminResetMulti">Zurücksetzen</button>
+                </div>
             </div>
-            <div class="hub-stats" id="hubStats"></div>
-            <div class="hub-buttons">
-                <button id="backToGameBtn">🐼 Zurück zum Panda-Spiel</button>
-                <button id="showAddFormBtn">➕ Neues Spiel posten</button>
-            </div>
-            <div id="gameGridContainer" class="game-grid"></div>
-            <div id="addGameFormContainer" style="display: none;"></div>
-        </div>
-
-        <!-- Spiel-Player -->
-        <div class="game-player" id="gamePlayer">
-            <div class="back-btn" id="closePlayerBtn">← Zurück zum Hub</div>
-            <iframe id="gameIframe" srcdoc="<html><body style='background:#2d4b2d; display:flex; justify-content:center; align-items:center; height:100%;'><h1 style='color:white'>Lade Spiel...</h1></body></html>"></iframe>
         </div>
     </div>
 
-    <!-- Rechte Spalte: Shops -->
-    <div class="right-column" id="rightColumn">
-        <div class="shop-area"><div class="shop-title">🛒 Bambus-Shop</div>
-            <div class="shop-item"><span class="item-desc">🤖 Autoclicker (einzeln)</span><span class="item-price">Preis: 50 💰</span><button id="buyAutoclicker">Kaufen</button></div>
-            <div class="shop-item"><span class="item-desc">🤖🤖 Autoclicker-Paket (2 Stück)</span><span class="item-price">Preis: 100 💰</span><button id="buyAutoclicker2">Kaufen</button></div>
-            <div class="shop-item"><span class="item-desc">⚡ Doppelklick (30 Sek.)</span><span class="item-price">Preis: 100 💰</span><button id="buyDouble">Kaufen</button></div>
-            <div class="shop-item"><span class="item-desc">🌧️ Bambus-Regen (10 Sek., 5x)</span><span class="item-price">Preis: 200 💰</span><button id="buyRain">Kaufen</button></div>
-            <div class="shop-item"><span class="item-desc">🍀 Glücksbambus (+2500)</span><span class="item-price">Preis: 150 💰</span><button id="buyLucky">Kaufen</button></div>
-            <div class="shop-item"><span class="item-desc">🤖 Auto-Rebirth (dauerhaft)</span><span class="item-price">Preis: 10000 💰</span><button id="buyAutoRebirth">Kaufen</button></div>
-        </div>
-        <div class="shop-area"><div class="shop-title">✨ Rebirth-Shop</div>
-            <div class="shop-item"><span class="item-desc">🌱 Rebirth-Bambus (+200)</span><span class="item-price">Preis: 2 💫</span><button id="buyRebirthFood">Kaufen</button></div>
-            <div class="shop-item"><span class="item-desc">✨ Mini-Gain +0.1</span><span class="item-price">Preis: 3 💫</span><button id="buyMiniMulti">Kaufen</button></div>
-            <div class="shop-item"><span class="item-desc">⚡ Normal-Gain +0.2</span><span class="item-price">Preis: 5 💫</span><button id="buyRebirthMulti">Kaufen</button></div>
-            <div class="shop-item"><span class="item-desc">💥 Mega-Gain +0.5</span><span class="item-price">Preis: 10 💫</span><button id="buyMegaMulti">Kaufen</button></div>
-            <div class="shop-item"><span class="item-desc">🤖 Autoclicker-Turbo</span><span class="item-price">Preis: 8 💫</span><button id="buyAutoTurbo">Kaufen</button></div>
-            <div class="shop-item" id="finishGameItem" style="display:none;"><span class="item-desc">🏆 Spiel durchspielen</span><span class="item-price">Preis: 1000 💫</span><button id="buyFinishGame">Kaufen</button></div>
-        </div>
-        <div class="shop-area" id="skinShop"><div class="shop-title">🎨 Skin-Shop</div><div id="skinContainer"></div></div>
-        <div class="shop-area" id="adminPanel" style="display:none;"><div class="shop-title">⚙️ Admin-Panel</div>
-            <div class="shop-item"><button id="adminAddMoney">💰 +10000 Geld</button></div>
-            <div class="shop-item"><button id="adminAddRebirths">💫 +10 Rebirths</button></div>
-            <div class="shop-item"><button id="adminAddMulti">⚡ +1.0 Multi</button></div>
-            <div class="shop-item"><button id="adminCompleteGoal">🎯 Sofort gewinnen</button></div>
-            <div class="shop-item"><button id="adminUnlockSkins">🔓 Alle Skins</button></div>
-            <div class="shop-item"><button id="adminEnableAutoRebirth">🤖 Auto-Rebirth</button></div>
-            <div class="shop-item"><button id="adminResetMulti">🔄 Multi zurücksetzen</button></div>
-        </div>
-    </div>
-</div>
+    <script>
+        (function() {
+            // ---------- Basis-Ziel ----------
+            const BASE_MAX = 10000;
+            const REBIRTH_STEP = 10000; // pro Rebirth +10.000
+            const MILLION_GOAL = 1000000; // 1.000.000 Meilenstein
 
-<script>
-    // ========== SPIEL-LOGIK ==========
-    const BASE_MAX = 10000;
-    const REBIRTH_STEP = 10000;
-    const MILLION_GOAL = 1000000;
-    const BASE_REBIRTH_BONUS = 0.25;
-
-    let currentScore = 0, bambooPoints = 0, rebirths = 0, rebirthGainMultiplier = 1.0;
-    let autoclickerCount = 0, autoclickerPower = 1;
-    let ownedSkins = ['normal'], currentSkin = 'normal';
-    let playerName = "Spieler";
-    let millionReached = false, gameCompleted = false, autoRebirthActive = false, gameActive = true;
-    let doubleBoostActive = false, rainBoostActive = false, doubleBoostTimeout = null, rainBoostTimeout = null;
-    let autoclickerInterval = null;
-    let ranking = [];
-
-    // DOM references
-    const pandaEmoji = document.getElementById('pandaEmoji');
-    const messageSpan = document.getElementById('messageText');
-    const scoreDisplay = document.getElementById('scoreDisplay');
-    const currencyDisplay = document.getElementById('currencyDisplay');
-    const rebirthDisplay = document.getElementById('rebirthDisplay');
-    const multiplierDisplay = document.getElementById('multiplierDisplay');
-    const boostInfo = document.getElementById('boostInfo');
-    const winMessageContainer = document.getElementById('winMessageContainer');
-    const bambooElements = Array.from(document.querySelectorAll('.bamboo'));
-    const resetBtn = document.getElementById('resetGameBtn');
-    const skinContainer = document.getElementById('skinContainer');
-    const finishGameItem = document.getElementById('finishGameItem');
-    const btnFinishGame = document.getElementById('buyFinishGame');
-    const playerNameInput = document.getElementById('playerName');
-    const winLobby = document.getElementById('winLobby');
-    const gameContent = document.getElementById('gameContent');
-    const winnerNameSpan = document.getElementById('winnerName');
-    const winnerStatsSpan = document.getElementById('winnerStats');
-    const rankingTableBody = document.querySelector('#rankingTable tbody');
-    const restartFromWinBtn = document.getElementById('restartFromWinBtn');
-    const rightColumn = document.getElementById('rightColumn');
-
-    // Shop buttons
-    const btnAutoclicker = document.getElementById('buyAutoclicker');
-    const btnAutoclicker2 = document.getElementById('buyAutoclicker2');
-    const btnDouble = document.getElementById('buyDouble');
-    const btnRain = document.getElementById('buyRain');
-    const btnLucky = document.getElementById('buyLucky');
-    const btnAutoRebirth = document.getElementById('buyAutoRebirth');
-    const btnRebirthFood = document.getElementById('buyRebirthFood');
-    const btnMiniMulti = document.getElementById('buyMiniMulti');
-    const btnRebirthMulti = document.getElementById('buyRebirthMulti');
-    const btnMegaMulti = document.getElementById('buyMegaMulti');
-    const btnAutoTurbo = document.getElementById('buyAutoTurbo');
-
-    // Admin buttons
-    const adminAddMoney = document.getElementById('adminAddMoney');
-    const adminAddRebirths = document.getElementById('adminAddRebirths');
-    const adminAddMulti = document.getElementById('adminAddMulti');
-    const adminCompleteGoal = document.getElementById('adminCompleteGoal');
-    const adminUnlockSkins = document.getElementById('adminUnlockSkins');
-    const adminEnableAutoRebirth = document.getElementById('adminEnableAutoRebirth');
-    const adminResetMulti = document.getElementById('adminResetMulti');
-    const adminPanel = document.getElementById('adminPanel');
-
-    // Helper functions
-    function getMaxScore() { return BASE_MAX + rebirths * REBIRTH_STEP; }
-    function getClickMultiplier() { let base = 1.0 + rebirths * BASE_REBIRTH_BONUS; if (doubleBoostActive) base *= 2; if (rainBoostActive) base *= 5; return base; }
-    function applySkinClass() { pandaEmoji.classList.remove('skin-normal','skin-gold','skin-ice','skin-rainbow','skin-secret'); const skins = [{id:'normal',class:'skin-normal'},{id:'gold',class:'skin-gold'},{id:'ice',class:'skin-ice'},{id:'rainbow',class:'skin-rainbow'},{id:'secret',class:'skin-secret'}]; const skin = skins.find(s=>s.id===currentSkin); pandaEmoji.classList.add(skin?skin.class:'skin-normal'); }
-
-    // Ranking
-    function loadRanking() { const saved = localStorage.getItem('egeRanking'); if(saved) ranking = JSON.parse(saved); else ranking = []; }
-    function saveRanking() { localStorage.setItem('egeRanking', JSON.stringify(ranking)); }
-    function addToRanking(name, rebirthCount) { ranking.push({ name, rebirths: rebirthCount }); ranking.sort((a,b)=>b.rebirths - a.rebirths); if(ranking.length>10) ranking = ranking.slice(0,10); saveRanking(); }
-    function updateRankingTable() { rankingTableBody.innerHTML = ranking.map((e,i)=>`<tr><td>${i+1}</td><td>${e.name}</td><td>${e.rebirths.toFixed(2)}</td></tr>`).join(''); }
-
-    function showWinLobby() { gameContent.style.display = 'none'; winLobby.style.display = 'flex'; rightColumn.style.display = 'none'; winnerNameSpan.textContent = playerName; winnerStatsSpan.textContent = `🎉 Du hast das Spiel mit ${rebirths.toFixed(2)} Rebirths abgeschlossen! 🎉`; updateRankingTable(); }
-    function hideWinLobby() { winLobby.style.display = 'none'; gameContent.style.display = 'block'; rightColumn.style.display = 'flex'; }
-
-    // Reset
-    function resetGame() {
-        // Auch wenn gameCompleted true ist, erlauben wir einen Reset
-        gameCompleted = false;
-        const max = getMaxScore();
-        if (!gameActive && currentScore >= max) rebirths += rebirthGainMultiplier;
-        if (autoclickerInterval) clearInterval(autoclickerInterval); autoclickerInterval = null;
-        if (doubleBoostTimeout) clearTimeout(doubleBoostTimeout);
-        if (rainBoostTimeout) clearTimeout(rainBoostTimeout);
-        doubleBoostActive = false; rainBoostActive = false;
-        currentScore = 0; bambooPoints = 0; gameActive = true;
-        bambooElements.forEach(b=>b.classList.remove('hidden'));
-        setPandaMessage("😃 Neues Spiel! Fütter mich!");
-        updateUI();
-        restartAutoclicker();
-        // Win-Lobby ausblenden, falls sichtbar
-        hideWinLobby();
-    }
-    function restartGameAfterWin() {
-        resetGame(); // Reset und Win-Lobby verstecken
-    }
-
-    // Feed
-    function feed(amount) {
-        if(!gameActive || gameCompleted) return;
-        let max = getMaxScore();
-        if(currentScore>=max) return;
-        let mult = getClickMultiplier();
-        let total = amount * mult;
-        let old = currentScore;
-        let newScore = Math.min(old+total, max);
-        let gained = newScore - old;
-        currentScore = newScore;
-        bambooPoints += gained;
-        if(currentScore>=max){
-            if(autoRebirthActive){
-                rebirths += rebirthGainMultiplier;
-                currentScore=0; bambooPoints=0; gameActive=true;
-                bambooElements.forEach(b=>b.classList.remove('hidden'));
-                setPandaMessage("😃 Automatischer Neustart!");
-                updateUI();
-            } else {
-                gameActive=false;
-                setPandaMessage("💥 BUMM! ege ist geplatzt!");
-                if(autoclickerInterval) clearInterval(autoclickerInterval);
-                autoclickerInterval=null;
-            }
-        } else { maybeRandomPhrase(); }
-        updateUI();
-    }
-    function maybeRandomPhrase(){ if(Math.random()<0.05) setPandaMessage(["😋","🙏","🎋"][Math.floor(Math.random()*3)]); }
-    function setPandaMessage(txt){ if(!gameActive && currentScore>=getMaxScore()){ pandaEmoji.textContent="💥"; messageSpan.textContent="ege: 💥 BUMM!"; } else { pandaEmoji.textContent="🐼"; applySkinClass(); messageSpan.textContent = "ege: "+txt; } }
-    function restartAutoclicker(){ if(autoclickerInterval) clearInterval(autoclickerInterval); if(autoclickerCount>0 && !gameCompleted) autoclickerInterval = setInterval(()=>{ if(gameActive && currentScore<getMaxScore() && !gameCompleted) feed(autoclickerCount*autoclickerPower); },1000); }
-    function updateUI(){
-        let max = getMaxScore();
-        scoreDisplay.textContent = `${Math.floor(currentScore)} / ${Math.floor(max)}`;
-        currencyDisplay.textContent = `💰 ${Math.floor(bambooPoints)}`;
-        rebirthDisplay.textContent = `💫 ${rebirths.toFixed(2)}`;
-        multiplierDisplay.textContent = `⚡ Klickkraft: ${getClickMultiplier().toFixed(2)}x | Rebirth-Gain: ${rebirthGainMultiplier.toFixed(2)}x | Auto: ${autoRebirthActive?'✅':'❌'}`;
-        boostInfo.textContent = (doubleBoostActive?"⚡ ":"")+(rainBoostActive?"🌧️ ":"")+(autoclickerCount>0?`🤖 ${autoclickerCount} (x${autoclickerPower})`:"Keine Boosts");
-        applySkinClass();
-        playerName = playerNameInput.value.trim()||"Spieler";
-        if(!millionReached && !gameCompleted && currentScore>=MILLION_GOAL){ millionReached=true; winMessageContainer.innerHTML='<div class="win-message">🏆 1.000.000 erreicht! Spiel durchspielen freigeschaltet!</div>'; finishGameItem.style.display='block'; }
-        if(gameCompleted){ /* nichts */ } else {
-            btnAutoclicker.disabled = !gameActive || bambooPoints<50;
-            btnAutoclicker2.disabled = !gameActive || bambooPoints<100;
-            btnDouble.disabled = !gameActive || bambooPoints<100;
-            btnRain.disabled = !gameActive || bambooPoints<200;
-            btnLucky.disabled = !gameActive || bambooPoints<150;
-            btnAutoRebirth.disabled = !gameActive || bambooPoints<10000 || autoRebirthActive;
-            btnRebirthFood.disabled = rebirths<2;
-            btnMiniMulti.disabled = rebirths<3;
-            btnRebirthMulti.disabled = rebirths<5;
-            btnMegaMulti.disabled = rebirths<10;
-            btnAutoTurbo.disabled = rebirths<8;
-            if(millionReached && !gameCompleted) finishGameItem.style.display='block'; else finishGameItem.style.display='none';
-            resetBtn.disabled = false;
-        }
-        renderSkinShop();
-        saveGame();
-        if(playerName==="M0M02S") adminPanel.style.display='block'; else adminPanel.style.display='none';
-    }
-    function renderSkinShop(){ const skins = [{id:'normal',name:'Normaler Panda',price:0,currency:'money',desc:''},{id:'gold',name:'Gold-Panda',price:500,currency:'money',desc:''},{id:'ice',name:'Eis-Panda',price:1000,currency:'money',desc:''},{id:'rainbow',name:'Regenbogen-Panda',price:50,currency:'rebirth',desc:''},{id:'secret',name:'Secret Panda (Galaxie)',price:100,currency:'rebirth',desc:''}]; skinContainer.innerHTML=''; skins.forEach(skin=>{ const owned=ownedSkins.includes(skin.id); const active=currentSkin===skin.id; const div=document.createElement('div'); div.className='shop-item'; div.innerHTML=`<span class="item-desc">${skin.name}<br><small>${skin.desc}</small></span><span class="item-price">${skin.price===0?'Kostenlos':`Preis: ${skin.price} ${skin.currency==='money'?'💰':'💫'}`}</span>`; const btn=document.createElement('button'); if(owned&&active) btn.textContent='Aktiv',btn.disabled=true; else if(owned&&!active) btn.textContent='Ausrüsten',btn.onclick=()=>{currentSkin=skin.id; setPandaMessage(`Jetzt ${skin.name}!`); updateUI();}; else btn.textContent=`Kaufen (${skin.price} ${skin.currency==='money'?'💰':'💫'})`,btn.disabled=gameCompleted||(skin.currency==='money'?bambooPoints<skin.price:rebirths<skin.price),btn.onclick=()=>{ if(skin.currency==='money'&&bambooPoints>=skin.price){ bambooPoints-=skin.price; ownedSkins.push(skin.id); currentSkin=skin.id; setPandaMessage(`${skin.name} gekauft!`); updateUI(); } else if(skin.currency==='rebirth'&&rebirths>=skin.price){ rebirths-=skin.price; ownedSkins.push(skin.id); currentSkin=skin.id; setPandaMessage(`${skin.name} gekauft!`); updateUI(); } }; div.appendChild(btn); skinContainer.appendChild(div); }); }
-    function saveGame(){ localStorage.setItem('egePandaSave',JSON.stringify({currentScore,bambooPoints,rebirths,rebirthGainMultiplier,autoclickerCount,autoclickerPower,ownedSkins,currentSkin,millionReached,gameCompleted,autoRebirthActive,playerName})); }
-    function loadGame(){ const saved=localStorage.getItem('egePandaSave'); if(saved){ const data=JSON.parse(saved); currentScore=data.currentScore||0; bambooPoints=data.bambooPoints||0; rebirths=data.rebirths||0; rebirthGainMultiplier=data.rebirthGainMultiplier||1; autoclickerCount=data.autoclickerCount||0; autoclickerPower=data.autoclickerPower||1; ownedSkins=data.ownedSkins||['normal']; currentSkin=data.currentSkin||'normal'; millionReached=data.millionReached||false; gameCompleted=data.gameCompleted||false; autoRebirthActive=data.autoRebirthActive||false; playerName=data.playerName||"Spieler"; playerNameInput.value=playerName; gameActive=true; if(currentScore>=getMaxScore()) gameActive=false; if(!gameCompleted) restartAutoclicker(); updateUI(); setPandaMessage("Willkommen zurück!"); if(gameCompleted) showWinLobby(); } else resetGame(); }
-
-    // Shop events
-    function buyItem(price,currency,callback,msg){ if(gameCompleted) return false; if(currency==='money' && bambooPoints<price) return false; if(currency==='rebirth' && rebirths<price) return false; if(currency==='money') bambooPoints-=price; else rebirths-=price; callback(); setPandaMessage(msg); updateUI(); return true; }
-    btnAutoclicker.onclick=()=>buyItem(50,'money',()=>{autoclickerCount++; restartAutoclicker();},"🤖 Autoclicker!");
-    btnAutoclicker2.onclick=()=>buyItem(100,'money',()=>{autoclickerCount+=2; restartAutoclicker();},"🤖🤖 Paket!");
-    btnDouble.onclick=()=>buyItem(100,'money',()=>{ if(doubleBoostActive)clearTimeout(doubleBoostTimeout); doubleBoostActive=true; doubleBoostTimeout=setTimeout(()=>{doubleBoostActive=false; updateUI();},30000);},"⚡ Doppelklick!");
-    btnRain.onclick=()=>buyItem(200,'money',()=>{ if(rainBoostActive)clearTimeout(rainBoostTimeout); rainBoostActive=true; rainBoostTimeout=setTimeout(()=>{rainBoostActive=false; updateUI();},10000);},"🌧️ Bambus-Regen!");
-    btnLucky.onclick=()=>buyItem(150,'money',()=>feed(2500),"🍀 +2500 Futter!");
-    btnAutoRebirth.onclick=()=>buyItem(10000,'money',()=>{autoRebirthActive=true; btnAutoRebirth.disabled=true;},"🤖 Auto-Rebirth aktiviert!");
-    btnRebirthFood.onclick=()=>buyItem(2,'rebirth',()=>feed(200),"🌱 +200 Futter!");
-    btnMiniMulti.onclick=()=>buyItem(3,'rebirth',()=>rebirthGainMultiplier+=0.1,"✨ Mini-Gain!");
-    btnRebirthMulti.onclick=()=>buyItem(5,'rebirth',()=>rebirthGainMultiplier+=0.2,"⚡ Normal-Gain!");
-    btnMegaMulti.onclick=()=>buyItem(10,'rebirth',()=>rebirthGainMultiplier+=0.5,"💥 Mega-Gain!");
-    btnAutoTurbo.onclick=()=>buyItem(8,'rebirth',()=>{autoclickerPower*=2; restartAutoclicker();},"🤖 Turbo!");
-    btnFinishGame.onclick=()=>{ if(rebirths>=1000 && millionReached && !gameCompleted){ rebirths-=1000; gameCompleted=true; addToRanking(playerName,rebirths+1000); if(autoclickerInterval)clearInterval(autoclickerInterval); showWinLobby(); } };
-
-    // Admin events
-    adminAddMoney.onclick=()=>{ if(playerName==="M0M02S"){ bambooPoints+=10000; updateUI(); } };
-    adminAddRebirths.onclick=()=>{ if(playerName==="M0M02S"){ rebirths+=10; updateUI(); } };
-    adminAddMulti.onclick=()=>{ if(playerName==="M0M02S"){ rebirthGainMultiplier+=1.0; updateUI(); } };
-    adminCompleteGoal.onclick=()=>{ if(playerName==="M0M02S"){ gameCompleted=true; addToRanking(playerName,rebirths); if(autoclickerInterval)clearInterval(autoclickerInterval); showWinLobby(); } };
-    adminUnlockSkins.onclick=()=>{ if(playerName==="M0M02S"){ ownedSkins=['normal','gold','ice','rainbow','secret']; updateUI(); } };
-    adminEnableAutoRebirth.onclick=()=>{ if(playerName==="M0M02S"){ autoRebirthActive=true; updateUI(); } };
-    adminResetMulti.onclick=()=>{ if(playerName==="M0M02S"){ rebirthGainMultiplier=1.0; updateUI(); } };
-
-    // Bambus clicks
-    bambooElements.forEach(b=>b.addEventListener('click',()=>{ if(gameActive && !gameCompleted && currentScore<getMaxScore() && !b.classList.contains('hidden')){ feed(1); b.classList.add('hidden'); setTimeout(()=>{ if(gameActive && !gameCompleted && currentScore<getMaxScore()) b.classList.remove('hidden'); },300); } }));
-
-    resetBtn.onclick=resetGame;
-    restartFromWinBtn.onclick=restartGameAfterWin;
-
-    // ========== GAME HUB LOGIK ==========
-    let gameList = [];
-
-    function loadGames() {
-        const saved = localStorage.getItem('gameHubGames');
-        if (saved) gameList = JSON.parse(saved);
-        else gameList = [];
-        renderGameGrid();
-        updateHubStats();
-    }
-    function saveGames() { localStorage.setItem('gameHubGames', JSON.stringify(gameList)); }
-    function updateHubStats() {
-        const hubStats = document.getElementById('hubStats');
-        if (!hubStats) return;
-        let totalPlayers = 0;
-        gameList.forEach(game => { totalPlayers += (game.players || 0); });
-        hubStats.innerHTML = `🎮 Aktuell spielen: ${totalPlayers} Spieler in ${gameList.length} Spielen`;
-    }
-    function renderGameGrid() {
-        const container = document.getElementById('gameGridContainer');
-        if (!container) return;
-        container.innerHTML = '';
-        gameList.forEach(game => {
-            const card = document.createElement('div');
-            card.className = 'game-card';
-            card.innerHTML = `
-                <h3>${escapeHtml(game.title)}</h3>
-                <div class="author">von ${escapeHtml(game.author)}</div>
-                <div class="description">${escapeHtml(game.description)}</div>
-                <div class="card-buttons">
-                    <span style="font-size:1.2rem;">👥 ${game.players || 0} spielen</span>
-                    <button class="play-btn">🎮 Spielen</button>
-                    <button class="delete-btn">🗑️ Löschen</button>
-                </div>
-            `;
-            const playBtn = card.querySelector('.play-btn');
-            const deleteBtn = card.querySelector('.delete-btn');
-            playBtn.onclick = () => playGame(game);
-            deleteBtn.onclick = () => {
-                if (confirm('Spiel wirklich löschen?')) {
-                    gameList = gameList.filter(g => g.id !== game.id);
-                    saveGames();
-                    renderGameGrid();
-                    updateHubStats();
+            // ---------- Skin-Daten ----------
+            const skinList = [
+                { 
+                    id: 'normal', 
+                    name: 'Normaler Panda', 
+                    price: 0, 
+                    currency: 'money', 
+                    class: 'skin-normal',
+                    description: 'Der klassische Panda – immer da, immer knuffig.' 
+                },
+                { 
+                    id: 'gold', 
+                    name: 'Gold-Panda', 
+                    price: 500, 
+                    currency: 'money', 
+                    class: 'skin-gold',
+                    description: 'Glänzt wie pures Gold – ein wahrer Schatz mit funkelndem Schimmer.' 
+                },
+                { 
+                    id: 'ice', 
+                    name: 'Eis-Panda', 
+                    price: 1000, 
+                    currency: 'money', 
+                    class: 'skin-ice',
+                    description: 'Aus eisigen Gefilden – schimmert in kühlem Blau und Weiß, fast durchsichtig.' 
+                },
+                { 
+                    id: 'rainbow', 
+                    name: 'Regenbogen-Panda', 
+                    price: 50, 
+                    currency: 'rebirth', 
+                    class: 'skin-rainbow',
+                    description: 'Ein Farbenspiel – alle Regenbogenfarben tanzen über sein Fell.' 
+                },
+                { 
+                    id: 'secret', 
+                    name: 'Secret Panda (Galaxie)', 
+                    price: 100, 
+                    currency: 'rebirth', 
+                    class: 'skin-secret',
+                    description: 'Schwarz wie das All, durchzogen von Sternenglitzern.' 
                 }
-            };
-            container.appendChild(card);
-        });
-    }
-    function escapeHtml(str) {
-        return str.replace(/[&<>]/g, function(m) {
-            if (m === '&') return '&amp;';
-            if (m === '<') return '&lt;';
-            if (m === '>') return '&gt;';
-            return m;
-        });
-    }
-    function playGame(game) {
-        const hub = document.getElementById('gameHub');
-        const player = document.getElementById('gamePlayer');
-        const iframe = document.getElementById('gameIframe');
-        if (!hub || !player || !iframe) return;
-        game.players = (game.players || 0) + 1;
-        saveGames();
-        renderGameGrid();
-        hub.style.display = 'none';
-        player.style.display = 'flex';
-        iframe.srcdoc = game.code;
-        setTimeout(() => {
-            game.players = Math.max(0, (game.players || 1) - 1);
-            saveGames();
-            renderGameGrid();
-            updateHubStats();
-        }, 5000);
-    }
-    function showAddGameForm() {
-        const container = document.getElementById('addGameFormContainer');
-        if (!container) return;
-        container.style.display = 'block';
-        container.innerHTML = `
-            <div class="add-game-form">
-                <h3>📝 Neues Spiel posten</h3>
-                <input type="text" id="gameTitle" placeholder="Spiel-Titel" maxlength="40">
-                <input type="text" id="gameAuthor" placeholder="Dein Name" maxlength="30" value="${playerName}">
-                <textarea id="gameDesc" placeholder="Beschreibung (optional)" rows="2"></textarea>
-                <textarea id="gameCode" placeholder="HTML/CSS/JS Code (vollständiges Spiel)" rows="12"></textarea>
-                <button id="submitGameBtn">🚀 Spiel publishen</button>
-                <button id="cancelGameBtn" style="background:#aaa; margin-left:15px;">Abbrechen</button>
-            </div>
-        `;
-        document.getElementById('submitGameBtn').onclick = () => {
-            const title = document.getElementById('gameTitle').value.trim();
-            const author = document.getElementById('gameAuthor').value.trim() || playerName;
-            const desc = document.getElementById('gameDesc').value.trim();
-            const code = document.getElementById('gameCode').value;
-            if (!title || !code) {
-                alert("Titel und Code sind erforderlich!");
-                return;
+            ];
+
+            // ---------- Spielzustand ----------
+            let currentScore = 0;
+            let bambooPoints = 0;               // 💰
+            let rebirths = 0;                    // 💫 (float)
+            let rebirthGainMultiplier = 1.0;      // Start: 1.0
+            const BASE_REBIRTH_BONUS = 0.25;       // jeder Rebirth gibt +0.25 Klickkraft
+
+            let autoclickerCount = 0;
+            let autoclickerPower = 1;
+            let ownedSkins = ['normal'];
+            let currentSkin = 'normal';
+
+            // Spielername
+            let playerName = "Spieler";
+
+            // Flags
+            let millionReached = false;
+            let gameCompleted = false;
+            let autoRebirthActive = false;
+
+            let gameActive = true;
+
+            // Temporäre Boosts
+            let doubleBoostActive = false;
+            let rainBoostActive = false;
+            let doubleBoostTimeout = null;
+            let rainBoostTimeout = null;
+
+            let autoclickerInterval = null;
+            let lastMilestonePercent = 0;
+
+            // Rangliste (Array von Objekten { name, rebirths })
+            let ranking = [];
+
+            // DOM-Elemente
+            const pandaEmoji = document.getElementById('pandaEmoji');
+            const messageSpan = document.getElementById('messageText');
+            const scoreDisplay = document.getElementById('scoreDisplay');
+            const currencyDisplay = document.getElementById('currencyDisplay');
+            const rebirthDisplay = document.getElementById('rebirthDisplay');
+            const multiplierDisplay = document.getElementById('multiplierDisplay');
+            const boostInfo = document.getElementById('boostInfo');
+            const winMessageContainer = document.getElementById('winMessageContainer');
+            const bambooElements = Array.from(document.querySelectorAll('.bamboo'));
+            const resetBtn = document.getElementById('resetGameBtn');
+            const skinContainer = document.getElementById('skinContainer');
+            const finishGameItem = document.getElementById('finishGameItem');
+            const btnFinishGame = document.getElementById('buyFinishGame');
+            const playerNameInput = document.getElementById('playerName');
+            const winLobby = document.getElementById('winLobby');
+            const gameContent = document.getElementById('gameContent');
+            const winnerNameSpan = document.getElementById('winnerName');
+            const winnerStatsSpan = document.getElementById('winnerStats');
+            const rankingTableBody = document.querySelector('#rankingTable tbody');
+            const restartFromWinBtn = document.getElementById('restartFromWinBtn');
+
+            // Admin-Panel Elemente
+            const adminPanel = document.getElementById('adminPanel');
+            const adminAddMoney = document.getElementById('adminAddMoney');
+            const adminAddRebirths = document.getElementById('adminAddRebirths');
+            const adminAddMulti = document.getElementById('adminAddMulti');
+            const adminCompleteGoal = document.getElementById('adminCompleteGoal');
+            const adminUnlockSkins = document.getElementById('adminUnlockSkins');
+            const adminEnableAutoRebirth = document.getElementById('adminEnableAutoRebirth');
+            const adminResetMulti = document.getElementById('adminResetMulti');
+
+            // Shop-Buttons
+            const btnAutoclicker = document.getElementById('buyAutoclicker');
+            const btnAutoclicker2 = document.getElementById('buyAutoclicker2');
+            const btnDouble = document.getElementById('buyDouble');
+            const btnRain = document.getElementById('buyRain');
+            const btnLucky = document.getElementById('buyLucky');
+            const btnAutoRebirth = document.getElementById('buyAutoRebirth');
+            const btnRebirthFood = document.getElementById('buyRebirthFood');
+            const btnMiniMulti = document.getElementById('buyMiniMulti');
+            const btnRebirthMulti = document.getElementById('buyRebirthMulti');
+            const btnMegaMulti = document.getElementById('buyMegaMulti');
+            const btnAutoTurbo = document.getElementById('buyAutoTurbo');
+
+            // ---------- Hilfsfunktionen ----------
+            function getMaxScore() {
+                return BASE_MAX + rebirths * REBIRTH_STEP;
             }
-            const newGame = { id: Date.now(), title, author, description: desc, code, players: 0 };
-            gameList.push(newGame);
-            saveGames();
-            renderGameGrid();
-            container.style.display = 'none';
-            updateHubStats();
-        };
-        document.getElementById('cancelGameBtn').onclick = () => {
-            container.style.display = 'none';
-        };
-    }
 
-    // Navigation
-    function showGameHub() {
-        const gameContentDiv = document.getElementById('gameContent');
-        const winLobbyDiv = document.getElementById('winLobby');
-        const hubDiv = document.getElementById('gameHub');
-        const rightCol = document.getElementById('rightColumn');
-        if (gameContentDiv) gameContentDiv.style.display = 'none';
-        if (winLobbyDiv) winLobbyDiv.style.display = 'none';
-        if (hubDiv) hubDiv.style.display = 'flex';
-        if (rightCol) rightCol.style.display = 'none';
-        loadGames();
-    }
-    function hideGameHub() {
-        const hubDiv = document.getElementById('gameHub');
-        const gameContentDiv = document.getElementById('gameContent');
-        const rightCol = document.getElementById('rightColumn');
-        const playerDiv = document.getElementById('gamePlayer');
-        if (hubDiv) hubDiv.style.display = 'none';
-        if (gameContentDiv) gameContentDiv.style.display = 'block';
-        if (rightCol) rightCol.style.display = 'flex';
-        if (playerDiv) playerDiv.style.display = 'none';
-        if (!gameCompleted && currentScore < getMaxScore()) gameActive = true;
-        updateUI();
-    }
+            function getClickMultiplier() {
+                let base = 1.0 + rebirths * BASE_REBIRTH_BONUS;
+                if (doubleBoostActive) base *= 2;
+                if (rainBoostActive) base *= 5;
+                return base;
+            }
 
-    const exitToHubBtn = document.getElementById('exitToHubBtn');
-    const backToGameBtn = document.getElementById('backToGameBtn');
-    const showAddFormBtnHub = document.getElementById('showAddFormBtn');
-    const closePlayerBtn = document.getElementById('closePlayerBtn');
+            function applySkinClass() {
+                pandaEmoji.classList.remove('skin-normal', 'skin-gold', 'skin-ice', 'skin-rainbow', 'skin-secret');
+                const skin = skinList.find(s => s.id === currentSkin);
+                if (skin) {
+                    pandaEmoji.classList.add(skin.class);
+                } else {
+                    pandaEmoji.classList.add('skin-normal');
+                }
+            }
 
-    if (exitToHubBtn) exitToHubBtn.onclick = showGameHub;
-    if (backToGameBtn) backToGameBtn.onclick = hideGameHub;
-    if (showAddFormBtnHub) showAddFormBtnHub.onclick = showAddGameForm;
-    if (closePlayerBtn) closePlayerBtn.onclick = () => {
-        const player = document.getElementById('gamePlayer');
-        const hub = document.getElementById('gameHub');
-        if (player) player.style.display = 'none';
-        if (hub) hub.style.display = 'flex';
-    };
+            // ---------- Rangliste laden / speichern ----------
+            function loadRanking() {
+                const saved = localStorage.getItem('egeRanking');
+                if (saved) {
+                    try {
+                        ranking = JSON.parse(saved);
+                    } catch (e) {
+                        ranking = [];
+                    }
+                } else {
+                    ranking = [];
+                }
+            }
 
-    // Start
-    loadRanking();
-    loadGame();
-    loadGames();
+            function saveRanking() {
+                localStorage.setItem('egeRanking', JSON.stringify(ranking));
+            }
 
-    window.addEventListener('beforeunload', () => { saveGame(); saveGames(); });
-</script>
+            function addToRanking(name, rebirthCount) {
+                ranking.push({ name: name, rebirths: rebirthCount });
+                ranking.sort((a, b) => b.rebirths - a.rebirths);
+                if (ranking.length > 10) ranking = ranking.slice(0, 10);
+                saveRanking();
+            }
+
+            function updateRankingTable() {
+                rankingTableBody.innerHTML = '';
+                ranking.forEach((entry, index) => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `<td>${index + 1}</td><td>${entry.name}</td><td>${entry.rebirths.toFixed(2)}</td>`;
+                    rankingTableBody.appendChild(row);
+                });
+            }
+
+            // ---------- Win-Lobby anzeigen ----------
+            function showWinLobby() {
+                gameContent.style.display = 'none';
+                winLobby.style.display = 'flex';
+                winnerNameSpan.textContent = playerName;
+                winnerStatsSpan.textContent = `🎉 Du hast das Spiel mit ${rebirths.toFixed(2)} Rebirths abgeschlossen! 🎉`;
+                updateRankingTable();
+            }
+
+            // Spiel komplett zurücksetzen (nach Sieg neu starten)
+            function restartGameAfterWin() {
+                currentScore = 0;
+                bambooPoints = 0;
+                rebirths = 0;
+                rebirthGainMultiplier = 1.0;
+                autoclickerCount = 0;
+                autoclickerPower = 1;
+                ownedSkins = ['normal'];
+                currentSkin = 'normal';
+                millionReached = false;
+                gameCompleted = false;
+                autoRebirthActive = false;
+                gameActive = true;
+
+                if (autoclickerInterval) clearInterval(autoclickerInterval);
+                autoclickerInterval = null;
+                if (doubleBoostTimeout) clearTimeout(doubleBoostTimeout);
+                if (rainBoostTimeout) clearTimeout(rainBoostTimeout);
+                doubleBoostActive = false;
+                rainBoostActive = false;
+
+                winLobby.style.display = 'none';
+                gameContent.style.display = 'block';
+                setPandaMessage("😃 Neues Spiel! Fütter mich!");
+                updateUI();
+                restartAutoclicker();
+            }
+
+            // ---------- Admin-Panel Sichtbarkeit ----------
+            function updateAdminPanelVisibility() {
+                if (playerName === "M0M02S") {
+                    adminPanel.style.display = 'block';
+                } else {
+                    adminPanel.style.display = 'none';
+                }
+            }
+
+            // ---------- Admin-Aktionen ----------
+            function adminAction(callback) {
+                if (playerName !== "M0M02S") return; // Sicherheitscheck
+                callback();
+                updateUI();
+            }
+
+            adminAddMoney.addEventListener('click', () => {
+                adminAction(() => {
+                    bambooPoints += 10000;
+                });
+            });
+
+            adminAddRebirths.addEventListener('click', () => {
+                adminAction(() => {
+                    rebirths += 10;
+                });
+            });
+
+            adminAddMulti.addEventListener('click', () => {
+                adminAction(() => {
+                    rebirthGainMultiplier += 1.0;
+                });
+            });
+
+            // === GEÄNDERT: Ziel sofort erreichen => Spiel direkt gewinnen ===
+            adminCompleteGoal.addEventListener('click', () => {
+                adminAction(() => {
+                    // Spiel als gewonnen markieren
+                    gameCompleted = true;
+                    const finalRebirths = rebirths; // aktuelle Rebirths als Endstand
+                    addToRanking(playerName, finalRebirths);
+                    
+                    // Timer stoppen
+                    if (autoclickerInterval) clearInterval(autoclickerInterval);
+                    autoclickerInterval = null;
+                    if (doubleBoostTimeout) clearTimeout(doubleBoostTimeout);
+                    if (rainBoostTimeout) clearTimeout(rainBoostTimeout);
+                    doubleBoostActive = false;
+                    rainBoostActive = false;
+                    
+                    // Win-Lobby anzeigen
+                    showWinLobby();
+                    // Kein updateUI nötig, da showWinLobby den Inhalt versteckt
+                });
+            });
+
+            adminUnlockSkins.addEventListener('click', () => {
+                adminAction(() => {
+                    skinList.forEach(skin => {
+                        if (!ownedSkins.includes(skin.id)) {
+                            ownedSkins.push(skin.id);
+                        }
+                    });
+                });
+            });
+
+            adminEnableAutoRebirth.addEventListener('click', () => {
+                adminAction(() => {
+                    autoRebirthActive = true;
+                });
+            });
+
+            adminResetMulti.addEventListener('click', () => {
+                adminAction(() => {
+                    rebirthGainMultiplier = 1.0;
+                });
+            });
+
+            // ---------- UI aktualisieren ----------
+            function updateUI() {
+                const max = getMaxScore();
+                scoreDisplay.textContent = `${Math.floor(currentScore)} / ${Math.floor(max)}`;
+                currencyDisplay.textContent = `💰 ${Math.floor(bambooPoints)}`;
+                rebirthDisplay.textContent = `💫 ${rebirths.toFixed(2)}`;
+                const clickMulti = getClickMultiplier();
+                multiplierDisplay.textContent = `⚡ Klickkraft: ${clickMulti.toFixed(2)}x | Rebirth-Gain: ${rebirthGainMultiplier.toFixed(2)}x | Auto-Rebirth: ${autoRebirthActive ? '✅' : '❌'}`;
+
+                let boosts = [];
+                if (doubleBoostActive) boosts.push("⚡ Doppelklick");
+                if (rainBoostActive) boosts.push("🌧️ 5x Bambus");
+                if (autoclickerCount > 0) boosts.push(`🤖 ${autoclickerCount} Autoclicker (x${autoclickerPower})`);
+                boostInfo.textContent = boosts.length ? "Aktiv: " + boosts.join(" · ") : "Keine aktiven Boosts";
+
+                applySkinClass();
+
+                // Namen aus Input lesen
+                playerName = playerNameInput.value.trim() || "Spieler";
+                updateAdminPanelVisibility();
+
+                // Prüfen, ob 1.000.000 erreicht wurde
+                if (!millionReached && !gameCompleted && currentScore >= MILLION_GOAL) {
+                    millionReached = true;
+                    setPandaMessage("ege: 🎉 Wow! 1.000.000 Bambus! Ein besonderes Item wurde freigeschaltet!");
+                    winMessageContainer.innerHTML = '<div class="win-message">🏆 1.000.000 erreicht! Im Rebirth-Shop gibt es jetzt das "Spiel durchspielen"-Item für 1000 Rebirths.</div>';
+                }
+
+                // Spiel beendet: Alles deaktivieren
+                if (gameCompleted) {
+                    btnAutoclicker.disabled = true;
+                    btnAutoclicker2.disabled = true;
+                    btnDouble.disabled = true;
+                    btnRain.disabled = true;
+                    btnLucky.disabled = true;
+                    btnAutoRebirth.disabled = true;
+                    btnRebirthFood.disabled = true;
+                    btnMiniMulti.disabled = true;
+                    btnRebirthMulti.disabled = true;
+                    btnMegaMulti.disabled = true;
+                    btnAutoTurbo.disabled = true;
+                    resetBtn.disabled = true;
+                    if (btnFinishGame) btnFinishGame.disabled = true;
+                } else {
+                    // Geld-Shop-Buttons
+                    btnAutoclicker.disabled = !gameActive || bambooPoints < 50;
+                    btnAutoclicker2.disabled = !gameActive || bambooPoints < 100;
+                    btnDouble.disabled = !gameActive || bambooPoints < 100;
+                    btnRain.disabled = !gameActive || bambooPoints < 200;
+                    btnLucky.disabled = !gameActive || bambooPoints < 150;
+                    btnAutoRebirth.disabled = !gameActive || bambooPoints < 10000 || autoRebirthActive;
+
+                    // Rebirth-Shop-Buttons
+                    btnRebirthFood.disabled = rebirths < 2;
+                    btnMiniMulti.disabled = rebirths < 3;
+                    btnRebirthMulti.disabled = rebirths < 5;
+                    btnMegaMulti.disabled = rebirths < 10;
+                    btnAutoTurbo.disabled = rebirths < 8;
+
+                    // Finish-Game-Item anzeigen, wenn millionReached und nicht gameCompleted
+                    if (millionReached && !gameCompleted) {
+                        finishGameItem.style.display = 'block';
+                        btnFinishGame.disabled = rebirths < 1000;
+                    } else {
+                        finishGameItem.style.display = 'none';
+                    }
+
+                    resetBtn.disabled = false;
+                }
+
+                // Skin-Shop rendern
+                renderSkinShop();
+
+                saveGame();
+            }
+
+            function setPandaMessage(text) {
+                if (gameCompleted) {
+                    // Wird nicht benötigt, da Win-Lobby
+                } else if (!gameActive && currentScore >= getMaxScore()) {
+                    pandaEmoji.textContent = "💥";
+                    messageSpan.textContent = "ege: " + "💥 BUMM! ege ist geplatzt!";
+                } else {
+                    pandaEmoji.textContent = "🐼";
+                    applySkinClass();
+                    messageSpan.textContent = text.startsWith('ege:') ? text : 'ege: ' + text;
+                }
+            }
+
+            // ---------- Sprüche ----------
+            const hungryPhrases = [
+                "😋 Bambus ist mein Leben!",
+                "🙏 Fütter mich, ich hab Hunger!",
+                "🎋 Noch mehr Bambus!",
+                "😃 Lecker, lecker!",
+                "🍽️ Ich könnte ewig fressen.",
+                "😊 Mmmh, das ist gut!",
+                "🌟 Weiter so!",
+                "😄 Immer her mit dem Bambus!",
+                "💚 Ich liebe Bambus!",
+                "😌 So sättigend …",
+                "🤤 Noch einen, bitte!",
+                "😁 Ich werde langsam satt …",
+                "🙂 Noch ein bisschen …"
+            ];
+
+            const satedPhrases = [
+                "😑 Ich bin satt. Hör auf!",
+                "😒 Im Ernst, es reicht.",
+                "😤 Du ignorierst mich!",
+                "😠 Ich platze gleich!",
+                "💢 Kein Bambus mehr!",
+                "😣 Bitte hör auf zu füttern!",
+                "😫 Ich kann nicht mehr!",
+                "😩 Warum tust du mir das an?",
+                "😡 Letzte Warnung!",
+                "🤬 Gleich explodiere ich!",
+                "😭 Du bist gemein!",
+                "😨 Noch ... (Angst)",
+                "😱 ... bitte stopp!"
+            ];
+
+            const explosionPhrase = "💥 BUMM! ege ist geplatzt!";
+
+            function getMilestonePhrase(percent) {
+                const max = getMaxScore();
+                const remaining = max - currentScore;
+                if (percent === 100) return `ege: 💥 100% – gleich platze ich!`;
+                if (percent >= 90) return `ege: 😨 Nur noch ${Math.floor(remaining)} Bambus bis zum Platzen!`;
+                if (percent >= 75) return `ege: 😰 Schon ${percent}% – langsam wird's eng!`;
+                if (percent >= 50) return `ege: 😐 ${percent}% geschafft. Noch ${Math.floor(remaining)} bis zum Ende.`;
+                if (percent >= 25) return `ege: 😌 ${percent}% – weiter so!`;
+                return `ege: 😃 ${percent}% – guter Anfang!`;
+            }
+
+            function getRandomPhasePhrase() {
+                const max = getMaxScore();
+                if (currentScore >= max) return explosionPhrase;
+                if (currentScore >= max / 2) {
+                    return satedPhrases[Math.floor(Math.random() * satedPhrases.length)];
+                } else {
+                    return hungryPhrases[Math.floor(Math.random() * hungryPhrases.length)];
+                }
+            }
+
+            function checkMilestone(oldScore, newScore) {
+                const max = getMaxScore();
+                const oldPercent = Math.floor(oldScore / max * 100);
+                const newPercent = Math.floor(newScore / max * 100);
+                for (let p = 10; p <= 100; p += 10) {
+                    if (oldPercent < p && newPercent >= p) {
+                        setPandaMessage(getMilestonePhrase(p));
+                        return true;
+                    }
+                }
+                return false;
+            }
+
+            function maybeRandomPhrase() {
+                if (!gameActive || gameCompleted) return;
+                if (Math.random() < 0.05) {
+                    setPandaMessage(getRandomPhasePhrase());
+                }
+            }
+
+            function performAutoReset() {
+                if (doubleBoostTimeout) clearTimeout(doubleBoostTimeout);
+                if (rainBoostTimeout) clearTimeout(rainBoostTimeout);
+                doubleBoostActive = false;
+                rainBoostActive = false;
+
+                currentScore = 0;
+                bambooPoints = 0;
+                gameActive = true;
+                lastMilestonePercent = 0;
+
+                bambooElements.forEach(b => b.classList.remove('hidden'));
+
+                setPandaMessage("😃 Automatischer Neustart! Weiter geht's!");
+                updateUI();
+            }
+
+            function feed(amount = 1) {
+                if (!gameActive || gameCompleted) return;
+                const max = getMaxScore();
+                if (currentScore >= max) return;
+
+                const multiplier = getClickMultiplier();
+                const totalFeed = amount * multiplier;
+                const oldScore = currentScore;
+                const newScore = Math.min(oldScore + totalFeed, max);
+                const feedActual = newScore - oldScore;
+
+                currentScore = newScore;
+                bambooPoints += feedActual;
+
+                if (currentScore >= max) {
+                    if (autoRebirthActive) {
+                        rebirths += rebirthGainMultiplier;
+                        performAutoReset();
+                    } else {
+                        gameActive = false;
+                        setPandaMessage(explosionPhrase);
+                        if (autoclickerInterval) clearInterval(autoclickerInterval);
+                        autoclickerInterval = null;
+                    }
+                } else {
+                    const milestoneReached = checkMilestone(oldScore, currentScore);
+                    if (!milestoneReached) maybeRandomPhrase();
+                }
+                updateUI();
+            }
+
+            function restartAutoclicker() {
+                if (autoclickerInterval) clearInterval(autoclickerInterval);
+                if (autoclickerCount > 0 && !gameCompleted) {
+                    autoclickerInterval = setInterval(() => {
+                        if (gameActive && currentScore < getMaxScore() && !gameCompleted) {
+                            feed(autoclickerCount * autoclickerPower);
+                        }
+                    }, 1000);
+                }
+            }
+
+            // ---------- Shop-Käufe ----------
+            function buyItem(price, currency, callback, successMessage) {
+                if (gameCompleted) return false;
+                if (currency === 'money' && bambooPoints < price) return false;
+                if (currency === 'rebirth' && rebirths < price) return false;
+                if (currency === 'money') bambooPoints -= price;
+                else rebirths -= price;
+                callback();
+                setPandaMessage(successMessage);
+                updateUI();
+                return true;
+            }
+
+            btnAutoclicker.addEventListener('click', () => {
+                buyItem(50, 'money', () => {
+                    autoclickerCount++;
+                    restartAutoclicker();
+                }, "ege: 🤖 Ein Autoclicker!");
+            });
+
+            btnAutoclicker2.addEventListener('click', () => {
+                buyItem(100, 'money', () => {
+                    autoclickerCount += 2;
+                    restartAutoclicker();
+                }, "ege: 🤖🤖 Zwei Autoclicker auf einmal!");
+            });
+
+            btnDouble.addEventListener('click', () => {
+                buyItem(100, 'money', () => {
+                    if (doubleBoostActive) clearTimeout(doubleBoostTimeout);
+                    doubleBoostActive = true;
+                    doubleBoostTimeout = setTimeout(() => {
+                        doubleBoostActive = false;
+                        updateUI();
+                    }, 30000);
+                }, "ege: ⚡ Doppelklick!");
+            });
+
+            btnRain.addEventListener('click', () => {
+                buyItem(200, 'money', () => {
+                    if (rainBoostActive) clearTimeout(rainBoostTimeout);
+                    rainBoostActive = true;
+                    rainBoostTimeout = setTimeout(() => {
+                        rainBoostActive = false;
+                        updateUI();
+                    }, 10000);
+                }, "ege: 🌧️ Bambus-Regen!");
+            });
+
+            btnLucky.addEventListener('click', () => {
+                buyItem(150, 'money', () => {
+                    feed(2500);
+                }, "ege: 🍀 Glücksbambus (+2500)!");
+            });
+
+            btnAutoRebirth.addEventListener('click', () => {
+                buyItem(10000, 'money', () => {
+                    autoRebirthActive = true;
+                    btnAutoRebirth.disabled = true;
+                }, "ege: 🤖 Automatisches Rebirth-System aktiviert!");
+            });
+
+            btnRebirthFood.addEventListener('click', () => {
+                buyItem(2, 'rebirth', () => {
+                    feed(200);
+                }, "ege: 🌱 Rebirth-Bambus!");
+            });
+
+            btnMiniMulti.addEventListener('click', () => {
+                buyItem(3, 'rebirth', () => {
+                    rebirthGainMultiplier += 0.1;
+                }, "ege: ✨ Mini-Gain (Rebirths +0.1 pro Explosion)!");
+            });
+
+            btnRebirthMulti.addEventListener('click', () => {
+                buyItem(5, 'rebirth', () => {
+                    rebirthGainMultiplier += 0.2;
+                }, "ege: ✨ Normal-Gain (Rebirths +0.2 pro Explosion)!");
+            });
+
+            btnMegaMulti.addEventListener('click', () => {
+                buyItem(10, 'rebirth', () => {
+                    rebirthGainMultiplier += 0.5;
+                }, "ege: 💥 Mega-Gain (Rebirths +0.5 pro Explosion)!");
+            });
+
+            btnAutoTurbo.addEventListener('click', () => {
+                buyItem(8, 'rebirth', () => {
+                    autoclickerPower *= 2;
+                    restartAutoclicker();
+                }, "ege: 🤖💨 Autoclicker Turbo!");
+            });
+
+            btnFinishGame.addEventListener('click', () => {
+                if (gameCompleted) return;
+                if (rebirths >= 1000 && millionReached) {
+                    rebirths -= 1000;
+                    gameCompleted = true;
+                    const finalRebirths = rebirths + 1000; // Korrektur: wir haben vorher 1000 abgezogen, also waren es vorher rebirths+1000
+                    addToRanking(playerName, finalRebirths);
+                    
+                    if (autoclickerInterval) clearInterval(autoclickerInterval);
+                    autoclickerInterval = null;
+                    if (doubleBoostTimeout) clearTimeout(doubleBoostTimeout);
+                    if (rainBoostTimeout) clearTimeout(rainBoostTimeout);
+                    doubleBoostActive = false;
+                    rainBoostActive = false;
+                    
+                    showWinLobby();
+                }
+            });
+
+            // ---------- Skin-Shop ----------
+            function renderSkinShop() {
+                skinContainer.innerHTML = '';
+                skinList.forEach(skin => {
+                    const owned = ownedSkins.includes(skin.id);
+                    const active = currentSkin === skin.id;
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = 'shop-item';
+
+                    const descSpan = document.createElement('span');
+                    descSpan.className = 'item-desc';
+                    descSpan.innerHTML = `<span style="font-size:2.5rem; margin-right:10px;">🐼</span> ${skin.name}<br><small style="font-size:1.2rem; color:#5e3e2b;">${skin.description}</small>`;
+                    itemDiv.appendChild(descSpan);
+
+                    const priceSpan = document.createElement('span');
+                    priceSpan.className = 'item-price';
+                    priceSpan.textContent = skin.price === 0 ? 'Kostenlos' : `Preis: ${skin.price} ${skin.currency === 'money' ? '💰' : '💫'}`;
+                    itemDiv.appendChild(priceSpan);
+
+                    const actionBtn = document.createElement('button');
+                    if (owned && active) {
+                        actionBtn.textContent = 'Aktiv';
+                        actionBtn.disabled = true;
+                    } else if (owned && !active) {
+                        actionBtn.textContent = 'Ausrüsten';
+                        actionBtn.addEventListener('click', () => {
+                            if (gameCompleted) return;
+                            currentSkin = skin.id;
+                            setPandaMessage(`ege: Jetzt trage ich ${skin.name}!`);
+                            updateUI();
+                        });
+                    } else {
+                        actionBtn.textContent = `Kaufen (${skin.price} ${skin.currency === 'money' ? '💰' : '💫'})`;
+                        actionBtn.disabled = gameCompleted || (skin.currency === 'money' ? bambooPoints < skin.price : rebirths < skin.price);
+                        actionBtn.addEventListener('click', () => {
+                            if (gameCompleted) return;
+                            if (skin.currency === 'money' && bambooPoints >= skin.price) {
+                                bambooPoints -= skin.price;
+                                ownedSkins.push(skin.id);
+                                currentSkin = skin.id;
+                                setPandaMessage(`ege: ${skin.name} gekauft!`);
+                                updateUI();
+                            } else if (skin.currency === 'rebirth' && rebirths >= skin.price) {
+                                rebirths -= skin.price;
+                                ownedSkins.push(skin.id);
+                                currentSkin = skin.id;
+                                setPandaMessage(`ege: ${skin.name} gekauft!`);
+                                updateUI();
+                            }
+                        });
+                    }
+                    itemDiv.appendChild(actionBtn);
+                    skinContainer.appendChild(itemDiv);
+                });
+            }
+
+            // ---------- Bambus-Klick ----------
+            function onBambooClick(event) {
+                const bamboo = event.currentTarget;
+                if (!gameActive || gameCompleted) return;
+                if (currentScore >= getMaxScore()) return;
+                if (bamboo.classList.contains('hidden')) return;
+
+                feed(1);
+
+                bamboo.classList.add('hidden');
+                const index = parseInt(bamboo.dataset.index, 10);
+                setTimeout(() => {
+                    if (gameActive && currentScore < getMaxScore() && !gameCompleted) {
+                        bamboo.classList.remove('hidden');
+                    }
+                }, 300);
+            }
+
+            // ---------- Reset (manuell) ----------
+            function resetGame() {
+                if (gameCompleted) return;
+                const max = getMaxScore();
+                if (!gameActive && currentScore >= max) {
+                    rebirths += rebirthGainMultiplier;
+                }
+
+                if (autoclickerInterval) clearInterval(autoclickerInterval);
+                autoclickerInterval = null;
+                if (doubleBoostTimeout) clearTimeout(doubleBoostTimeout);
+                if (rainBoostTimeout) clearTimeout(rainBoostTimeout);
+                doubleBoostActive = false;
+                rainBoostActive = false;
+
+                currentScore = 0;
+                bambooPoints = 0;
+                gameActive = true;
+                lastMilestonePercent = 0;
+
+                bambooElements.forEach(b => b.classList.remove('hidden'));
+
+                setPandaMessage("😃 Hey, ich bin ege! Fütter mich!");
+                updateUI();
+                restartAutoclicker();
+            }
+
+            // ---------- Speicherfunktionen ----------
+            function saveGame() {
+                const saveData = {
+                    currentScore,
+                    bambooPoints,
+                    rebirths,
+                    rebirthGainMultiplier,
+                    autoclickerCount,
+                    autoclickerPower,
+                    ownedSkins,
+                    currentSkin,
+                    millionReached,
+                    gameCompleted,
+                    autoRebirthActive,
+                    playerName
+                };
+                localStorage.setItem('egePandaSave', JSON.stringify(saveData));
+            }
+
+            function loadGame() {
+                const saved = localStorage.getItem('egePandaSave');
+                if (saved) {
+                    try {
+                        const data = JSON.parse(saved);
+                        currentScore = data.currentScore || 0;
+                        bambooPoints = data.bambooPoints || 0;
+                        rebirths = data.rebirths || 0;
+                        rebirthGainMultiplier = data.rebirthGainMultiplier || 1.0;
+                        autoclickerCount = data.autoclickerCount || 0;
+                        autoclickerPower = data.autoclickerPower || 1;
+                        ownedSkins = data.ownedSkins || ['normal'];
+                        currentSkin = data.currentSkin || 'normal';
+                        millionReached = data.millionReached || false;
+                        gameCompleted = data.gameCompleted || false;
+                        autoRebirthActive = data.autoRebirthActive || false;
+                        playerName = data.playerName || "Spieler";
+
+                        doubleBoostActive = false;
+                        rainBoostActive = false;
+                        gameActive = true;
+                        lastMilestonePercent = 0;
+
+                        const max = getMaxScore();
+                        if (currentScore >= max) {
+                            if (autoRebirthActive) {
+                                gameActive = true;
+                            } else {
+                                gameActive = false;
+                            }
+                        }
+
+                        if (!gameCompleted) {
+                            restartAutoclicker();
+                        }
+
+                        playerNameInput.value = playerName;
+                        updateUI();
+                        setPandaMessage("😃 Willkommen zurück, ege!");
+
+                        if (gameCompleted) {
+                            showWinLobby();
+                        }
+                    } catch (e) {
+                        console.warn("Fehler beim Laden", e);
+                    }
+                } else {
+                    resetGame();
+                }
+            }
+
+            // ---------- Event-Listener ----------
+            bambooElements.forEach((bamboo, idx) => {
+                bamboo.dataset.index = idx;
+                bamboo.addEventListener('click', onBambooClick);
+                bamboo.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        bamboo.click();
+                    }
+                });
+            });
+
+            resetBtn.addEventListener('click', resetGame);
+            restartFromWinBtn.addEventListener('click', restartGameAfterWin);
+
+            // Name-Change-Listener
+            playerNameInput.addEventListener('input', () => {
+                playerName = playerNameInput.value.trim() || "Spieler";
+                updateAdminPanelVisibility();
+            });
+
+            // Rangliste laden
+            loadRanking();
+
+            // Spiel laden
+            loadGame();
+
+            // Speichern vor dem Schließen
+            window.addEventListener('beforeunload', () => {
+                saveGame();
+            });
+        })();
+    </script>
 </body>
 </html>
